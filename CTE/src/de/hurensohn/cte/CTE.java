@@ -1,4 +1,4 @@
-package de.hurensohn.CTE;
+package de.hurensohn.cte;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
