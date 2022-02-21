@@ -1,5 +1,6 @@
 package com.osterph.cte;
 
+import com.osterph.lagerhalle.MySQL;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class CTE extends JavaPlugin{
@@ -18,8 +19,15 @@ public class CTE extends JavaPlugin{
 	@Override
 	public void onEnable() {
 		INSTANCE = this;
-		
-		
+		system = new CTESystem();
+
+
+		String host = "";
+		String pw = "";
+		String db = "";
+		String user = "";
+
+		mysql = new MySQL(host, db, user, pw);
 	}
 	
 	@Override
