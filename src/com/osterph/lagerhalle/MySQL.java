@@ -7,21 +7,21 @@ import java.sql.*;
 
 public class MySQL {
 
-    private static String host;
-    private static String database;
-    private static final int port = 3306;
-    private static String username;
-    private static String password;
-    private static Connection con;
+    private String host;
+    private String database;
+    private final int port = 3306;
+    private String username;
+    private String password;
+    private Connection con;
 
     public MySQL(String host, String database, String username, String password) {
-        MySQL.host = host;
-        MySQL.database = database;
-        MySQL.username = username;
-        MySQL.password = password;
+        this.host = host;
+        this.database = database;
+        this.username = username;
+        this.password = password;
     }
 
-    private static void connect() {
+    private void connect() {
         try {
             con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database +"?user="+username+"&password="+password + "&characterEncoding=latin1");
             java.lang.System.out.println("[MySQL] Connected");
@@ -31,10 +31,10 @@ public class MySQL {
         }
     }
 
-    private static void disconnect() {
+    private void disconnect() {
         try {
-            if (con != null) {
-                con.close();
+            if (this.con != null) {
+                this.con.close();
                 java.lang.System.out.println("[MySQL] disconnected");
             }
         } catch (SQLException e) {
@@ -42,7 +42,7 @@ public class MySQL {
         }
     }
 
-    public static void update(String query) {
+    public void update(String query) {
         connect();
         try {
             PreparedStatement ps = con.prepareStatement(query);
@@ -67,17 +67,17 @@ public class MySQL {
         return rs;
     }
 
-    public static void setDatabase(String Tabelle, String SpalteKategorie, String SpalteInhalt, String WertKategorie, String WertInhalt) {
+    public void setDatabase(String Tabelle, String SpalteKategorie, String SpalteInhalt, String WertKategorie, Object WertInhalt) {
         try {
-            update("INSERT INTO " + Tabelle + " (" + SpalteKategorie + "," + WertKategorie + ") VALUES ('" + SpalteInhalt + "','" + WertInhalt + "')");
+            this.update("INSERT INTO " + Tabelle + " (" + SpalteKategorie + "," + WertKategorie + ") VALUES ('" + SpalteInhalt + "','" + WertInhalt + "')");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static String getDatabase(String Tabelle, String SpalteKategorie, String SpalteInhalt, String WertKategorie) {
+    public Object getDatabase(String Tabelle, String SpalteKategorie, String SpalteInhalt, String WertKategorie) {
         ResultSet rs = CTE.mysql.query("SELECT " + WertKategorie + " FROM " + Tabelle + " WHERE " + SpalteKategorie + "='" + SpalteInhalt + "'");
-        String out = null;
+        Object out = null;
 
         try{
             while (rs.next()){
@@ -87,6 +87,6 @@ public class MySQL {
             exception.printStackTrace();
         }
 
-        return (out != null) ? out : "null";
+        return (out != null) ? out : 0;
     }
 }
