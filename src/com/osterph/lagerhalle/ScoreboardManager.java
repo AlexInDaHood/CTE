@@ -1,5 +1,7 @@
 package com.osterph.lagerhalle;
 
+import com.osterph.cte.CTE;
+import com.osterph.cte.CTESystem;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -15,10 +17,77 @@ public class ScoreboardManager {
     private static Team red;
     private static Team blue;
 
+    private static CTESystem sys = CTE.INSTANCE.system;
     public static void refreshBoard(Player p) {
         board = Bukkit.getScoreboardManager().getNewScoreboard();
         defineTeams();
 
+        for(Player all : Bukkit.getOnlinePlayers()) {
+            CTESystem.TEAM team = sys.teams.get(all);
+            switch (team) {
+                case RED:
+                    all.setPlayerListName("§cR§8 | §c" + all.getName());
+                    red.addEntry(all.getName());
+                    break;
+                case BLUE:
+                    all.setPlayerListName("§9B§8 | §9" + all.getName());
+                    blue.addEntry(all.getName());
+                    break;
+                case DEFAULT:
+                    all.setPlayerListName("§7W §8| §7" + all.getName());
+                    user.addEntry(all.getName());
+                    break;
+                case SPEC:
+                    all.setPlayerListName("§7§oS §8| §7§o" + all.getName());
+                    spectator.addEntry(all.getName());
+                    all.removePotionEffect(PotionEffectType.INVISIBILITY);
+                    all.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999999,0,true));
+                    all.setAllowFlight(true);
+                    break;
+            }
+        }
+
+        if (sys.isRunning || sys.isEnding) {
+            Objective o = board.getObjective(p.getName());
+            try {
+                if (o == null) o = board.registerNewObjective(p.getName(), "");
+            } catch (Exception ignored) {}
+
+            o.setDisplayName("§8» §6§lCTE §8«");
+            o.setDisplaySlot(DisplaySlot.SIDEBAR);
+
+            o.getScore("§1").setScore(6);
+            o.getScore("§9BLAU§8: " + EggStatus(TEAM.BLUE)).setScore(5);
+            o.getScore("§cROT§8: " + EggStatus(TEAM.RED)).setScore(4);
+            o.getScore("§2").setScore(3);
+            if (sys.teams.get(p).equals(CTESystem.TEAM.BLUE)||sys.teams.get(p).equals(CTESystem.TEAM.RED)) {
+                o.getScore("§3PUNKTE§8: §7" + sys.punkte.get(p)).setScore(2);
+                o.getScore("§bKILLS§8: §7" + sys.kills.get(p)).setScore(1);
+            }
+        } else {
+            Objective o = board.getObjective(p.getName());
+            try {
+                if (o == null) o = board.registerNewObjective(p.getName(), "");
+            } catch (Exception ignored) {}
+
+            o.setDisplayName("§8» §6§lCTE §8«");
+            o.setDisplaySlot(DisplaySlot.SIDEBAR);
+
+            o.getScore("§1").setScore(8);
+            if (Bukkit.getOnlinePlayers().size() >= 4) {
+                o.getScore("§eWarte auf "+(4-Bukkit.getOnlinePlayers().size())+" Spieler...").setScore(7);
+            } else {
+                o.getScore("§e"+Bukkit.getOnlinePlayers().size()+"§7/§e"+sys.maxPlayers+" Spieler").setScore(7);
+            }
+            o.getScore("§2").setScore(6);
+            o.getScore("§9BLAU§8: §e" + sys.red.size()+"§7/§e"+sys.maxPlayers/2).setScore(5);
+            o.getScore("§cROT§8: §e" + sys.blue.size()+"§7/§e"+sys.maxPlayers/2).setScore(4);
+            o.getScore("§3").setScore(3);
+            o.getScore("§3GES. PUNKTE").setScore(2);
+            o.getScore("§8➥ §7"+CTE.mysql.getDatabase("PLAYERPOINTS", "UUID", p.getUniqueId().toString(), "POINTS")).setScore(1);
+        }
+
+        p.setScoreboard(board);
 
     }
 

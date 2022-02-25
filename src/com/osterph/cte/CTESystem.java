@@ -16,9 +16,17 @@ import java.util.HashMap;
 public class CTESystem {
 
     public HashMap<Player, TEAM> teams = new HashMap<>();
-    public ArrayList<Player> winner = new ArrayList<>();
-    public TEAM winnerTeam = null;
-    private enum TEAM {
+    public HashMap<Player, Integer> punkte = new HashMap<>();
+    public HashMap<Player, Integer> kills = new HashMap<>();
+    public EGG_STATE BLUE_EGG = EGG_STATE.OKAY;
+    public EGG_STATE RED_EGG = EGG_STATE.OKAY;
+    public ArrayList<Player> red = new ArrayList<>();
+    public int startRED = 0;
+    public ArrayList<Player> blue = new ArrayList<>();
+    public int startBLUE = 0;
+    public TEAM winnerTeam = TEAM.DEFAULT;
+
+    public enum TEAM {
         BLUE, RED, SPEC, DEFAULT
     }
 
