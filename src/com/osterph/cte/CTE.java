@@ -1,5 +1,9 @@
 package com.osterph.cte;
 
+import com.osterph.dev.countdownCMD;
+import com.osterph.dev.startCMD;
+import com.osterph.dev.setteamCMD;
+import com.osterph.inventory.ShopListener;
 import com.osterph.lagerhalle.MySQL;
 import com.osterph.lagerhalle.NPCListener;
 import com.osterph.manager.ScoreboardManager;
@@ -16,6 +20,7 @@ public class CTE extends JavaPlugin{
 	public static String prefix = "§8[§6CTE§8] §e";
 	public static MySQL mysql;
 	public CTESystem system;
+
 
 	@Override
 	public void onEnable() {
@@ -60,6 +65,15 @@ public class CTE extends JavaPlugin{
 		pm.registerEvents(new PlayerEvent(), this);
 		pm.registerEvents(new EggListener(), this);
 		pm.registerEvents(new BlockListener(), this);
+		pm.registerEvents(new ShopListener(), this);
+		pm.registerEvents(new ChatListener(), this);
+		pm.registerEvents(new InteractEvent(), this);
+		pm.registerEvents(new DamageListener(), this);
+		pm.registerEvents(new NPCListener(), this);
+
+		getCommand("start").setExecutor(new startCMD());
+		getCommand("countdown").setExecutor(new countdownCMD());
+		getCommand("setteam").setExecutor(new setteamCMD());
 	}
 	
 }

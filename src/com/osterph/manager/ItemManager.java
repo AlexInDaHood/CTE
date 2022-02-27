@@ -127,8 +127,6 @@ public class ItemManager {
                 meta.addEnchant(ench, enchantments.get(ench), true);
             }
         }
-
-
         stack.setItemMeta(meta);
         return stack;
     }

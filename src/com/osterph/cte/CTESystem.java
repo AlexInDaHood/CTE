@@ -101,6 +101,11 @@ public class CTESystem {
 
         new LocationLIST().blueEGG().getBlock().setType(Material.DRAGON_EGG);
         new LocationLIST().redEGG().getBlock().setType(Material.DRAGON_EGG);
+
+        for(Player all : Bukkit.getOnlinePlayers()) {
+            NPCListener.show(all);
+        }
+        new LocationLIST().shopkeeperStand();
     }
 
     public void endGame() {
