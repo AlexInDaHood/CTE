@@ -1,20 +1,80 @@
-package com.osterph.lagerhalle;
+package com.osterph.manager;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Item;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
-import java.util.logging.Level;
+import java.util.*;
 
 public class ItemManager {
+
+    private Material m;
+    private String ItemName;
+    private int amount;
+    private int data;
+    private ItemMeta meta;
+    private List<String> lores = new ArrayList<>();
+    private boolean unbreakable;
+    private boolean HIDEunbreakable;
+
+    public ItemManager(Material m) {
+        this.m = m;
+    }
+
+    public ItemManager withName(String ItemName) {
+        this.ItemName = ItemName;
+        return this;
+    }
+
+    public ItemManager withAmount(int amount) {
+        this.amount = amount;
+        return this;
+    }
+
+    public ItemManager withData(int data) {
+        this.data = data;
+        return this;
+    }
+
+    public ItemManager withMeta(ItemMeta meta) {
+        this.meta = meta;
+        return this;
+    }
+
+    public ItemManager withLores(String... lores) {
+        this.lores = Arrays.asList(lores);
+        return this;
+    }
+
+    public ItemManager unbreakable(boolean HideFlag) {
+        this.unbreakable = true;
+        this.HIDEunbreakable = HideFlag;
+        return this;
+    }
+
+    public ItemStack complete() {
+        ItemStack item = new ItemStack(this.m);
+        ItemMeta meta = item.getItemMeta();
+        if (this.meta != null) meta = this.meta;
+
+        meta.spigot().setUnbreakable(unbreakable);
+        if (HIDEunbreakable) meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+
+        meta.setLore(this.lores);
+        if (this.ItemName != null) meta.setDisplayName(this.ItemName);
+
+        item.setItemMeta(meta);
+        item.setAmount(amount);
+
+        return item;
+    }
 
     public static ItemStack newItem(Material item, String name, String lore, int id) {
         ItemStack stack;

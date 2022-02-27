@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import com.osterph.inventory.Shop;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -45,14 +46,20 @@ public class NPCListener implements Listener {
 
         if (e.getPlayer().getWorld().getName().equals("world")) e.setCancelled(true);
 
+        if (e.getRightClicked().getName() == null|| !e.getRightClicked().getName().equals("[SHOPKEEPER]")) return;
+
+        Shop.openShop(e.getPlayer(), Shop.SHOPTYPE.CHOOSE);
+
     }
 
     public static void spawnNPCs() {
         // World
-        spawnNPC("§eEnPeSee", "gangll", new Location(Bukkit.getWorld("world"), 11.5, 58, -10.5, 45, 350));
-        spawnNPC("§b§lSKYPVP", "LitzBeats", new Location(Bukkit.getWorld("world"), 15.5, 58, -6.5, 75, 0));
-        spawnNPC("§a§lPARKOUR", "HK0221", new Location(Bukkit.getWorld("world"), 16.5, 58, -1.5, 105, 0));
-        spawnNPC("§d§lEVENT", "DangerBoy03", new Location(Bukkit.getWorld("world"), 3.5, 55, 9.5, 240, 0));
+        spawnNPC("§9Shopkeeper", "rabbit", new LocationLIST().blueNPC());
+        spawnNPC("§cShopkeeper", "LitzBeats", new LocationLIST().redNPC());
+    }
+
+    public static void show(Player p) {
+        NPC.show(p);
     }
 }
 
@@ -75,30 +82,16 @@ class NPC implements Serializable {
 
         if (p.getWorld().getName().equals("world")) {
 
-            for(Map.Entry<NPC, String> entry : npcHashMap.entrySet()) {
+            for (Map.Entry<NPC, String> entry : npcHashMap.entrySet()) {
                 NPC key = entry.getKey();
                 String value = entry.getValue();
 
-                if(value.equals("world")){
+                if (value.equals("world")) {
                     key.spawn(p);
                     key.removeFromTablist();
                 }
             }
-
-        } else if (p.getWorld().getName().equals("world_mine")) {
-
-            for(Map.Entry<NPC, String> entry : npcHashMap.entrySet()) {
-                NPC key = entry.getKey();
-                String value = entry.getValue();
-
-                if(value.equals("world_mine")){
-                    key.spawn(p);
-                    key.removeFromTablist();
-                }
-            }
-
         }
-
     }
 
     public NPC(String name, Location location) {

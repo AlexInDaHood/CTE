@@ -1,7 +1,9 @@
 package com.osterph.cte;
 
 import com.osterph.lagerhalle.LocationLIST;
-import com.osterph.lagerhalle.ScoreboardManager;
+import com.osterph.lagerhalle.NPCListener;
+import com.osterph.manager.ItemManager;
+import com.osterph.manager.ScoreboardManager;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent;
 import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
 import org.bukkit.Bukkit;
@@ -9,6 +11,8 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,9 +74,26 @@ public class CTESystem {
         }
     }
 
+    public void clear(Player p) {
+        p.getInventory().setHelmet(null);
+        p.getInventory().setChestplate(null);
+        p.getInventory().setLeggings(null);
+        p.getInventory().setBoots(null);
+    }
+
+    public void startEquip(Player p) {
+
+        p.getInventory().setHelmet(null);
+        p.getInventory().setChestplate(null);
+        p.getInventory().setLeggings(null);
+        p.getInventory().setBoots(null);
+        p.getInventory().setItem(0, new ItemManager(Material.WOOD_SWORD).unbreakable(false).complete());
+    }
+
     public void forceStart() {
         isStarting = false;
         isRunning = true;
+        cancel_countdown();
         RED_EGG = EGG_STATE.OKAY;
         BLUE_EGG = EGG_STATE.OKAY;
         startRED = red.size();

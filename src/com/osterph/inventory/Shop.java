@@ -1,13 +1,12 @@
 package com.osterph.inventory;
 
-import com.osterph.lagerhalle.ItemManager;
+import com.osterph.manager.ItemManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.HashMap;
 

@@ -2,8 +2,10 @@ package com.osterph.listener;
 
 import com.osterph.cte.CTE;
 import com.osterph.cte.CTESystem;
-import com.osterph.lagerhalle.ItemManager;
+import com.osterph.manager.ItemManager;
 import com.osterph.lagerhalle.LocationLIST;
+import com.osterph.manager.ScoreboardManager;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -11,7 +13,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -32,6 +33,10 @@ public class EggListener implements Listener {
             e.setCancelled(true);
             return;
         }
+        if (!sys.isRunning) {
+            e.setCancelled(true);
+            return;
+        }
         if (e.getClickedBlock() == null) return;
         if (!e.getClickedBlock().getType().equals(Material.DRAGON_EGG)) return;
         if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) e.setCancelled(true);
@@ -44,7 +49,7 @@ public class EggListener implements Listener {
                 p.sendMessage(CTE.prefix + "Das ist das falsche Ei...");
                 return;
             }
-            sys.sendAllMessage("§c" + p.getName() + " hat das §9blaue Ei§e gestohlen!");
+            sys.sendAllMessage(CTE.prefix+"§c" + p.getName() + " §ehat das §9blaue Ei§e gestohlen!");
             sys.sendAllSound(Sound.WITHER_DEATH, 1, 1);
             sys.BLUE_EGG = CTESystem.EGG_STATE.STOLEN;
             stolenegg = "blue";
@@ -53,7 +58,7 @@ public class EggListener implements Listener {
                 p.sendMessage(CTE.prefix + "Das ist das falsche Ei...");
                 return;
             }
-            sys.sendAllMessage("§9" + p.getName() + " hat das §crote Ei§e gestohlen!");
+            sys.sendAllMessage(CTE.prefix+"§9" + p.getName() + " §ehat das §crote Ei§e gestohlen!");
             sys.sendAllSound(Sound.WITHER_DEATH, 1, 1);
             sys.RED_EGG = CTESystem.EGG_STATE.STOLEN;
             stolenegg = "red";
@@ -65,11 +70,14 @@ public class EggListener implements Listener {
         if(stolenegg.equals("red")) {
             headEgg = ItemManager.customHead("§cRotes-Ei", "", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTZiYTk5ODdmNzM4ZTZkNzVkM2IwMmMzMGQxNDgwYTM2MDU5M2RkYjQ2NGJkMWM4MWFiYjlkNzFkOWU2NTZjMCJ9fX0=");
         } else {
-            headEgg = ItemManager.customHead("§8Blaues-Ei", "", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTZiYTk5ODdmNzM4ZTZkNzVkM2IwMmMzMGQxNDgwYTM2MDU5M2RkYjQ2NGJkMWM4MWFiYjlkNzFkOWU2NTZjMCJ9fX0=");
+            headEgg = ItemManager.customHead("§9Blaues-Ei", "", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTZiYTk5ODdmNzM4ZTZkNzVkM2IwMmMzMGQxNDgwYTM2MDU5M2RkYjQ2NGJkMWM4MWFiYjlkNzFkOWU2NTZjMCJ9fX0=");
         }
         p.getInventory().setHelmet(headEgg);
 
         e.getClickedBlock().setType(Material.AIR);
+        for (Player all: Bukkit.getOnlinePlayers()) {
+            ScoreboardManager.refreshBoard(all);
+        }
     }
 
     @EventHandler

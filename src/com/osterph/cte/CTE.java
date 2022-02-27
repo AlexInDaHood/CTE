@@ -1,9 +1,9 @@
 package com.osterph.cte;
 
 import com.osterph.lagerhalle.MySQL;
-import com.osterph.listener.BlockListener;
-import com.osterph.listener.EggListener;
-import com.osterph.listener.PlayerEvent;
+import com.osterph.lagerhalle.NPCListener;
+import com.osterph.manager.ScoreboardManager;
+import com.osterph.listener.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.entity.Player;
@@ -32,17 +32,19 @@ public class CTE extends JavaPlugin{
 		mysql = new MySQL(host, db, user, pw);
 
 		mysql.update("CREATE TABLE IF NOT EXISTS `PLAYERPOINTS` (`UUID` text NOT NULL, `POINTS` int NOT NULL);");
-	}
-	
-	@Override
-	public void onDisable() {
-		for (Player all: Bukkit.getOnlinePlayers()) all.kickPlayer("§4SERVER RELOAD");
+
+		for (Player all: Bukkit.getOnlinePlayers()) {
+			ScoreboardManager.refreshBoard(all);
+			system.punkte.put(all, 0);
+			system.kills.put(all, 0);
+		}
+		NPCListener.spawnNPCs();
 	}
 
 	private void onSettings() {
 		Bukkit.getWorld("world").setThundering(false);
 		Bukkit.getWorld("world").setStorm(false);
-		Bukkit.getWorld("world").setDifficulty(Difficulty.EASY);
+		Bukkit.getWorld("world").setDifficulty(Difficulty.PEACEFUL);
 		Bukkit.getWorld("world").setGameRuleValue("doMobSpawning", "false");
 		Bukkit.getWorld("world").setGameRuleValue("doMobLoot", "false");
 		Bukkit.getWorld("world").setGameRuleValue("randomTickSpeed", "0");

@@ -4,3 +4,7 @@ authors:
   - Cake-chan
 version: 69.420
 main: com.osterph.cte.CTE
+commands:
+  start:
+  countdown:
+  setteam:

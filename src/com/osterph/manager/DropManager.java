@@ -1,4 +1,4 @@
-package com.osterph.lagerhalle;
+package com.osterph.manager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -18,7 +18,7 @@ public class DropManager {
         this.d = d;
     }
 
-    private enum DROP {
+    public enum DROP {
         CARROT, MELON, APPLE
     }
 
