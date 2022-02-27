@@ -11,6 +11,8 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Locale;
+
 public class ShopListener implements Listener {
 
     @EventHandler
@@ -38,20 +40,21 @@ public class ShopListener implements Listener {
                 if(name.contains("Zurück")) {
                     Shop.openShop(p, Shop.SHOPTYPE.CHOOSE);
                 }
-                System.out.println("1");
                 if(item.getItemMeta().getLore() != null && item.getItemMeta().getLore().get(0).contains("§7Cost: ")) {
-                    System.out.println("2");
                     ShopItem shop = Shop.getShopItemByItemStack(item);
                     if(shop != null) {
-                        System.out.println("3");
                         if(checkItem(shop.getRessource(), shop.cost, p)) {
-                            System.out.println("4");
                             if(p.getInventory().getContents().length == 36) {
                                 boolean isFull = true;
                                 for(ItemStack a : p.getInventory().getContents()) {
+                                    if(a == null) {
+                                        isFull = false;
+                                        break;
+                                    }
                                     if(a.isSimilar(shop.getInventoryItem())) {
-                                        if(a.getAmount() < a.getMaxStackSize()) {
+                                        if(a.getAmount()+shop.getAmount() < a.getMaxStackSize()) {
                                             isFull = false;
+                                            break;
                                         }
                                     }
                                 }
@@ -59,8 +62,34 @@ public class ShopListener implements Listener {
                                     p.playSound(p.getLocation(), Sound.VILLAGER_NO, 1, 1);
                                     p.sendMessage(CTE.prefix + "§cDein Inventar ist voll!");
                                 } else {
+                                    ItemStack b = null;
+                                    switch(shop.getRessource()) {
+                                        case Karotte:
+                                            b = new DropManager(DropManager.DROP.CARROT).getItem(1);
+                                            break;
+                                        case Melone:
+                                            b = new DropManager(DropManager.DROP.MELON).getItem(1);
+                                            break;
+                                        case Apfel:
+                                            b = new DropManager(DropManager.DROP.APPLE).getItem(1);
+                                            break;
+                                    }
                                     p.getInventory().addItem(shop.getInventoryItem());
-                                    p.sendMessage(CTE.prefix + "§aDu hast §e" + shop.getName() + " §a für " + shop.getCost() + " " + shop.getRessource() + " §agekauft!");
+                                    p.sendMessage(CTE.prefix + "§eDu hast §6" + shop.getName() + " §efür " + shop.getCost() + " " + shop.getRessource() + " §egekauft!");
+                                    ItemStack[] list = p.getInventory().getContents();
+                                    int cost = shop.getCost();
+                                    for (ItemStack i : list) {
+                                        if (cost == 0) return;
+                                        if (i == null) continue;
+                                        if (i.getAmount() == 0) continue;
+                                        if (i.getItemMeta() == null) continue;
+                                        if (i.getItemMeta().getDisplayName() == null) continue;
+                                        if (!i.getItemMeta().getDisplayName().equals(b.getItemMeta().getDisplayName())) continue;
+                                        while (i.getAmount() > 0 && cost > 0) {
+                                            i.setAmount(i.getAmount()-1);
+                                            cost--;
+                                        }
+                                    }
                                 }
                             } else {
                                 p.getInventory().addItem(shop.getInventoryItem());

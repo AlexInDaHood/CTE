@@ -52,6 +52,12 @@ public class PlayerEvent implements Listener {
             p.teleport(new LocationLIST().specSPAWN());
         }
 
+        if(sys.isStarting) {
+            e.setJoinMessage("§8[§a+§8] §7" + p.getName());
+        } else {
+            e.setJoinMessage(null);
+        }
+
         sys.punkte.put(p, 0);
         sys.kills.put(p, 0);
 
@@ -80,5 +86,12 @@ public class PlayerEvent implements Listener {
         if (sys.currentPlayers >= sys.minPlayers) return;
 
         sys.cancel_countdown();
+        if(sys.isStarting) {
+            e.setQuitMessage("§8[§c-§8] §7" + p.getName());
+        } else if(sys.isRunning) {
+            e.setQuitMessage("§7" + p.getName() + " hat das Spiel verlassen.");
+        } else {
+            e.setQuitMessage(null);
+        }
     }
 }

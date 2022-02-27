@@ -40,9 +40,9 @@ public class ShopItem {
         ItemStack item = new ItemStack(mat);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(name);
-        ArrayList<String> lore = new ArrayList<>();
-        lore.add("§7"+description);
-        meta.setLore(lore);
+        //ArrayList<String> lore = new ArrayList<>();
+        //lore.add("§7"+description);
+        //meta.setLore(lore);
         if(enchants != null) {
             for (Enchantment ench : enchants.keySet()) {
                 meta.addEnchant(ench, enchants.get(ench), true);
@@ -58,7 +58,7 @@ public class ShopItem {
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(name);
         ArrayList<String> lore = new ArrayList<>();
-        lore.add("§7Cost: "  + ResourceToColor() + amount + " " + ResourceToString());
+        lore.add("§7Cost: "  + ResourceToColor() + cost + " " + ResourceToString());
         lore.add(" ");
         lore.add("§7"+description);
         meta.setLore(lore);
