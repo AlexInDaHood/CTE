@@ -17,44 +17,44 @@ public class Shop {
 
     private static void fillPrices() {
         //WEAPON
-        items.add(new ShopItem(Material.STONE_SWORD, "§7Stein Schwert", "Macht mehr Damage als ein Holz schwert", 1, 10, Ressourcen.Melone, null, 20, SHOPTYPE.WEAPON));
-        items.add(new ShopItem(Material.IRON_SWORD, "§7Eisen Schwert", "Macht mehr Damage als ein Stein schwert", 1, 20, Ressourcen.Melone, null, 22, SHOPTYPE.WEAPON));
-        items.add(new ShopItem(Material.DIAMOND_SWORD, "§7Diamant Schwert", "Macht mehr Damage als ein Eisen schwert", 1, 30, Ressourcen.Melone, null, 24, SHOPTYPE.WEAPON));
-        items.add(new ShopItem(Material.BOW, "§7Bogen", "Halt ein Bogen oder so", 1, 5, Ressourcen.Melone, null, 29, SHOPTYPE.WEAPON));
+        items.add(new ShopItem(Material.STONE_SWORD, "§fSteinschwert", "Macht mehr Damage als ein Holz schwert", 1, 10, Ressourcen.Melone, null, 20, SHOPTYPE.WEAPON));
+        items.add(new ShopItem(Material.IRON_SWORD, "§fEisenschwert", "Macht mehr Damage als ein Stein schwert", 1, 20, Ressourcen.Melone, null, 22, SHOPTYPE.WEAPON));
+        items.add(new ShopItem(Material.DIAMOND_SWORD, "§fDiamantschwert", "Macht mehr Damage als ein Eisen schwert", 1, 30, Ressourcen.Melone, null, 24, SHOPTYPE.WEAPON));
+        items.add(new ShopItem(Material.BOW, "§fBogen", "Halt ein Bogen oder so", 1, 5, Ressourcen.Melone, null, 29, SHOPTYPE.WEAPON));
         HashMap<Enchantment, Integer> ench = new HashMap<>();
         ench.put(Enchantment.ARROW_DAMAGE, 2);
-        items.add(new ShopItem(Material.BOW, "§7Guter Bogen", "Macht mehr Damage als ein normaler Bogen", 1, 50, Ressourcen.Melone, ench, 31, SHOPTYPE.WEAPON));
-        items.add(new ShopItem(Material.ARROW, "§7Pfeile", "Munition für dein Bogen", 8, 20, Ressourcen.Melone, null, 33, SHOPTYPE.WEAPON));
+        items.add(new ShopItem(Material.BOW, "§fBogen", "Macht mehr Damage als ein normaler Bogen", 1, 50, Ressourcen.Melone, ench, 31, SHOPTYPE.WEAPON));
+        items.add(new ShopItem(Material.ARROW, "§fPfeile", "Munition für dein Bogen", 8, 20, Ressourcen.Melone, null, 33, SHOPTYPE.WEAPON));
 
         //ARMOR
-        items.add(new ShopItem(Material.CHAINMAIL_CHESTPLATE, "§cKetten Rüstung", "Damit hälst du mehr Schläge aus", 1, 10, Ressourcen.Melone, null, 29, SHOPTYPE.ARMOR));
-        items.add(new ShopItem(Material.IRON_CHESTPLATE, "§cEisen Rüstung", "Damit hälst du mehr Schläge aus", 1, 10, Ressourcen.Melone, null, 31, SHOPTYPE.ARMOR));
-        items.add(new ShopItem(Material.DIAMOND_CHESTPLATE, "§cDiamant Rüstung", "Damit hälst du mehr Schläge aus", 1, 10, Ressourcen.Melone, null, 33, SHOPTYPE.ARMOR));
+        items.add(new ShopItem(Material.CHAINMAIL_CHESTPLATE, "§fKettenbrustpanzer", "Damit hälst du mehr Schläge aus", 1, 10, Ressourcen.Melone, null, 29, SHOPTYPE.ARMOR));
+        items.add(new ShopItem(Material.IRON_CHESTPLATE, "§fEisenbrustpanzer", "Damit hälst du mehr Schläge aus", 1, 10, Ressourcen.Melone, null, 31, SHOPTYPE.ARMOR));
+        items.add(new ShopItem(Material.DIAMOND_CHESTPLATE, "§fDiamantbrustpanzer", "Damit hälst du mehr Schläge aus", 1, 10, Ressourcen.Melone, null, 33, SHOPTYPE.ARMOR));
 
         //TOOLS
-        items.add(new ShopItem(Material.STONE_PICKAXE, "§7Stein Spitzhacke", "Damit kannst du schneller Steine abbauen", 1, 10, Ressourcen.Apfel, null, 20, SHOPTYPE.TOOLS));
-        items.add(new ShopItem(Material.IRON_PICKAXE, "§7Eisen Spitzhacke", "Damit kannst du schneller Steine abbauen", 1, 10, Ressourcen.Apfel, null, 29, SHOPTYPE.TOOLS));
-        items.add(new ShopItem(Material.DIAMOND_PICKAXE, "§7Diamant Spitzhacke", "Damit kannst du schneller Steine abbauen", 1, 10, Ressourcen.Apfel, null, 38, SHOPTYPE.TOOLS));
-        items.add(new ShopItem(Material.SHEARS, "§7Schere", "Damit kannst du schneller Wolle abbauen", 1, 10, Ressourcen.Apfel, null, 31, SHOPTYPE.TOOLS));
-        items.add(new ShopItem(Material.STONE_AXE, "§7Stein Axt", "Damit kannst du schneller Holz abbauen", 1, 10, Ressourcen.Apfel, null, 24, SHOPTYPE.TOOLS));
-        items.add(new ShopItem(Material.IRON_AXE, "§7Eisen Axt", "Damit kannst du schneller Holz abbauen", 1, 10, Ressourcen.Apfel, null, 33, SHOPTYPE.TOOLS));
-        items.add(new ShopItem(Material.DIAMOND_AXE, "§7Diamant Axt", "Damit kannst du schneller Holz abbauen", 1, 10, Ressourcen.Apfel, null, 42, SHOPTYPE.TOOLS));
+        items.add(new ShopItem(Material.STONE_PICKAXE, "§fSteinspitzhacke", "Damit kannst du schneller Steine abbauen", 1, 10, Ressourcen.Apfel, null, 20, SHOPTYPE.TOOLS));
+        items.add(new ShopItem(Material.IRON_PICKAXE, "§fEisenspitzhacke", "Damit kannst du schneller Steine abbauen", 1, 10, Ressourcen.Apfel, null, 29, SHOPTYPE.TOOLS));
+        items.add(new ShopItem(Material.DIAMOND_PICKAXE, "§fDiamantspitzhacke", "Damit kannst du schneller Steine abbauen", 1, 10, Ressourcen.Apfel, null, 38, SHOPTYPE.TOOLS));
+        items.add(new ShopItem(Material.SHEARS, "§fSchere", "Damit kannst du schneller Wolle abbauen", 1, 10, Ressourcen.Apfel, null, 31, SHOPTYPE.TOOLS));
+        items.add(new ShopItem(Material.STONE_AXE, "§fSteinaxt", "Damit kannst du schneller Holz abbauen", 1, 10, Ressourcen.Apfel, null, 24, SHOPTYPE.TOOLS));
+        items.add(new ShopItem(Material.IRON_AXE, "§fEisenaxt", "Damit kannst du schneller Holz abbauen", 1, 10, Ressourcen.Apfel, null, 33, SHOPTYPE.TOOLS));
+        items.add(new ShopItem(Material.DIAMOND_AXE, "§fDiamantaxt", "Damit kannst du schneller Holz abbauen", 1, 10, Ressourcen.Apfel, null, 42, SHOPTYPE.TOOLS));
 
         //Blocks
-        items.add(new ShopItem(Material.WOOL, "§7Wolle", "Zum bauen", 16, 10, Ressourcen.Melone, null, 20, SHOPTYPE.BLOCKS));
-        items.add(new ShopItem(Material.WOOD, "§7Holz", "Zum bauen", 6, 10, Ressourcen.Melone, null, 21, SHOPTYPE.BLOCKS));
-        items.add(new ShopItem(Material.SANDSTONE, "§7Sandstein", "Zum bauen", 8, 10, Ressourcen.Melone, null, 23, SHOPTYPE.BLOCKS));
-        items.add(new ShopItem(Material.ENDER_STONE, "§7Endstone", "Zum bauen", 4, 10, Ressourcen.Melone, null, 24, SHOPTYPE.BLOCKS));
-        items.add(new ShopItem(Material.OBSIDIAN, "§7Obsidian", "Zum bauen", 2, 10, Ressourcen.Melone, null, 30, SHOPTYPE.BLOCKS));
-        items.add(new ShopItem(Material.WEB, "§7Cobweb", "Zum bauen", 1, 10, Ressourcen.Melone, null, 31, SHOPTYPE.BLOCKS));
-        items.add(new ShopItem(Material.LADDER, "§7Leiter", "Zum bauen", 16, 10, Ressourcen.Melone, null, 32, SHOPTYPE.BLOCKS));
+        items.add(new ShopItem(Material.WOOL, "§fWolle", "Zum bauen", 16, 10, Ressourcen.Melone, null, 20, SHOPTYPE.BLOCKS));
+        items.add(new ShopItem(Material.WOOD, "§fHolz", "Zum bauen", 6, 10, Ressourcen.Melone, null, 21, SHOPTYPE.BLOCKS));
+        items.add(new ShopItem(Material.SANDSTONE, "§fSandstein", "Zum bauen", 8, 10, Ressourcen.Melone, null, 23, SHOPTYPE.BLOCKS));
+        items.add(new ShopItem(Material.ENDER_STONE, "§fEndstein", "Zum bauen", 4, 10, Ressourcen.Melone, null, 24, SHOPTYPE.BLOCKS));
+        items.add(new ShopItem(Material.OBSIDIAN, "§fObsidian", "Zum bauen", 2, 10, Ressourcen.Melone, null, 30, SHOPTYPE.BLOCKS));
+        items.add(new ShopItem(Material.WEB, "§fSpinnweben", "Zum bauen", 1, 10, Ressourcen.Melone, null, 31, SHOPTYPE.BLOCKS));
+        items.add(new ShopItem(Material.LADDER, "§fLeiter", "Zum bauen", 16, 10, Ressourcen.Melone, null, 32, SHOPTYPE.BLOCKS));
 
         //Extras
-        items.add(new ShopItem(Material.GOLDEN_APPLE, "§7Goldapfel", "Heilt dich", 1, 20, Ressourcen.Karotte, null, 20, SHOPTYPE.SONSTIGES));
-        items.add(new ShopItem(Material.WATER_BUCKET, "§7Wassereimer", "Halt ein Wassereimer?", 1, 20, Ressourcen.Melone, null, 22, SHOPTYPE.SONSTIGES));
-        items.add(new ShopItem(Material.EGG, "§7Bridgeegg", "Halt ein Wassereimer?", 1, 20, Ressourcen.Melone, null, 24, SHOPTYPE.SONSTIGES));
-        items.add(new ShopItem(Material.ENDER_PEARL, "§7Enderperle", "UwU", 1, 20, Ressourcen.Apfel, null, 30, SHOPTYPE.SONSTIGES));
-        items.add(new ShopItem(Material.BLAZE_ROD, "§7Rettungsplattform", "Rettet dich beim runterfallen", 1, 20, Ressourcen.Melone, null, 32, SHOPTYPE.SONSTIGES));
+        items.add(new ShopItem(Material.GOLDEN_APPLE, "§fGoldapfel", "Heilt dich", 1, 20, Ressourcen.Karotte, null, 20, SHOPTYPE.SONSTIGES));
+        items.add(new ShopItem(Material.WATER_BUCKET, "§fWassereimer", "Halt ein Wassereimer?", 1, 20, Ressourcen.Melone, null, 22, SHOPTYPE.SONSTIGES));
+        items.add(new ShopItem(Material.EGG, "§fBrückenei", "Halt ein Wassereimer?", 1, 20, Ressourcen.Melone, null, 24, SHOPTYPE.SONSTIGES));
+        items.add(new ShopItem(Material.ENDER_PEARL, "§fEnderperle", "UwU", 1, 20, Ressourcen.Apfel, null, 30, SHOPTYPE.SONSTIGES));
+        items.add(new ShopItem(Material.BLAZE_ROD, "§fRettungsplattform", "Rettet dich beim runterfallen", 1, 20, Ressourcen.Melone, null, 32, SHOPTYPE.SONSTIGES));
 
     }
 

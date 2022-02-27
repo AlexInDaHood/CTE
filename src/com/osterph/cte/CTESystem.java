@@ -7,11 +7,13 @@ import com.osterph.manager.ScoreboardManager;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent;
 import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import java.util.ArrayList;
@@ -83,11 +85,17 @@ public class CTESystem {
 
     public void startEquip(Player p) {
 
-        p.getInventory().setHelmet(null);
-        p.getInventory().setChestplate(null);
-        p.getInventory().setLeggings(null);
-        p.getInventory().setBoots(null);
-        p.getInventory().setItem(0, new ItemManager(Material.WOOD_SWORD).unbreakable(false).complete());
+        ItemStack i = new ItemStack(Material.LEATHER_HELMET);
+        LeatherArmorMeta m = (LeatherArmorMeta) i.getItemMeta();
+        if (teams.get(p).equals(TEAM.SPEC) || teams.get(p).equals(TEAM.DEFAULT)) return;
+        if (teams.get(p).equals(TEAM.RED)) m.setColor(Color.RED);
+        if (teams.get(p).equals(TEAM.BLUE)) m.setColor(Color.BLUE);
+
+        p.getInventory().setHelmet(new ItemManager(Material.LEATHER_HELMET).withName("§7Lederhelm").unbreakable(true).withMeta(m).complete());
+        p.getInventory().setChestplate(new ItemManager(Material.LEATHER_CHESTPLATE).withName("§7Lederbrustpanzer").unbreakable(true).withMeta(m).complete());
+        p.getInventory().setLeggings(new ItemManager(Material.LEATHER_LEGGINGS).withName("§7Lederhose").unbreakable(true).withMeta(m).complete());
+        p.getInventory().setBoots(new ItemManager(Material.LEATHER_BOOTS).withName("§7Lederstiefel").unbreakable(true).withMeta(m).complete());
+        p.getInventory().setItem(0, new ItemManager(Material.WOOD_SWORD).withName("§7Holzschwert").unbreakable(true).complete());
     }
 
     public void forceStart() {
@@ -104,6 +112,9 @@ public class CTESystem {
 
         for(Player all : Bukkit.getOnlinePlayers()) {
             NPCListener.show(all);
+            startEquip(all);
+            if (teams.get(all).equals(TEAM.RED)) all.teleport(new LocationLIST().redSPAWN());
+            if (teams.get(all).equals(TEAM.BLUE)) all.teleport(new LocationLIST().blueSPAWN());
         }
         new LocationLIST().shopkeeperStand();
     }

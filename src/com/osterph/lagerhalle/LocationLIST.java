@@ -20,10 +20,10 @@ public class LocationLIST {
     }
 
     public Location blueSPAWN() {
-        return new Location(w, 1073, 100, 1000, 90, 10);
+        return new Location(w, 1073.5, 100, 1000.5, 90, 10);
     }
     public Location redSPAWN() {
-        return new Location(w, 927, 100, 1000, 270, 10);
+        return new Location(w, 927.5, 100, 1000.5, 270, 10);
     }
 
     public Location blueEGG() {return new Location(w, 1080, 102, 1000);}

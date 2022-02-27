@@ -26,6 +26,13 @@ public class ItemManager {
 
     public ItemManager(Material m) {
         this.m = m;
+        this.amount = 1;
+        this.data = 0;
+        this.meta = null;
+        this.ItemName = null;
+        this.lores = new ArrayList<>();
+        this.unbreakable = false;
+        this.HIDEunbreakable = false;
     }
 
     public ItemManager withName(String ItemName) {
@@ -66,6 +73,7 @@ public class ItemManager {
 
         meta.spigot().setUnbreakable(unbreakable);
         if (HIDEunbreakable) meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
         meta.setLore(this.lores);
         if (this.ItemName != null) meta.setDisplayName(this.ItemName);

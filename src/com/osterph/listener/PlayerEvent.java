@@ -41,6 +41,7 @@ public class PlayerEvent implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
         p.setHealth(20);
+        p.getActivePotionEffects().clear();
         sys.clear(p);
         sys.teams.put(p, CTESystem.TEAM.DEFAULT);
 
