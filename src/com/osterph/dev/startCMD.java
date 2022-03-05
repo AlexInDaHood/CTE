@@ -1,6 +1,8 @@
 package com.osterph.dev;
 
 import com.osterph.cte.CTE;
+
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -21,7 +23,8 @@ public class startCMD implements CommandExecutor {
 
         p.sendMessage(CTE.prefix + "Game started.");
         CTE.INSTANCE.system.forceStart();
-
+        
         return false;
     }
+    
 }

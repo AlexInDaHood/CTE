@@ -4,18 +4,29 @@ import com.osterph.cte.CTE;
 import com.osterph.cte.CTESystem;
 import com.osterph.lagerhalle.LocationLIST;
 import com.osterph.manager.ScoreboardManager;
+import com.osterph.spawner.Spawner;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PlayerEvent implements Listener {
 
     private CTESystem sys = CTE.INSTANCE.system;
-
+    
+    
+    @EventHandler
+    public void onPickupItems(PlayerPickupItemEvent e) {
+    	if(CTE.INSTANCE.getSpawnermanager().getSpawnerByLocation(e.getItem().getLocation()) != null) {
+    		CTE.INSTANCE.getSpawnermanager().getSpawnerByLocation(e.getItem().getLocation()).setCurrentitems(0);
+    	}
+    }
+    
     @EventHandler
     public void onLogin(PlayerLoginEvent e) {
         if (sys.currentPlayers == sys.maxPlayers && sys.isStarting) {

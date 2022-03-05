@@ -85,9 +85,14 @@ public class ShopListener implements Listener {
                                         if (i.getItemMeta() == null) continue;
                                         if (i.getItemMeta().getDisplayName() == null) continue;
                                         if (!i.getItemMeta().getDisplayName().equals(b.getItemMeta().getDisplayName())) continue;
-                                        while (i.getAmount() > 0 && cost > 0) {
-                                            i.setAmount(i.getAmount()-1);
-                                            cost--;
+                                        while (i != null && i.getAmount() > 0 && cost > 0) {
+                                        	cost--;
+                                        	if(i.getAmount() == 1) {
+                                        		p.getInventory().remove(i);
+                                        		break;
+                                        	} else {
+                                        		i.setAmount(i.getAmount()-1);
+                                        	}
                                         }
                                     }
                                 }
