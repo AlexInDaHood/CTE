@@ -4,18 +4,15 @@ import com.osterph.dev.countdownCMD;
 import com.osterph.dev.startCMD;
 import com.osterph.dev.setteamCMD;
 import com.osterph.inventory.ShopListener;
+import com.osterph.lagerhalle.LocationLIST;
 import com.osterph.lagerhalle.MySQL;
 import com.osterph.lagerhalle.NPCListener;
 import com.osterph.manager.ScoreboardManager;
-import com.osterph.spawner.Spawner;
 import com.osterph.spawner.SpawnerManager;
 import com.osterph.listener.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -24,16 +21,21 @@ public class CTE extends JavaPlugin{
 	public static CTE INSTANCE;
 	public static String prefix = "§8[§6CTE§8] §e";
 	public static MySQL mysql;
+	
 	public CTESystem system;
 	private SpawnerManager spawnermanager;
-
+	private LocationLIST locations;
+	
+	
 	@Override
 	public void onEnable() {
 		INSTANCE = this;
 		system = new CTESystem();
 		spawnermanager = new SpawnerManager();
+		locations = new LocationLIST();
 		onSettings();
 		register();
+		
 
 		String host = "45.85.219.177";
 		String pw = "aFUWBuNMzUDygbhZ";
@@ -74,7 +76,7 @@ public class CTE extends JavaPlugin{
 
 		pm.registerEvents(new PlayerEvent(), this);
 		pm.registerEvents(new EggListener(), this);
-		//pm.registerEvents(new BlockListener(), this);
+		pm.registerEvents(new BlockListener(), this);
 		pm.registerEvents(new ShopListener(), this);
 		pm.registerEvents(new ChatListener(), this);
 		pm.registerEvents(new InteractEvent(), this);
@@ -89,6 +91,10 @@ public class CTE extends JavaPlugin{
 	
 	public SpawnerManager getSpawnermanager() {
 		return spawnermanager;
+	}
+	
+	public LocationLIST getLocations() {
+		return locations;
 	}
 	
 }

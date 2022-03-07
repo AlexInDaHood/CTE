@@ -4,7 +4,6 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -27,7 +26,7 @@ public class ItemManager {
     public ItemManager(Material m) {
         this.m = m;
         this.amount = 1;
-        this.data = 0;
+       this.data = 0;
         this.meta = null;
         this.ItemName = null;
         this.lores = new ArrayList<>();

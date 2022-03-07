@@ -2,6 +2,7 @@ package com.osterph.listener;
 
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Fireball;
@@ -11,10 +12,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
+
+import com.osterph.cte.CTE;
+import com.osterph.spawner.Spawner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +26,17 @@ import java.util.List;
 public class BlockListener implements Listener {
 
 
+	@EventHandler
+	public void onPlace(BlockPlaceEvent e) {
+		for(Spawner sp : CTE.INSTANCE.getSpawnermanager().spawners) {
+			if(e.getBlock().getLocation().distance(sp.getLocation()) < 3) {
+				e.setCancelled(true);
+				e.getPlayer().sendMessage(CTE.prefix + "§cDu kannst hier keine Blöcke platzieren! [Spawner-Schutz]");
+				e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.VILLAGER_NO, 1, 1);
+			}
+		}
+	}
+	
     @EventHandler
     public void onBreak(BlockBreakEvent e) {
         if (e.getPlayer().getGameMode().equals(GameMode.CREATIVE)) return;
@@ -71,7 +86,8 @@ public class BlockListener implements Listener {
         if (!isDropped(i.getItemStack().getType())) i.remove();
     }
 
-    public boolean isBreakable(Block b) {
+    @SuppressWarnings("deprecation")
+	public boolean isBreakable(Block b) {
 
         if (b.getType().equals(Material.WOOL)) {
             return b.getData() == 11 || b.getData() == 14;

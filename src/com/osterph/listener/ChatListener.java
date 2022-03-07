@@ -19,7 +19,8 @@ public class ChatListener implements Listener {
     private CTESystem sys = CTE.INSTANCE.system;
     private ArrayList<String> cooldown = new ArrayList<>();
 
-    @EventHandler
+    @SuppressWarnings("incomplete-switch")
+	@EventHandler
     void onChat(AsyncPlayerChatEvent e) {
         Player p = e.getPlayer();
         Shop.openShop(p, Shop.SHOPTYPE.WEAPON);

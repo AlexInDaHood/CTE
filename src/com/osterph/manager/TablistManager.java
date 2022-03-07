@@ -64,7 +64,8 @@ public class TablistManager {
         }
     }
 
-    public static void removeFakePlayer(String Name) {
+    @SuppressWarnings("deprecation")
+	public static void removeFakePlayer(String Name) {
         GameProfile profile;
         if (Bukkit.getPlayer(Name) != null) {
             profile = new GameProfile(Bukkit.getPlayer(Name).getUniqueId(), Name);

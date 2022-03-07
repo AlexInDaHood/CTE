@@ -2,23 +2,48 @@ package com.osterph.listener;
 
 import com.osterph.cte.CTE;
 import com.osterph.cte.CTESystem;
+import com.osterph.cte.CTESystem.TEAM;
+import com.osterph.lagerhalle.LocationLIST;
+import com.osterph.manager.ScoreboardManager;
+
+import java.util.HashMap;
+
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 
 public class DamageListener implements Listener {
 
     private CTESystem sys = CTE.INSTANCE.system;
 
+    public HashMap<Player, Player> combat = new HashMap<>(); //TARGET | DAMAGER
+    
+    
+    @EventHandler
+    public void onMove(PlayerMoveEvent e) {
+    	if(!(e.getPlayer().getLocation().getY() < 30)) return;
+    	if(!sys.isRunning) return;
+    	if(!e.getPlayer().getGameMode().equals(GameMode.SURVIVAL) && !e.getPlayer().getGameMode().equals(GameMode.ADVENTURE)) return;
+    	Player p = e.getPlayer();
+    	onDeath(p, "Der Spieler §a" + p.getName() + " §eist gestorben!");
+    }
+    
+    
+    
     @EventHandler
     public void onDamage(EntityDamageEvent e) {
         if (!sys.isRunning) {
             e.setCancelled(true);
             return;
         }
-
+        
         Enum<EntityDamageEvent.DamageCause> cause = e.getCause();
 
         if (cause.equals(EntityDamageEvent.DamageCause.CONTACT)) {
@@ -27,7 +52,104 @@ public class DamageListener implements Listener {
             e.setCancelled(true);
         }
     }
-
+    
+    @EventHandler
+    public void onDamage(EntityDamageByEntityEvent e) {
+    	if(!sys.isRunning) {
+    		e.setCancelled(true);
+    		return;
+    	}
+    	if(e.getEntity() instanceof ArmorStand) {
+    		e.setCancelled(true);
+    		return;
+    	}    	
+    	if(e.getEntity() instanceof Player && !sys.teams.get((Player)e.getEntity()).equals(TEAM.DEFAULT) && !sys.teams.get((Player)e.getEntity()).equals(TEAM.SPEC)) {
+    		Player t = (Player) e.getEntity();
+    		Player damager = null;
+    		if(e.getDamager() instanceof Player) {
+    			damager = (Player)e.getDamager();
+    		} else if(e.getDamager() instanceof Projectile) {
+    			Projectile pro = (Projectile) e.getDamager();
+    			if(pro.getShooter() instanceof Player)
+    				damager = (Player)pro.getShooter();
+    		}
+    		
+    		if(damager != null && (sys.teams.get(damager).equals(TEAM.DEFAULT) || sys.teams.get(damager).equals(TEAM.SPEC))) {
+    			e.setCancelled(true);
+    			return;
+    		}
+    		
+    		if(sys.teams.get(t).equals(sys.teams.get(damager))) {
+    			e.setCancelled(true);
+    			return;
+    		}
+    		
+    		combat.put(t, damager);
+    		if(e.getDamage() >= t.getHealth()) {
+    			if(damager != null) {
+    				t.setHealth(20);
+    				onDeath(t, t.getName() + " §ewurde von §c" + damager.getName() + " §egetötet!");
+    			} else {
+    				t.setHealth(20);
+    				onDeath(t, t.getName() + " §eist gestorben!");
+    			}
+    		}
+    		
+    	} else {
+    		e.setCancelled(true);
+    		return;
+    	}
+    	
+    }
+    
+    public void onDeath(Player p, String reason) {
+    	onEgg(p);
+    	combat.remove(p);
+    	LocationLIST locs = CTE.INSTANCE.getLocations();
+    	p.setGameMode(GameMode.SPECTATOR);
+    	p.teleport(locs.specSPAWN());
+    	sys.sendAllMessage(CTE.prefix + reason);
+    	Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, new Runnable() {
+			@Override
+			public void run() {
+				if(sys.teams.get(p).equals(TEAM.BLUE)) {
+					p.teleport(locs.blueSPAWN());
+				} else if(sys.teams.get(p).equals(TEAM.RED)){
+					p.teleport(locs.redSPAWN());
+				}
+				p.setGameMode(GameMode.SURVIVAL);
+				p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1, 1);
+				p.getInventory().clear();
+				sys.startEquip(p);
+				p.setHealth(20);
+			}
+		}, 20*5);
+    }
+    
+    private void onEgg(Player p) {
+    	TEAM t = sys.teams.get(p);
+    	if(t == TEAM.BLUE) {
+    		if(p.getInventory().getHelmet() != null && p.getInventory().getHelmet().getItemMeta().getDisplayName().equals("§cRotes-Ei")) {
+    			sys.RED_EGG = sys.RED_EGG.OKAY;
+    			CTE.INSTANCE.getLocations().redEGG().getBlock().setType(Material.DRAGON_EGG);
+    			sys.sendAllMessage(CTE.prefix + "Das §cRote-Ei §eist nun wieder sicher!");
+    			for(Player all : Bukkit.getOnlinePlayers()) {
+    				ScoreboardManager.refreshBoard(all);
+    			}
+    		}
+    	} else if(t == TEAM.RED) {
+    		if(p.getInventory().getHelmet() != null && p.getInventory().getHelmet().getItemMeta().getDisplayName().equals("§9Blaues-Ei")) {
+    			sys.BLUE_EGG = sys.BLUE_EGG.OKAY;
+    			CTE.INSTANCE.getLocations().blueEGG().getBlock().setType(Material.DRAGON_EGG);
+    			sys.sendAllMessage(CTE.prefix + "Das §8Blaue-Ei §eist nun wieder sicher!");
+    			for(Player all : Bukkit.getOnlinePlayers()) {
+    				ScoreboardManager.refreshBoard(all);
+    			}
+    		}
+    	}
+    }
+    
+    /**
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent e) {
         if (!sys.isRunning) {
@@ -43,6 +165,7 @@ public class DamageListener implements Listener {
 
         if (!(e.getEntity() instanceof Player)) return;
         Player p = (Player) e.getEntity();
+        
         if (sys.teams.get(p).equals(CTESystem.TEAM.SPEC) || sys.teams.get(p).equals(CTESystem.TEAM.DEFAULT)) {
             e.setCancelled(true);
             return;
@@ -70,4 +193,5 @@ public class DamageListener implements Listener {
             }
         }
     }
+    **/
 }

@@ -8,7 +8,6 @@ import com.osterph.inventory.Shop;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.util.CraftChatMessage;
@@ -19,7 +18,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -63,6 +61,7 @@ public class NPCListener implements Listener {
     }
 }
 
+@SuppressWarnings("serial")
 class NPC implements Serializable {
 
     private int entityID;
@@ -164,7 +163,6 @@ class NPC implements Serializable {
         sendPacket(packet);
     }
 
-    @SuppressWarnings("deprecation")
     public void sleep(boolean state) {
         if (state) {
             Location bedLocation = new Location(location.getWorld(), 1, 1, 1);

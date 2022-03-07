@@ -14,16 +14,21 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class PlayerEvent implements Listener {
 
     private CTESystem sys = CTE.INSTANCE.system;
     
-    
     @EventHandler
     public void onPickupItems(PlayerPickupItemEvent e) {
-    	if(CTE.INSTANCE.getSpawnermanager().getSpawnerByLocation(e.getItem().getLocation()) != null) {
-    		CTE.INSTANCE.getSpawnermanager().getSpawnerByLocation(e.getItem().getLocation()).setCurrentitems(0);
+    	if(e.getItem().getItemStack().getItemMeta().getDisplayName().contains("[") && e.getItem().getItemStack().getItemMeta().getDisplayName().contains("]")) {
+    		String name = e.getItem().getItemStack().getItemMeta().getDisplayName();
+    		ItemMeta m = e.getItem().getItemStack().getItemMeta();
+    		m.setDisplayName(m.getDisplayName().substring(0, m.getDisplayName().indexOf("[")));
+    		e.getItem().getItemStack().setItemMeta(m);
+    		Spawner sp = CTE.INSTANCE.getSpawnermanager().getSpawnerByName(name.substring(name.indexOf("[")+1, name.indexOf("]")));
+    		sp.setCurrentitems(0);
     	}
     }
     

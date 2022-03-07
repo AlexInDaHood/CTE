@@ -6,13 +6,18 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class SpawnerManager {
 	
 	public ArrayList<Spawner> spawners = new ArrayList<>();
 	
 	public void addSpawner() {
-		spawners.add(new Spawner(new ItemStack(Material.APPLE), new Location(Bukkit.getWorld("world"), 1096.5, 100, 995.5), 20, 1, 10));
+		ItemStack item = new ItemStack(Material.APPLE);
+		ItemMeta name = item.getItemMeta();
+		name.setDisplayName("&6Apfel");
+		item.setItemMeta(name);
+		spawners.add(new Spawner("BLUE-APPLE", item, new Location(Bukkit.getWorld("world"), 1069.5, 100, 995.5), 20, 1, 10));
 		
 	}
 	
@@ -22,7 +27,12 @@ public class SpawnerManager {
 		}
 	}
 	
-	public Spawner getSpawnerByLocation(Location loc) {
+	public Spawner getSpawnerByName(String name) {
+		for(Spawner sp : spawners) {
+			if(sp.getName().equals(name)) {
+				return sp;
+			}
+		}
 		return null;
 	}
 	

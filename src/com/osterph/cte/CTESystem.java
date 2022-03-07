@@ -13,7 +13,6 @@ import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import java.util.ArrayList;
@@ -119,7 +118,8 @@ public class CTESystem {
         new LocationLIST().shopkeeperStand();
     }
 
-    public void endGame() {
+    @SuppressWarnings("incomplete-switch")
+	public void endGame() {
         isRunning = false;
         isStarting = false;
         isEnding = true;
@@ -169,7 +169,8 @@ public class CTESystem {
         }
     }
 
-    public void sendAllTitle(String title, String subtitle) {
+    @SuppressWarnings("deprecation")
+	public void sendAllTitle(String title, String subtitle) {
         for(Player all : Bukkit.getOnlinePlayers()) {
             all.sendTitle(title, subtitle);
         }

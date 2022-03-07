@@ -1,19 +1,16 @@
 package com.osterph.spawner;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Effect;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import com.osterph.cte.CTE;
 
-import net.minecraft.server.v1_8_R3.EnumParticle;
-import net.minecraft.server.v1_8_R3.PacketPlayOutWorldParticles;
 
 public class Spawner {
 	
+	String name;
 	ItemStack item;
 	Location loc;
 	int delay;
@@ -24,22 +21,27 @@ public class Spawner {
 	
 	private int scheduler;
 	
-	public Spawner(ItemStack item, Location loc, int delay, int amount, int max) {
-		this.item = item;
+	public Spawner(String name, ItemStack item, Location loc, int delay, int amount, int max) {
+		ItemStack i = item;
+		ItemMeta m = i.getItemMeta();
+		m.setDisplayName(m.getDisplayName() + "[" + name +"]");
+		i.setItemMeta(m);
+		this.item = i;
 		this.loc = loc;
 		this.delay = delay;
 		this.max = max;
 		this.amount = amount;
+		this.name = name;
 	}
 	
 	public void onStart() {
-		System.out.println("STARTED");
+		item.getItemMeta().setDisplayName(item.getItemMeta().getDisplayName() + "["+name+"]");
 		scheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {			
 			@Override
 			public void run() {
 				if(currentitems < max) {
 					for(int i=0;i<amount;i++) {
-						loc.getWorld().dropItem(loc, item);
+						loc.getWorld().dropItemNaturally(loc, item);
 						currentitems++;
 					}
 				}
@@ -89,6 +91,10 @@ public class Spawner {
 	
 	public void setCurrentitems(int currentitems) {
 		this.currentitems = currentitems;
+	}
+	
+	public String getName() {
+		return name;
 	}
 	
 }
