@@ -66,9 +66,6 @@ public class CTE extends JavaPlugin{
 		Bukkit.getWorld("world").setGameRuleValue("mobGriefing", "false");
 		Bukkit.getWorld("world").setTime(6000);
 		
-		spawnermanager.addSpawner();
-		spawnermanager.aktivateSpawner();
-		
 	}
 
 	private void register() {

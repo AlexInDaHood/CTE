@@ -24,8 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BlockListener implements Listener {
-
-
+	
 	@EventHandler
 	public void onPlace(BlockPlaceEvent e) {
 		for(Spawner sp : CTE.INSTANCE.getSpawnermanager().spawners) {

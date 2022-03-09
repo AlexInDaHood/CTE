@@ -97,6 +97,15 @@ public class CTESystem {
         p.getInventory().setItem(0, new ItemManager(Material.WOOD_SWORD).withName("§7Holzschwert").unbreakable(true).complete());
     }
 
+    public void setHelmet(Player p) {
+    	ItemStack i = new ItemStack(Material.LEATHER_HELMET);
+        LeatherArmorMeta m = (LeatherArmorMeta) i.getItemMeta();
+        if (teams.get(p).equals(TEAM.SPEC) || teams.get(p).equals(TEAM.DEFAULT)) return;
+        if (teams.get(p).equals(TEAM.RED)) m.setColor(Color.RED);
+        if (teams.get(p).equals(TEAM.BLUE)) m.setColor(Color.BLUE);
+        p.getInventory().setHelmet(new ItemManager(Material.LEATHER_HELMET).withName("§7Lederhelm").unbreakable(true).withMeta(m).complete());
+    }
+    
     public void forceStart() {
         isStarting = false;
         isRunning = true;
@@ -116,6 +125,8 @@ public class CTESystem {
             if (teams.get(all).equals(TEAM.BLUE)) all.teleport(new LocationLIST().blueSPAWN());
         }
         new LocationLIST().shopkeeperStand();
+        CTE.INSTANCE.getSpawnermanager().addSpawner();
+        CTE.INSTANCE.getSpawnermanager().aktivateSpawner();
     }
 
     @SuppressWarnings("incomplete-switch")

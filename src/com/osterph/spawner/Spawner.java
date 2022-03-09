@@ -1,16 +1,12 @@
 package com.osterph.spawner;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Effect;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import com.osterph.cte.CTE;
 
-import net.minecraft.server.v1_8_R3.EnumParticle;
-import net.minecraft.server.v1_8_R3.PacketPlayOutWorldParticles;
 
 public class Spawner {
 
@@ -26,16 +22,19 @@ public class Spawner {
 	private int scheduler;
 	
 	public Spawner(String name, ItemStack item, Location loc, int delay, int amount, int max) {
-		this.item = item;
 		this.loc = loc;
 		this.delay = delay;
 		this.max = max;
 		this.amount = amount;
 		this.name = name;
+		
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(meta.getDisplayName() + "[" + name + "]");
+		item.setItemMeta(meta);
+		this.item = item;
 	}
 	
 	public void onStart() {
-		System.out.println("STARTED");
 		scheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {			
 			@Override
 			public void run() {

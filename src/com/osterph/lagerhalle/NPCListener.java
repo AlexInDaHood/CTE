@@ -4,10 +4,15 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import com.osterph.cte.CTE;
+import com.osterph.cte.CTESystem;
+import com.osterph.cte.CTESystem.TEAM;
 import com.osterph.inventory.Shop;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.util.CraftChatMessage;
@@ -18,6 +23,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.scoreboard.Team;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -45,8 +51,27 @@ public class NPCListener implements Listener {
         if (e.getPlayer().getWorld().getName().equals("world")) e.setCancelled(true);
 
         if (e.getRightClicked().getName() == null|| !e.getRightClicked().getName().equals("[SHOPKEEPER]")) return;
-
-        Shop.openShop(e.getPlayer(), Shop.SHOPTYPE.CHOOSE);
+        
+        if(e.getPlayer().getInventory().getHelmet() != null && e.getPlayer().getInventory().getHelmet().getType().equals(Material.LEATHER_HELMET)) {
+        	Shop.openShop(e.getPlayer(), Shop.SHOPTYPE.CHOOSE);
+        } else if(e.getPlayer().getInventory().getHelmet().getType().equals(Material.SKULL_ITEM)){
+        	Player p = e.getPlayer();
+        	CTESystem system = CTE.INSTANCE.system;
+        	TEAM t = system.teams.get(p);
+        	
+        	if(t.equals(TEAM.RED)) {
+        		system.BLUE_EGG = system.BLUE_EGG.GONE;
+        		system.sendAllMessage(CTE.prefix + "Das §9Blaue-Ei §ewurde erobert! Das §9Blaue-Team §ekann nicht länger respawnen!");
+        		system.sendAllSound(Sound.ENDERDRAGON_GROWL, 1, 1);
+        		system.setHelmet(p);
+        	} else if(t.equals(TEAM.BLUE)) {
+        		system.RED_EGG = system.RED_EGG.GONE;
+        		system.sendAllMessage(CTE.prefix + "Das §cRote-Ei §ewurde erobert! Das §cRote-Team §ekann nicht länger respawnen!");
+        		system.sendAllSound(Sound.ENDERDRAGON_GROWL, 1, 1);
+        		system.setHelmet(p);
+        	}
+        	
+        }
 
     }
 

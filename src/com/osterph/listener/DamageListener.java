@@ -154,27 +154,31 @@ public class DamageListener implements Listener {
     	p.teleport(locs.specSPAWN());
 		p.playSound(p.getLocation(), Sound.CAT_PURREOW, 1, 0.5f);
 		sys.clear(p);
-		p.sendMessage(CTE.prefix + "Du wirst in §c5 Sekunden §ewiederbelebt.");
-    	Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, new Runnable() {
-			@Override
-			public void run() {
-				sys.teams.put(p, taa);
-				if(sys.teams.get(p).equals(TEAM.BLUE)) {
-					p.teleport(locs.blueSPAWN());
-				} else if(sys.teams.get(p).equals(TEAM.RED)){
-					p.teleport(locs.redSPAWN());
+		if((taa == TEAM.BLUE && sys.BLUE_EGG != sys.BLUE_EGG.GONE) || (taa == TEAM.RED && sys.RED_EGG != sys.RED_EGG.GONE)) {
+			p.sendMessage(CTE.prefix + "Du wirst in §c5 Sekunden §ewiederbelebt.");
+	    	Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, new Runnable() {
+				@Override
+				public void run() {
+					sys.teams.put(p, taa);
+					if(sys.teams.get(p).equals(TEAM.BLUE)) {
+						p.teleport(locs.blueSPAWN());
+					} else if(sys.teams.get(p).equals(TEAM.RED)){
+						p.teleport(locs.redSPAWN());
+					}
+					p.setGameMode(GameMode.SURVIVAL);
+					p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1, 1);
+					sys.startEquip(p);
+					p.setFlying(false);
+					p.setHealth(20);
+					p.sendMessage(CTE.prefix + "Du wurdest wiederbelebt.");
+					for(Player all : Bukkit.getOnlinePlayers()) {
+						ScoreboardManager.refreshBoard(all);
+					}
 				}
-				p.setGameMode(GameMode.SURVIVAL);
-				p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1, 1);
-				sys.startEquip(p);
-				p.setFlying(false);
-				p.setHealth(20);
-				p.sendMessage(CTE.prefix + "Du wurdest wiederbelebt.");
-				for(Player all : Bukkit.getOnlinePlayers()) {
-					ScoreboardManager.refreshBoard(all);
-				}
-			}
-		},20*5L);
+			},20*5L);
+		} else {
+			p.sendMessage(CTE.prefix + "Du bist nun eliminiert!");
+		}
     }
     
     private void onEgg(Player p) {
