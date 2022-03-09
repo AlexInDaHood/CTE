@@ -61,11 +61,11 @@ public class PlayerEvent implements Listener {
         sys.clear(p);
         sys.teams.put(p, CTESystem.TEAM.DEFAULT);
 
-        if (sys.isStarting || sys.isEnding) {
-            p.teleport(new LocationLIST().lobbySPAWN());
-        } else if (sys.isRunning) {
+        if (sys.isRunning) {
             sys.teams.put(p, CTESystem.TEAM.SPEC);
             p.teleport(new LocationLIST().specSPAWN());
+        } else {
+            p.teleport(new LocationLIST().lobbySPAWN());
         }
 
         if(sys.isStarting) {

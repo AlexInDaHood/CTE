@@ -21,7 +21,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 
 public class DamageListener implements Listener {
 
-    private CTESystem sys = CTE.INSTANCE.system;
+    private final CTESystem sys = CTE.INSTANCE.system;
 
     public HashMap<Player, Player> combat = new HashMap<>(); //TARGET | DAMAGER
     
@@ -86,14 +86,9 @@ public class DamageListener implements Listener {
     		
     		combat.put(t, damager);
     		if(e.getDamage() >= t.getHealth()) {
-    			if(damager != null) {
-    				t.setHealth(20);
-    				onDeath(t, t.getName() + " §ewurde von §c" + damager.getName() + " §egetötet!");
-    			} else {
-    				t.setHealth(20);
-    				onDeath(t, t.getName() + " §eist gestorben!");
-    			}
-    		}
+				t.setHealth(20);
+				onDeath(t);
+			}
     		
     	} else {
     		e.setCancelled(true);
@@ -101,17 +96,25 @@ public class DamageListener implements Listener {
     	}
     	
     }
-    
-    public void onDeath(Player p, String reason) {
+
+    public void onDeath(Player p) {
+		LocationLIST locs = CTE.INSTANCE.getLocations();
+		if (sys.teams.get(p).equals(TEAM.SPEC) || sys.teams.get(p).equals(TEAM.DEFAULT)) {
+			p.teleport(locs.specSPAWN());
+			return;
+		}
     	onEgg(p);
     	combat.remove(p);
     	LocationLIST locs = CTE.INSTANCE.getLocations();
     	p.setGameMode(GameMode.SPECTATOR);
     	p.teleport(locs.specSPAWN());
-    	sys.sendAllMessage(CTE.prefix + reason);
+		p.playSound(p.getLocation(), Sound.CAT_PURREOW, 1, 0.5f);
+		sys.clear(p);
+		p.sendMessage(CTE.prefix + "Du wirst in §c5 Sekunden §ewiederbelebt.");
     	Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, new Runnable() {
 			@Override
 			public void run() {
+				sys.teams.put(p, taa);
 				if(sys.teams.get(p).equals(TEAM.BLUE)) {
 					p.teleport(locs.blueSPAWN());
 				} else if(sys.teams.get(p).equals(TEAM.RED)){
@@ -119,18 +122,17 @@ public class DamageListener implements Listener {
 				}
 				p.setGameMode(GameMode.SURVIVAL);
 				p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1, 1);
-				p.getInventory().clear();
 				sys.startEquip(p);
 				p.setHealth(20);
 			}
-		}, 20*5);
+		},20*5L);
     }
     
     private void onEgg(Player p) {
     	TEAM t = sys.teams.get(p);
     	if(t == TEAM.BLUE) {
     		if(p.getInventory().getHelmet() != null && p.getInventory().getHelmet().getItemMeta().getDisplayName().equals("§cRotes-Ei")) {
-    			sys.RED_EGG = sys.RED_EGG.OKAY;
+    			sys.RED_EGG = CTESystem.EGG_STATE.OKAY;
     			CTE.INSTANCE.getLocations().redEGG().getBlock().setType(Material.DRAGON_EGG);
     			sys.sendAllMessage(CTE.prefix + "Das §cRote-Ei §eist nun wieder sicher!");
     			for(Player all : Bukkit.getOnlinePlayers()) {
@@ -139,9 +141,9 @@ public class DamageListener implements Listener {
     		}
     	} else if(t == TEAM.RED) {
     		if(p.getInventory().getHelmet() != null && p.getInventory().getHelmet().getItemMeta().getDisplayName().equals("§9Blaues-Ei")) {
-    			sys.BLUE_EGG = sys.BLUE_EGG.OKAY;
+    			sys.BLUE_EGG = CTESystem.EGG_STATE.OKAY;
     			CTE.INSTANCE.getLocations().blueEGG().getBlock().setType(Material.DRAGON_EGG);
-    			sys.sendAllMessage(CTE.prefix + "Das §8Blaue-Ei §eist nun wieder sicher!");
+    			sys.sendAllMessage(CTE.prefix + "Das §9Blaue-Ei §eist nun wieder sicher!");
     			for(Player all : Bukkit.getOnlinePlayers()) {
     				ScoreboardManager.refreshBoard(all);
     			}

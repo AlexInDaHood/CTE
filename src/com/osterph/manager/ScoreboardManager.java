@@ -4,6 +4,7 @@ import com.osterph.cte.CTE;
 import com.osterph.cte.CTESystem;
 import com.osterph.dev.StaffManager;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -31,6 +32,7 @@ public class ScoreboardManager {
             switch (team) {
                 case RED:
                     all.setPlayerListName("§8[§cR§8] §c" + all.getName());
+                    all.setGameMode(GameMode.SURVIVAL);
                     red.addEntry(all.getName());
                     sys.red.add(all);
                     all.removePotionEffect(PotionEffectType.INVISIBILITY);
@@ -40,6 +42,7 @@ public class ScoreboardManager {
                     break;
                 case BLUE:
                     all.setPlayerListName("§8[§9B§8] §9" + all.getName());
+                    all.setGameMode(GameMode.SURVIVAL);
                     blue.addEntry(all.getName());
                     sys.blue.add(all);
                     all.removePotionEffect(PotionEffectType.INVISIBILITY);
@@ -49,6 +52,7 @@ public class ScoreboardManager {
                     break;
                 case DEFAULT:
                     all.setPlayerListName("§8[§7W§8] §7" + all.getName());
+                    all.setGameMode(GameMode.SURVIVAL);
                     user.addEntry(all.getName());
                     all.removePotionEffect(PotionEffectType.INVISIBILITY);
                     for (Player o : Bukkit.getOnlinePlayers()) {
@@ -58,6 +62,7 @@ public class ScoreboardManager {
                 case SPEC:
                     all.setPlayerListName("§8[§7§oS§8] §7§o" + all.getName());
                     spectator.addEntry(all.getName());
+                    all.setGameMode(GameMode.ADVENTURE);
                     all.removePotionEffect(PotionEffectType.INVISIBILITY);
                     all.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999999, 0, true));
                     all.setAllowFlight(true);
