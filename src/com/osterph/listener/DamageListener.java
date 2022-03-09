@@ -7,6 +7,7 @@ import com.osterph.lagerhalle.LocationLIST;
 import com.osterph.manager.ScoreboardManager;
 
 import java.util.HashMap;
+import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -18,21 +19,24 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.scoreboard.Team;
 
 public class DamageListener implements Listener {
 
     private final CTESystem sys = CTE.INSTANCE.system;
 
-    public HashMap<Player, Player> combat = new HashMap<>(); //TARGET | DAMAGER
-    
-    
+    public HashMap<Player, String[]> combat = new HashMap<>(); //TARGET | DAMAGER
+
+
+	private int Scheduler;
+
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
     	if(!(e.getPlayer().getLocation().getY() < 30)) return;
     	if(!sys.isRunning) return;
     	if(!e.getPlayer().getGameMode().equals(GameMode.SURVIVAL) && !e.getPlayer().getGameMode().equals(GameMode.ADVENTURE)) return;
     	Player p = e.getPlayer();
-    	onDeath(p, "Der Spieler §a" + p.getName() + " §eist gestorben!");
+		onDeath(p);
     }
     
     
@@ -51,6 +55,14 @@ public class DamageListener implements Listener {
         } else if (cause.equals(EntityDamageEvent.DamageCause.SUFFOCATION)) {
             e.setCancelled(true);
         }
+
+
+		if(!(e.getEntity() instanceof Player)) return;
+		if(cause.equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK) || cause.equals(EntityDamageEvent.DamageCause.PROJECTILE) || cause.equals(EntityDamageEvent.DamageCause.ENTITY_EXPLOSION)) return;
+		if(e.getDamage() >= ((Player) e.getEntity()).getHealth()) {
+			e.setCancelled(true);
+			onDeath((Player)e.getEntity());
+		}
     }
     
     @EventHandler
@@ -83,8 +95,19 @@ public class DamageListener implements Listener {
     			e.setCancelled(true);
     			return;
     		}
-    		
-    		combat.put(t, damager);
+
+			if(combat.containsKey(t)) {
+				Bukkit.getScheduler().cancelTask(Integer.parseInt(combat.get(t)[1]));
+			}
+			Scheduler = Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, new Runnable() {
+				@Override
+				public void run() {
+					combat.remove(t);
+				}
+			},20*15);
+
+    		combat.put(t, new String[] {damager.getName(),"" + Scheduler});
+
     		if(e.getDamage() >= t.getHealth()) {
 				t.setHealth(20);
 				onDeath(t);
@@ -104,9 +127,30 @@ public class DamageListener implements Listener {
 			return;
 		}
     	onEgg(p);
-    	combat.remove(p);
-    	LocationLIST locs = CTE.INSTANCE.getLocations();
-    	p.setGameMode(GameMode.SPECTATOR);
+		if(combat.containsKey(p)) {
+			Player target = Bukkit.getPlayer(combat.get(p)[0]);
+			String pl = sys.teams.get(p).equals(TEAM.RED) ? "§c" : sys.teams.get(p).equals(TEAM.BLUE) ? "§9" : "§7";
+			combat.remove(p);
+			if(target != null) {
+				sys.kills.put(target, sys.kills.get(target)+1);
+				ScoreboardManager.refreshBoard(target);
+				String t = sys.teams.get(target).equals(TEAM.RED) ? "§c" : sys.teams.get(target).equals(TEAM.BLUE) ? "§9" : "§7";
+				target.playSound(target.getLocation(), Sound.BAT_DEATH, 1f, 1.6f);
+				sys.sendAllMessage(CTE.prefix + pl + p.getName() + "§e wurde von §c" + t + target.getName() + "§e getötet!");
+			} else {
+				sys.sendAllMessage(CTE.prefix + pl + p.getName() + "§e ist gestorben!");
+			}
+		} else {
+			String pl = sys.teams.get(p).equals(TEAM.RED) ? "§c" : sys.teams.get(p).equals(TEAM.BLUE) ? "§9" : "§7";
+			sys.sendAllMessage(CTE.prefix + pl + p.getName() + "§e ist gestorben!");
+		}
+		TEAM taa = sys.teams.get(p);
+		sys.teams.put(p, TEAM.SPEC);
+		for(Player all : Bukkit.getOnlinePlayers()) {
+			ScoreboardManager.refreshBoard(all);
+		}
+		p.setFlying(true);
+		p.setHealth(20);
     	p.teleport(locs.specSPAWN());
 		p.playSound(p.getLocation(), Sound.CAT_PURREOW, 1, 0.5f);
 		sys.clear(p);
@@ -123,7 +167,12 @@ public class DamageListener implements Listener {
 				p.setGameMode(GameMode.SURVIVAL);
 				p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1, 1);
 				sys.startEquip(p);
+				p.setFlying(false);
 				p.setHealth(20);
+				p.sendMessage(CTE.prefix + "Du wurdest wiederbelebt.");
+				for(Player all : Bukkit.getOnlinePlayers()) {
+					ScoreboardManager.refreshBoard(all);
+				}
 			}
 		},20*5L);
     }

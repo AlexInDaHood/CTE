@@ -52,8 +52,8 @@ public class NPCListener implements Listener {
 
     public static void spawnNPCs() {
         // World
-        spawnNPC("§9Shopkeeper", "rabbit", new LocationLIST().blueNPC());
-        spawnNPC("§cShopkeeper", "LitzBeats", new LocationLIST().redNPC());
+        spawnNPC("§9Shopkeeper", "ewogICJ0aW1lc3RhbXAiIDogMTY0NjY4MTc0OTk2MywKICAicHJvZmlsZUlkIiA6ICJhNWI3YTJiZWM1OWQ0YWQwODczOTc5Mzc1ODdjZDgwNiIsCiAgInByb2ZpbGVOYW1lIiA6ICJSYWJiaXQiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTU0Yjg0ZDMwNDNkMTU2NDY3NzQ4MTQ1OWEzYzU0MWRiZjVlNWViODFlZGI5MTA1YmE1NzIxYmY2OGRmZjg2MyIsCiAgICAgICJtZXRhZGF0YSIgOiB7CiAgICAgICAgIm1vZGVsIiA6ICJzbGltIgogICAgICB9CiAgICB9CiAgfQp9", "sNeHCB5/3X3F9sLDQ2U6pJ61ihRLLx/VyIo4wbwbnb2GatOC6Bvd7ef3hT/yN8z2xTPEb1H8bo2+gO/0JR4UxzSJvxRLIqARG0BxzoIfYAAQKFtN9zR93xDkPbxBQKt/D9yPqSkHq3uwkmJk5aCHpwAdQJdfEbCWd3vzB5y0870RLXzgaIoLDQZFtJMytdFoCTGDKRddtwm0ORKIR+ohfD8NftErdxHrf9IiYUfi96+qBiQKJBYykZ+d40CpwAnNV/R2cAmwd+SIEFYR7EX4OOwoG0DvaQbVksdrm5FSATo1ynhY119+6YMktN476IAiNnuWCW5w3+yaW6gnqhOblAHIUVdNpk7gYmznoTSaVc1b6TO0lgvBGoA89rSwSLhzgZyYiDSiOjrWu61kVWFaNL+o4avF9nxMS4YniU8gCzrHMfPwSuwfFeC5B/ejWeTYkUUps4rD4cXPqJ0wgNWoyeu0sTTHsLFGeglNRQOZqRCfOO4rhVhxxEpiVb9PKsTfI5oGaB88yOFZ5sxYh8B0RPJFuD4uPEt16tSxgEodyIQ9rseP8Vf9WDvn+qy92Z1FZs7CpyZzKjU1PfR8+viLF6lZKNH6tI6gCz6v+qCGw5/twvBbvZWTMwLiAg9TqDR0nPoUi6R0eb9ENv54i/VZyLwo3K5L3fg086gpZST7JwM=", new LocationLIST().blueNPC());
+        spawnNPC("§cShopkeeper", "ewogICJ0aW1lc3RhbXAiIDogMTY0NjY4MjE0MTkwNCwKICAicHJvZmlsZUlkIiA6ICIxNmQxMjc5N2ZhYjE0YTM2OGMzOWZjNGI0ODI3YTkxZSIsCiAgInByb2ZpbGVOYW1lIiA6ICJnYW5nbGwiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDdlN2UyZDIxOWNlNGFhN2UyMzkyZmFjZWY4YmZkY2ZjZGIxOWY3MzBkMDkzZTFjZGZhZjg3YzBjNGYwZDVlNSIKICAgIH0KICB9Cn0=" ,"YG5/rxFSHr5P2lRrml4FbbIwdjGfvKHxNMywN01zHg37fcip2wspw4f3gekPToHjyS16e3fNjAqnqAYR5Le+o7jszFPizO8qkmDb9GrAN1lz7K0OQId+snfeSP3qKSBjCpI0MM1gAqeIQSMj1gf3CaeioEY+uP2JPVdXQ7YNbxbtuH3kjS5a5xoIib6RfqyAZKRn+CYvdMphKirU2PtZ7ZV4sP0ZDRUSrPI1ag1Gh4YuEdvO0g+TiGJlS9m9axalh6s7MSg4cjCWs1IbiFnH4usVfIaFfIZ+n+PHaO2FpQR7hu59zcIlMcTkBChcSyi4unhqd2zR5wSSe+kirlYv+tdAVPYv0pu3CHBWF6V+Zrbn2Z8xse0xB4DgELKLPBnIDUQQds8hUV5soP7fdD7x+wHUYVBABa3gF+NPc+WMHBl1O5U1htV6AAz94m5aqdgQCx4i3eeUyaTosZ58C08+ms8P6xsja9JPCBFFthikNn0gXeaESdNREqy73WPlUe5xxF76wDF+Jc6mcsbj3V78sad/ifXpw5Ge0VIknmI/LZWMgzOJYDl0SYriMoOF1gLWsU59ukd2si0qiJ636g5rbiC7Qjnv5UXBrur/+lwAnQouPMqa/2PJBAjmSC3tenR0TWJ/9IkKaVZGyo827B0pujVYePnbfxgCVUjqbtAV354=", new LocationLIST().redNPC());
     }
 
     public static void show(Player p) {
@@ -70,9 +70,9 @@ class NPC implements Serializable {
     private Float health = 20F;
     private static HashMap<NPC, String> npcHashMap = new HashMap<>();
 
-    public static void spawnNPC(String Name, String SkinName, Location loc) {
+    public static void spawnNPC(String Name, String value, String signature, Location loc) {
         NPC npc = new NPC(Name, loc);
-        npc.setSkin(SkinName);
+        npc.setSkin(value, signature);
 
         npcHashMap.put(npc, loc.getWorld().getName());
     }
@@ -125,18 +125,20 @@ class NPC implements Serializable {
         return location;
     }
 
-    public void setSkin(String name) {
-        Gson gson = new Gson();
-        String url = "https://api.mojang.com/users/profiles/minecraft/" + name;
-        String json = getStringFromURL(url);
-        String uuid = gson.fromJson(json, JsonObject.class).get("id").getAsString();
+    public void setSkin(String value, String signatur) {
+        //Gson gson = new Gson();
+        //String url = "https://api.mojang.com/users/profiles/minecraft/" + name;
+        //String json = getStringFromURL(url);
+        //String uuid = gson.fromJson(json, JsonObject.class).get("id").getAsString();
 
-        url = "https://sessionserver.mojang.com/session/minecraft/profile/" + uuid + "?unsigned=false";
-        json = getStringFromURL(url);
-        JsonObject mainObject = gson.fromJson(json, JsonObject.class);
-        JsonObject jObject = mainObject.get("properties").getAsJsonArray().get(0).getAsJsonObject();
-        String value = jObject.get("value").getAsString();
-        String signatur = jObject.get("signature").getAsString();
+        //url = "https://sessionserver.mojang.com/session/minecraft/profile/" + uuid + "?unsigned=false";
+        //json = getStringFromURL(url);
+        //JsonObject mainObject = gson.fromJson(json, JsonObject.class);
+        //JsonObject jObject = mainObject.get("properties").getAsJsonArray().get(0).getAsJsonObject();
+        //String value = jObject.get("value").getAsString();
+        //String signatur = jObject.get("signature").getAsString();
+        //
+
 
         gameprofile.getProperties().put("textures", new Property("textures", value, signatur));
     }

@@ -15,7 +15,7 @@ public class SpawnerManager {
 	public void addSpawner() {
 		ItemStack item = new ItemStack(Material.APPLE);
 		ItemMeta name = item.getItemMeta();
-		name.setDisplayName("&6Apfel");
+		name.setDisplayName("§6Apfel");
 		item.setItemMeta(name);
 		spawners.add(new Spawner("BLUE-APPLE", item, new Location(Bukkit.getWorld("world"), 1069.5, 100, 995.5), 20, 1, 10));
 		

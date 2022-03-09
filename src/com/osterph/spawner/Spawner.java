@@ -13,7 +13,7 @@ import net.minecraft.server.v1_8_R3.EnumParticle;
 import net.minecraft.server.v1_8_R3.PacketPlayOutWorldParticles;
 
 public class Spawner {
-	
+
 	String name;
 	ItemStack item;
 	Location loc;
