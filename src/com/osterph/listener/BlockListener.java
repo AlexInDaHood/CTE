@@ -79,6 +79,7 @@ public class BlockListener implements Listener {
 
     @EventHandler
     public void onDrop(EntitySpawnEvent e) {
+        if (e.getEntityType().equals(EntityType.CHICKEN)) e.setCancelled(true);
         if (!e.getEntityType().equals(EntityType.DROPPED_ITEM)) return;
         Item i = (Item) e.getEntity();
 
@@ -125,7 +126,10 @@ public class BlockListener implements Listener {
             m.equals(Material.TNT)||
             m.equals(Material.APPLE)||
             m.equals(Material.MELON)||
-            m.equals(Material.CARROT_ITEM)) {
+            m.equals(Material.CARROT_ITEM)||
+            m.equals(Material.ENDER_PEARL)||
+            m.equals(Material.BLAZE_ROD)||
+            m.equals(Material.EGG)) {
 
             return true;
         }

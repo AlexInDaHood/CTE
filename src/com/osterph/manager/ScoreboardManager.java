@@ -20,6 +20,13 @@ public class ScoreboardManager {
     private static Team blue;
 
     private static CTESystem sys = CTE.INSTANCE.getSystem();
+
+    public static void refreshBoard() {
+        for (Player all: Bukkit.getOnlinePlayers()) {
+            refreshBoard(all);
+        }
+    }
+
     public static void refreshBoard(Player p) {
         board = Bukkit.getScoreboardManager().getNewScoreboard();
         defineTeams();
@@ -32,7 +39,7 @@ public class ScoreboardManager {
             switch (team) {
                 case RED:
                     all.setPlayerListName("§8[§cR§8] §c" + all.getName());
-                    all.setGameMode(GameMode.SURVIVAL);
+                    if (!all.getGameMode().equals(GameMode.CREATIVE)) all.setGameMode(GameMode.SURVIVAL);
                     red.addEntry(all.getName());
                     sys.red.add(all);
                     all.removePotionEffect(PotionEffectType.INVISIBILITY);
@@ -42,7 +49,7 @@ public class ScoreboardManager {
                     break;
                 case BLUE:
                     all.setPlayerListName("§8[§9B§8] §9" + all.getName());
-                    all.setGameMode(GameMode.SURVIVAL);
+                    if (!all.getGameMode().equals(GameMode.CREATIVE)) all.setGameMode(GameMode.SURVIVAL);
                     blue.addEntry(all.getName());
                     sys.blue.add(all);
                     all.removePotionEffect(PotionEffectType.INVISIBILITY);
@@ -52,7 +59,7 @@ public class ScoreboardManager {
                     break;
                 case DEFAULT:
                     all.setPlayerListName("§8[§7W§8] §7" + all.getName());
-                    all.setGameMode(GameMode.SURVIVAL);
+                    if (!all.getGameMode().equals(GameMode.CREATIVE)) all.setGameMode(GameMode.ADVENTURE);
                     user.addEntry(all.getName());
                     all.removePotionEffect(PotionEffectType.INVISIBILITY);
                     for (Player o : Bukkit.getOnlinePlayers()) {
@@ -62,7 +69,7 @@ public class ScoreboardManager {
                 case SPEC:
                     all.setPlayerListName("§8[§7§oS§8] §7§o" + all.getName());
                     spectator.addEntry(all.getName());
-                    all.setGameMode(GameMode.ADVENTURE);
+                    if (!all.getGameMode().equals(GameMode.CREATIVE)) all.setGameMode(GameMode.ADVENTURE);
                     all.removePotionEffect(PotionEffectType.INVISIBILITY);
                     all.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999999, 0, true));
                     all.setAllowFlight(true);
@@ -86,8 +93,8 @@ public class ScoreboardManager {
             o.setDisplaySlot(DisplaySlot.SIDEBAR);
 
             o.getScore("§1").setScore(6);
-            o.getScore("§9BLAUES EI§8: " + EggStatus(TEAM.BLUE)).setScore(5);
-            o.getScore("§cROTES EI§8: " + EggStatus(TEAM.RED)).setScore(4);
+            o.getScore("§9BLAUES TEAM§8: " + EggStatus(TEAM.BLUE)).setScore(5);
+            o.getScore("§cROTES TEAM§8: " + EggStatus(TEAM.RED)).setScore(4);
             o.getScore("§2").setScore(3);
             if (sys.teams.get(p).equals(CTESystem.TEAM.BLUE)||sys.teams.get(p).equals(CTESystem.TEAM.RED)) {
                 o.getScore("§3PUNKTE§8: §7" + sys.punkte.get(p)).setScore(2);

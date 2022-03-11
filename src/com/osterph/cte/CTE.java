@@ -7,6 +7,7 @@ import com.osterph.inventory.ShopListener;
 import com.osterph.lagerhalle.LocationLIST;
 import com.osterph.lagerhalle.MySQL;
 import com.osterph.lagerhalle.NPCListener;
+import com.osterph.lagerhalle.TeamSelector;
 import com.osterph.manager.ScoreboardManager;
 import com.osterph.spawner.SpawnerManager;
 import com.osterph.listener.*;
@@ -79,6 +80,7 @@ public class CTE extends JavaPlugin{
 		pm.registerEvents(new InteractEvent(), this);
 		pm.registerEvents(new DamageListener(), this);
 		pm.registerEvents(new NPCListener(), this);
+		pm.registerEvents(new TeamSelector(), this);
 		pm.registerEvents(new WorldEvent(), this);
 		
 		getCommand("start").setExecutor(new startCMD());

@@ -37,6 +37,8 @@ import static com.osterph.lagerhalle.NPC.spawnNPC;
 
 public class NPCListener implements Listener {
 
+    private CTESystem sys = CTE.INSTANCE.getSystem();
+
     @EventHandler
     public void onWorld(PlayerChangedWorldEvent e) {
         NPC.show(e.getPlayer());
@@ -53,6 +55,7 @@ public class NPCListener implements Listener {
         if (e.getPlayer().getWorld().getName().equals("world")) e.setCancelled(true);
 
         if (e.getRightClicked().getName() == null|| !e.getRightClicked().getName().equals("[SHOPKEEPER]")) return;
+        if (sys.teams.get(e.getPlayer()).equals(TEAM.SPEC) || sys.teams.get(e.getPlayer()).equals(TEAM.DEFAULT)) return;
         
         if(e.getPlayer().getInventory().getHelmet() != null && e.getPlayer().getInventory().getHelmet().getType().equals(Material.LEATHER_HELMET)) {
         	Shop.openShop(e.getPlayer(), Shop.SHOPTYPE.CHOOSE);

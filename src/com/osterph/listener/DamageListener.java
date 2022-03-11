@@ -52,9 +52,9 @@ public class DamageListener implements Listener {
 
         if (cause.equals(EntityDamageEvent.DamageCause.CONTACT)) {
             e.setCancelled(true);
-        } else if (cause.equals(EntityDamageEvent.DamageCause.SUFFOCATION)) {
-            e.setCancelled(true);
-        }
+        } else if (cause.equals(EntityDamageEvent.DamageCause.DROWNING)) {
+			e.setCancelled(true);
+		}
 
 
 		if(!(e.getEntity() instanceof Player)) return;

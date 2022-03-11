@@ -2,10 +2,12 @@ package com.osterph.spawner;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.osterph.cte.CTE;
+import org.bukkit.util.Vector;
 
 
 public class Spawner {
@@ -40,7 +42,8 @@ public class Spawner {
 			public void run() {
 				if(currentitems < max) {
 					for(int i=0;i<amount;i++) {
-						loc.getWorld().dropItem(loc, item);
+						Item it = loc.getWorld().dropItem(loc, item);
+						it.setVelocity(new Vector(0, 0.001, 0));
 						currentitems++;
 					}
 				}

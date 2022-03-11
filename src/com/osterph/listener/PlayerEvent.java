@@ -4,6 +4,7 @@ import com.osterph.cte.CTE;
 import com.osterph.cte.CTESystem;
 import com.osterph.cte.CTESystem.TEAM;
 import com.osterph.lagerhalle.LocationLIST;
+import com.osterph.lagerhalle.TeamSelector;
 import com.osterph.manager.ScoreboardManager;
 import com.osterph.spawner.Spawner;
 
@@ -23,7 +24,8 @@ public class PlayerEvent implements Listener {
     
     @EventHandler
     public void onPickupItems(PlayerPickupItemEvent e) {
-    	if(e.getItem().getItemStack().getItemMeta().getDisplayName().contains("[") && e.getItem().getItemStack().getItemMeta().getDisplayName().contains("]")) {
+        if (e.getItem().getItemStack().getItemMeta() == null || e.getItem().getItemStack().getItemMeta().getDisplayName() == null) return;
+    	if (e.getItem().getItemStack().getItemMeta().getDisplayName().contains("[") && e.getItem().getItemStack().getItemMeta().getDisplayName().contains("]")) {
     		String name = e.getItem().getItemStack().getItemMeta().getDisplayName();
     		ItemMeta m = e.getItem().getItemStack().getItemMeta();
     		m.setDisplayName(m.getDisplayName().substring(0, m.getDisplayName().indexOf("[")));
@@ -43,6 +45,8 @@ public class PlayerEvent implements Listener {
             e.disallow(PlayerLoginEvent.Result.KICK_OTHER, CTE.prefix + "Die Runde ist vorbei!");
             return;
         }
+
+        if (!e.getResult().equals(PlayerLoginEvent.Result.ALLOWED)) return;
 
         sys.currentPlayers++;
         if (sys.currentPlayers < sys.minPlayers) {
@@ -66,6 +70,7 @@ public class PlayerEvent implements Listener {
             p.teleport(new LocationLIST().specSPAWN());
         } else {
             p.teleport(new LocationLIST().lobbySPAWN());
+            p.getInventory().setItem(0, new TeamSelector().team);
         }
 
         if(sys.isStarting) {
@@ -109,12 +114,11 @@ public class PlayerEvent implements Listener {
             e.setQuitMessage("§8[§c-§8] §7" + p.getName());
             System.out.println(sys.currentPlayers + " : " + sys.minPlayers);
             if(sys.currentPlayers < sys.minPlayers) {
-            	System.out.println("STOPPED");
             	sys.stopStartTimer();
             	sys.sendAllMessage(CTE.prefix + "Der Start wurde abgebrochen!");
             }
         } else if(sys.isRunning) {
-            e.setQuitMessage("§7" + p.getName() + " hat das Spiel verlassen.");
+            e.setQuitMessage("§8[§c-§8] §7" + p.getName());
             sys.teams.put(e.getPlayer(), TEAM.SPEC);
             sys.checkTeamSizes();
         } else {

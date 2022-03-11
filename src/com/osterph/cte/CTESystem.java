@@ -52,6 +52,7 @@ public class CTESystem {
         p.getInventory().setChestplate(null);
         p.getInventory().setLeggings(null);
         p.getInventory().setBoots(null);
+        p.getInventory().clear();
     }
 
     public void checkTeamSizes() {
@@ -66,10 +67,10 @@ public class CTESystem {
     		}
     	}
     	if(blue == 0) {
-    		winnerTeam = winnerTeam.RED;
+    		winnerTeam = TEAM.RED;
     		endGame();
     	} else if(red == 0) {
-    		winnerTeam = winnerTeam.BLUE;
+    		winnerTeam = TEAM.BLUE;
     		endGame();
     		
     	}
@@ -112,6 +113,7 @@ public class CTESystem {
         new LocationLIST().redEGG().getBlock().setType(Material.DRAGON_EGG);
 
         for(Player all : Bukkit.getOnlinePlayers()) {
+            ScoreboardManager.refreshBoard(all);
             NPCListener.show(all);
             startEquip(all);
             if (teams.get(all).equals(TEAM.RED)) all.teleport(new LocationLIST().redSPAWN());
@@ -130,18 +132,18 @@ public class CTESystem {
         
         switch (winnerTeam) {
             case DEFAULT: {
-                sendAllMessage(CTE.prefix + "Die Runde §e§lCAPTURE THE EGG §eendete mit einem §7§lUnentschieden§e!");
+                sendAllMessage(CTE.prefix + "Die Runde §6§lCAPTURE THE EGG §eendete mit einem §7§lUnentschieden§e!");
                 sendAllTitle("§7UNENTSCHIEDEN", "§eDas Spiel endete mit einem Unentschieden!");
                 break;
             }
             case RED: {
-                sendAllMessage(CTE.prefix + "Das §c§lRote-Team §ehat die Runde §e§lCAPTURE THE EGG §egewonnen!");
-                sendAllTitle("§4§k0 §cROT §4§k0","§ehat das Spiel gewonnen!");
+                sendAllMessage(CTE.prefix + "Das §c§lRote-Team §ehat die Runde §6§lCAPTURE THE EGG §egewonnen!");
+                sendAllTitle("§4§k0§r §cROT §4§k0","§ehat das Spiel gewonnen!");
                 break;
             }
             case BLUE: {
-                sendAllMessage(CTE.prefix + "Das §c§lBlaue-Team §ehat die Runde §e§lCAPTURE THE EGG §egewonnen!");
-                sendAllTitle("§1§k0 §9BLAU §1§k0","§ehat das Spiel gewonnen!");
+                sendAllMessage(CTE.prefix + "Das §c§lBlaue-Team §ehat die Runde §6§lCAPTURE THE EGG §egewonnen!");
+                sendAllTitle("§1§k0§r §9BLAU §1§k0","§ehat das Spiel gewonnen!");
                 break;
             }
         }
@@ -150,7 +152,7 @@ public class CTESystem {
         }
         for(Entity t : Bukkit.getWorld("world").getEntities()) {
         	if(t instanceof Item) {
-        		((Item) t).remove();
+        		t.remove();
         	}
         }
 

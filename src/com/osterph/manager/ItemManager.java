@@ -59,6 +59,11 @@ public class ItemManager {
         return this;
     }
 
+    public ItemManager withLores(List<String> lores) {
+        this.lores = lores;
+        return this;
+    }
+
     public ItemManager unbreakable(boolean HideFlag) {
         this.unbreakable = true;
         this.HIDEunbreakable = HideFlag;
@@ -79,6 +84,7 @@ public class ItemManager {
 
         item.setItemMeta(meta);
         item.setAmount(amount);
+        item.setDurability((short) data);
 
         return item;
     }

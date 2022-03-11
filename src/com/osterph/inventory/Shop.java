@@ -134,7 +134,7 @@ public class Shop {
         CHOOSE, WEAPON, ARMOR, TOOLS, BLOCKS, SONSTIGES;
     }
 
-    private static ItemStack[] getStandardGUI(boolean back) {
+    public static ItemStack[] getStandardGUI(boolean back) {
         Inventory inv = Bukkit.createInventory(null, 9*6, "");
         ItemStack glass = ItemManager.newItem(Material.STAINED_GLASS_PANE, " ", "", 7);
         ItemStack bglass = ItemManager.newItem(Material.STAINED_GLASS_PANE, " ", "", 15);
@@ -161,6 +161,36 @@ public class Shop {
         inv.setItem(46, bglass);
         inv.setItem(52, bglass);
         inv.setItem(53, bglass);
+        return inv.getContents();
+    }
+
+    public static ItemStack[] getStandardGUI45(boolean back) {
+        Inventory inv = Bukkit.createInventory(null, 9*5, "");
+        ItemStack glass = ItemManager.newItem(Material.STAINED_GLASS_PANE, " ", "", 7);
+        ItemStack bglass = ItemManager.newItem(Material.STAINED_GLASS_PANE, " ", "", 15);
+        ItemStack backI = ItemManager.newItem(Material.ARROW, "§cZurück", "", 0);
+        ItemStack close = ItemManager.newItem(Material.ARROW, "§cSchließen", "", 0);
+
+        for(int i =0;i<inv.getSize();i++) {
+            inv.setItem(i, glass);
+        }
+        inv.setItem(0, bglass);
+        inv.setItem(1, bglass);
+        inv.setItem(7, bglass);
+        inv.setItem(8, bglass);
+        inv.setItem(9, bglass);
+        inv.setItem(17, bglass);
+        inv.setItem(27, bglass);
+        inv.setItem(35, bglass);
+        if(back) {
+            inv.setItem(40, backI);
+        } else {
+            inv.setItem(40, close);
+        }
+        inv.setItem(36, bglass);
+        inv.setItem(37, bglass);
+        inv.setItem(43, bglass);
+        inv.setItem(44, bglass);
         return inv.getContents();
     }
 

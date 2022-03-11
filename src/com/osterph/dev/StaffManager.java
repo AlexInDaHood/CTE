@@ -21,7 +21,7 @@ public class StaffManager {
     public boolean isHelper() {
         if (isDev()) return true;
 
-        return UUID.equals("470f8310-3eed-4c6b-a730-52e0fe3579f3");
+        return UUID.equals("470f8310-3eed-4c6b-a730-52e0fe3579f3") || UUID.equals("08bbb829-5667-4bee-9e79-8fbdaef9d68c");
     }
 
     public boolean hasRoles() {
