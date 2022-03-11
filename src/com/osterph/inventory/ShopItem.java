@@ -37,7 +37,7 @@ public class ShopItem {
     }
 
     public ItemStack getInventoryItem() {
-        ItemStack item = new ItemStack(mat);
+        ItemStack item = new ItemStack(mat, amount);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(name);
         //ArrayList<String> lore = new ArrayList<>();

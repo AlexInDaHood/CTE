@@ -8,6 +8,8 @@ import com.osterph.cte.CTE;
 import com.osterph.cte.CTESystem;
 import com.osterph.cte.CTESystem.TEAM;
 import com.osterph.inventory.Shop;
+import com.osterph.manager.ScoreboardManager;
+
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -56,7 +58,7 @@ public class NPCListener implements Listener {
         	Shop.openShop(e.getPlayer(), Shop.SHOPTYPE.CHOOSE);
         } else if(e.getPlayer().getInventory().getHelmet().getType().equals(Material.SKULL_ITEM)){
         	Player p = e.getPlayer();
-        	CTESystem system = CTE.INSTANCE.system;
+        	CTESystem system = CTE.INSTANCE.getSystem();
         	TEAM t = system.teams.get(p);
         	
         	if(t.equals(TEAM.RED)) {
@@ -64,11 +66,17 @@ public class NPCListener implements Listener {
         		system.sendAllMessage(CTE.prefix + "Das §9Blaue-Ei §ewurde erobert! Das §9Blaue-Team §ekann nicht länger respawnen!");
         		system.sendAllSound(Sound.ENDERDRAGON_GROWL, 1, 1);
         		system.setHelmet(p);
+        		for(Player all : Bukkit.getOnlinePlayers()) {
+        			ScoreboardManager.refreshBoard(all);
+        		}
         	} else if(t.equals(TEAM.BLUE)) {
         		system.RED_EGG = system.RED_EGG.GONE;
         		system.sendAllMessage(CTE.prefix + "Das §cRote-Ei §ewurde erobert! Das §cRote-Team §ekann nicht länger respawnen!");
         		system.sendAllSound(Sound.ENDERDRAGON_GROWL, 1, 1);
         		system.setHelmet(p);
+        		for(Player all : Bukkit.getOnlinePlayers()) {
+        			ScoreboardManager.refreshBoard(all);
+        		}
         	}
         	
         }

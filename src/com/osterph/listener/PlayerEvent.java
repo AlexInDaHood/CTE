@@ -2,6 +2,7 @@ package com.osterph.listener;
 
 import com.osterph.cte.CTE;
 import com.osterph.cte.CTESystem;
+import com.osterph.cte.CTESystem.TEAM;
 import com.osterph.lagerhalle.LocationLIST;
 import com.osterph.manager.ScoreboardManager;
 import com.osterph.spawner.Spawner;
@@ -18,7 +19,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class PlayerEvent implements Listener {
 
-    private CTESystem sys = CTE.INSTANCE.system;
+    private CTESystem sys = CTE.INSTANCE.getSystem();
     
     @EventHandler
     public void onPickupItems(PlayerPickupItemEvent e) {
@@ -48,9 +49,8 @@ public class PlayerEvent implements Listener {
             if (sys.currentPlayers == sys.maxPlayers && sys.c > 11) sys.c = 10;
             return;
         }
-        if (sys.isStarting) return;
 
-        sys.countdown();
+        sys.startTimer();
     }
 
     @EventHandler
@@ -70,6 +70,11 @@ public class PlayerEvent implements Listener {
 
         if(sys.isStarting) {
             e.setJoinMessage("§8[§a+§8] §7" + p.getName());
+            
+            if(sys.currentPlayers >= sys.minPlayers) {
+            	sys.startTimer();
+            }
+            
         } else {
             e.setJoinMessage(null);
         }
@@ -99,13 +104,19 @@ public class PlayerEvent implements Listener {
                 }
             }
         },5);
-        if (sys.currentPlayers >= sys.minPlayers) return;
 
-        sys.cancel_countdown();
         if(sys.isStarting) {
             e.setQuitMessage("§8[§c-§8] §7" + p.getName());
+            System.out.println(sys.currentPlayers + " : " + sys.minPlayers);
+            if(sys.currentPlayers < sys.minPlayers) {
+            	System.out.println("STOPPED");
+            	sys.stopStartTimer();
+            	sys.sendAllMessage(CTE.prefix + "Der Start wurde abgebrochen!");
+            }
         } else if(sys.isRunning) {
             e.setQuitMessage("§7" + p.getName() + " hat das Spiel verlassen.");
+            sys.teams.put(e.getPlayer(), TEAM.SPEC);
+            sys.checkTeamSizes();
         } else {
             e.setQuitMessage(null);
         }

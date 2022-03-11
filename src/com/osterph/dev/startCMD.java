@@ -22,7 +22,7 @@ public class startCMD implements CommandExecutor {
         }
 
         p.sendMessage(CTE.prefix + "Game started.");
-        CTE.INSTANCE.system.forceStart();
+        CTE.INSTANCE.getSystem().forceStart();
         
         return false;
     }

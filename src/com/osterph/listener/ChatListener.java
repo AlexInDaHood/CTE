@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class ChatListener implements Listener {
 
-    private CTESystem sys = CTE.INSTANCE.system;
+    private CTESystem sys = CTE.INSTANCE.getSystem();
     private ArrayList<String> cooldown = new ArrayList<>();
 
     @SuppressWarnings("incomplete-switch")

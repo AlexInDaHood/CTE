@@ -20,7 +20,7 @@ public class countdownCMD implements CommandExecutor {
         }
 
         p.sendMessage(CTE.prefix + "Countdown started.");
-        CTE.INSTANCE.system.countdown();
+        CTE.INSTANCE.getSystem().startTimer();
 
         return false;
     }

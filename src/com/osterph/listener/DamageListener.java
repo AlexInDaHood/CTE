@@ -23,7 +23,7 @@ import org.bukkit.scoreboard.Team;
 
 public class DamageListener implements Listener {
 
-    private final CTESystem sys = CTE.INSTANCE.system;
+    private final CTESystem sys = CTE.INSTANCE.getSystem();
 
     public HashMap<Player, String[]> combat = new HashMap<>(); //TARGET | DAMAGER
 
@@ -178,6 +178,7 @@ public class DamageListener implements Listener {
 			},20*5L);
 		} else {
 			p.sendMessage(CTE.prefix + "Du bist nun eliminiert!");
+			sys.checkTeamSizes();
 		}
     }
     

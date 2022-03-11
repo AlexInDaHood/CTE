@@ -22,7 +22,7 @@ public class CTE extends JavaPlugin{
 	public static String prefix = "§8[§6CTE§8] §e";
 	public static MySQL mysql;
 	
-	public CTESystem system;
+	private CTESystem system;
 	private SpawnerManager spawnermanager;
 	private LocationLIST locations;
 	
@@ -92,6 +92,10 @@ public class CTE extends JavaPlugin{
 	
 	public LocationLIST getLocations() {
 		return locations;
+	}
+	
+	public CTESystem getSystem() {
+		return system;
 	}
 	
 }

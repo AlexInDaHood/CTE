@@ -23,7 +23,7 @@ import java.util.List;
 
 public class EggListener implements Listener {
 
-    private CTESystem sys = CTE.INSTANCE.system;
+    private CTESystem sys = CTE.INSTANCE.getSystem();
 
     @EventHandler
     private void onInteract(PlayerInteractEvent e) {

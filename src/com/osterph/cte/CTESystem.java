@@ -11,6 +11,8 @@ import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -36,7 +38,7 @@ public class CTESystem {
     }
 
     public int maxPlayers = 12;
-    public int minPlayers = 3;
+    public int minPlayers = 2;
     public int currentPlayers = 0;
     private int task;
     public int c;
@@ -45,36 +47,6 @@ public class CTESystem {
     public boolean isEnding = false;
 
 
-    public void countdown() {
-        isStarting = true;
-        c = 30;
-        task = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {
-            @Override
-            public void run() {
-                for (Player all: Bukkit.getOnlinePlayers()) {
-                    all.setLevel(c);
-                }
-                c--;
-                if (c > 0) return;
-
-                forceStart();
-                for (Player all: Bukkit.getOnlinePlayers()) {
-                    all.setLevel(0);
-                }
-            }
-        }, 0, 20);
-    }
-
-    public void cancel_countdown() {
-        isStarting = false;
-        Bukkit.getScheduler().cancelTask(task);
-        c = 0;
-        for (Player all: Bukkit.getOnlinePlayers()) {
-            all.setLevel(c);
-            ScoreboardManager.refreshBoard(all);
-        }
-    }
-
     public void clear(Player p) {
         p.getInventory().setHelmet(null);
         p.getInventory().setChestplate(null);
@@ -82,6 +54,27 @@ public class CTESystem {
         p.getInventory().setBoots(null);
     }
 
+    public void checkTeamSizes() {
+    	int blue = 0;
+    	int red = 0;
+    	
+    	for(Player p : teams.keySet()) {
+    		if(teams.get(p).equals(TEAM.BLUE)) {
+    			blue++;
+    		} else if(teams.get(p).equals(TEAM.RED)) {
+    			red++;
+    		}
+    	}
+    	if(blue == 0) {
+    		winnerTeam = winnerTeam.RED;
+    		endGame();
+    	} else if(red == 0) {
+    		winnerTeam = winnerTeam.BLUE;
+    		endGame();
+    		
+    	}
+    }
+    
     public void startEquip(Player p) {
 
         ItemStack i = new ItemStack(Material.LEATHER_HELMET);
@@ -109,7 +102,7 @@ public class CTESystem {
     public void forceStart() {
         isStarting = false;
         isRunning = true;
-        cancel_countdown();
+        stopStartTimer();
         RED_EGG = EGG_STATE.OKAY;
         BLUE_EGG = EGG_STATE.OKAY;
         startRED = red.size();
@@ -134,7 +127,7 @@ public class CTESystem {
         isRunning = false;
         isStarting = false;
         isEnding = true;
-
+        
         switch (winnerTeam) {
             case DEFAULT: {
                 sendAllMessage(CTE.prefix + "Die Runde §e§lCAPTURE THE EGG §eendete mit einem §7§lUnentschieden§e!");
@@ -152,7 +145,14 @@ public class CTESystem {
                 break;
             }
         }
-
+        for(Player all : Bukkit.getOnlinePlayers()) {
+        	all.getInventory().clear();
+        }
+        for(Entity t : Bukkit.getWorld("world").getEntities()) {
+        	if(t instanceof Item) {
+        		((Item) t).remove();
+        	}
+        }
 
     }
 
@@ -199,4 +199,62 @@ public class CTESystem {
         ((CraftPlayer)p).getHandle().playerConnection.sendPacket(chat);
     }
 
+    
+    private int scheduler;
+    private int countdown = 60;
+    
+    public void startTimer() {
+    	if(!Bukkit.getScheduler().isCurrentlyRunning(scheduler)) {
+	    	scheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {			
+				@Override
+				public void run() {
+					isStarting = true;
+					
+					for(Player all : Bukkit.getOnlinePlayers()) {
+						all.setLevel(countdown);
+					}
+					
+					switch(countdown) {
+						case 60:
+							sendAllMessage(CTE.prefix + "Das Spiel beginnt in §c60 Sekunden§e.");
+							break;
+						case 45:
+							sendAllMessage(CTE.prefix + "Das Spiel beginnt in §c45 Sekunden§e.");
+							break;
+						case 30:
+							sendAllMessage(CTE.prefix + "Das Spiel beginnt in §c30 Sekunden§e.");
+							break;
+						case 20:
+							sendAllMessage(CTE.prefix + "Das Spiel beginnt in §c20 Sekunden§e.");
+							break;
+						case 10:
+							sendAllMessage(CTE.prefix + "Das Spiel beginnt in §c10 Sekunden§e.");
+							break;
+						case 3:
+							sendAllMessage(CTE.prefix + "Das Spiel beginnt in §c3 Sekunden§e.");
+							break;
+						case 2:
+							sendAllMessage(CTE.prefix + "Das Spiel beginnt in §c2 Sekunden§e.");
+							break;
+						case 1:
+							sendAllMessage(CTE.prefix + "Das Spiel beginnt in §c1 Sekunde§e.");
+							break;
+						case 0: forceStart();
+					}
+					
+					countdown--;
+				}
+			}, 0, 20L);
+    	}
+    	
+    }
+    
+    public void stopStartTimer() {
+    	Bukkit.getScheduler().cancelTask(scheduler);
+    	countdown = 60;
+    	for(Player all : Bukkit.getOnlinePlayers()) {
+    		all.setLevel(0);
+    	}
+    }
+    
 }

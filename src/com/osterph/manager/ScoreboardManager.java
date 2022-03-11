@@ -19,7 +19,7 @@ public class ScoreboardManager {
     private static Team red;
     private static Team blue;
 
-    private static CTESystem sys = CTE.INSTANCE.system;
+    private static CTESystem sys = CTE.INSTANCE.getSystem();
     public static void refreshBoard(Player p) {
         board = Bukkit.getScoreboardManager().getNewScoreboard();
         defineTeams();

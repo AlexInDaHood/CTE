@@ -26,7 +26,7 @@ public class setteamCMD implements CommandExecutor {
             p.sendMessage(CTE.prefix + "§cTeam benötigt.");
             return false;
         }
-        CTESystem sys = CTE.INSTANCE.system;
+        CTESystem sys = CTE.INSTANCE.getSystem();
 
         if (args[0].equalsIgnoreCase("default")) {
             sys.teams.put(p, CTESystem.TEAM.DEFAULT);
