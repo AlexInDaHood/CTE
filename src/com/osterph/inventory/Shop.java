@@ -1,5 +1,7 @@
 package com.osterph.inventory;
 
+import com.osterph.cte.CTE;
+import com.osterph.cte.CTESystem;
 import com.osterph.manager.ItemManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -17,43 +19,43 @@ public class Shop {
 
     private static void fillPrices() {
         //WEAPON
-        items.add(new ShopItem(Material.STONE_SWORD, "§fSteinschwert", "Macht mehr Damage als ein Holz schwert", 1, 20, Ressourcen.Apfel, null, 20, SHOPTYPE.WEAPON));
-        items.add(new ShopItem(Material.IRON_SWORD, "§fEisenschwert", "Macht mehr Damage als ein Stein schwert", 1, 10, Ressourcen.Melone, null, 22, SHOPTYPE.WEAPON));
-        items.add(new ShopItem(Material.DIAMOND_SWORD, "§fDiamantschwert", "Macht mehr Damage als ein Eisen schwert", 1, 2, Ressourcen.Karotte, null, 24, SHOPTYPE.WEAPON));
-        items.add(new ShopItem(Material.BOW, "§fBogen", "Halt ein Bogen oder so", 1, 2, Ressourcen.Karotte, null, 29, SHOPTYPE.WEAPON));
+        items.add(new ShopItem(Material.STONE_SWORD, "§fSteinschwert", "Macht mehr Damage als ein Holz schwert", 1, 10, Ressourcen.Apfel, null, 20, SHOPTYPE.WEAPON));
+        items.add(new ShopItem(Material.IRON_SWORD, "§fEisenschwert", "Macht mehr Damage als ein Stein schwert", 1, 7, Ressourcen.Melone, null, 22, SHOPTYPE.WEAPON));
+        items.add(new ShopItem(Material.DIAMOND_SWORD, "§fDiamantschwert", "Macht mehr Damage als ein Eisen schwert", 1, 4, Ressourcen.Karotte, null, 24, SHOPTYPE.WEAPON));
+        items.add(new ShopItem(Material.BOW, "§fBogen", "Halt ein Bogen oder so", 1, 12, Ressourcen.Melone, null, 29, SHOPTYPE.WEAPON));
         HashMap<Enchantment, Integer> ench = new HashMap<>();
         ench.put(Enchantment.ARROW_DAMAGE, 2);
-        items.add(new ShopItem(Material.BOW, "§fGuter Bogen", "Macht mehr Damage als ein normaler Bogen", 1, 4, Ressourcen.Karotte, ench, 31, SHOPTYPE.WEAPON));
-        items.add(new ShopItem(Material.ARROW, "§fPfeile", "Munition für dein Bogen", 8, 8, Ressourcen.Melone, null, 33, SHOPTYPE.WEAPON));
+        items.add(new ShopItem(Material.BOW, "§fGuter Bogen", "Macht mehr Damage als ein normaler Bogen", 1, 24, Ressourcen.Melone, ench, 31, SHOPTYPE.WEAPON));
+        items.add(new ShopItem(Material.ARROW, "§fPfeile", "Munition für dein Bogen", 8, 2, Ressourcen.Melone, null, 33, SHOPTYPE.WEAPON));
 
         //ARMOR
         items.add(new ShopItem(Material.CHAINMAIL_CHESTPLATE, "§fKettenbrustpanzer", "Damit hälst du mehr Schläge aus", 1, 40, Ressourcen.Apfel, null, 29, SHOPTYPE.ARMOR));
-        items.add(new ShopItem(Material.IRON_CHESTPLATE, "§fEisenbrustpanzer", "Damit hälst du mehr Schläge aus", 1, 16, Ressourcen.Melone, null, 31, SHOPTYPE.ARMOR));
+        items.add(new ShopItem(Material.IRON_CHESTPLATE, "§fEisenbrustpanzer", "Damit hälst du mehr Schläge aus", 1, 12, Ressourcen.Melone, null, 31, SHOPTYPE.ARMOR));
         items.add(new ShopItem(Material.DIAMOND_CHESTPLATE, "§fDiamantbrustpanzer", "Damit hälst du mehr Schläge aus", 1, 6, Ressourcen.Karotte, null, 33, SHOPTYPE.ARMOR));
 
         //TOOLS
         items.add(new ShopItem(Material.STONE_PICKAXE, "§fSteinspitzhacke", "Damit kannst du schneller Steine abbauen", 1, 10, Ressourcen.Apfel, null, 20, SHOPTYPE.TOOLS));
-        items.add(new ShopItem(Material.IRON_PICKAXE, "§fEisenspitzhacke", "Damit kannst du schneller Steine abbauen", 1, 10, Ressourcen.Apfel, null, 29, SHOPTYPE.TOOLS));
-        items.add(new ShopItem(Material.DIAMOND_PICKAXE, "§fDiamantspitzhacke", "Damit kannst du schneller Steine abbauen", 1, 10, Ressourcen.Apfel, null, 38, SHOPTYPE.TOOLS));
+        items.add(new ShopItem(Material.IRON_PICKAXE, "§fEisenspitzhacke", "Damit kannst du schneller Steine abbauen", 1, 30, Ressourcen.Apfel, null, 29, SHOPTYPE.TOOLS));
+        items.add(new ShopItem(Material.DIAMOND_PICKAXE, "§fDiamantspitzhacke", "Damit kannst du schneller Steine abbauen", 1, 8, Ressourcen.Melone, null, 38, SHOPTYPE.TOOLS));
         items.add(new ShopItem(Material.SHEARS, "§fSchere", "Damit kannst du schneller Wolle abbauen", 1, 10, Ressourcen.Apfel, null, 31, SHOPTYPE.TOOLS));
         items.add(new ShopItem(Material.STONE_AXE, "§fSteinaxt", "Damit kannst du schneller Holz abbauen", 1, 10, Ressourcen.Apfel, null, 24, SHOPTYPE.TOOLS));
-        items.add(new ShopItem(Material.IRON_AXE, "§fEisenaxt", "Damit kannst du schneller Holz abbauen", 1, 10, Ressourcen.Apfel, null, 33, SHOPTYPE.TOOLS));
-        items.add(new ShopItem(Material.DIAMOND_AXE, "§fDiamantaxt", "Damit kannst du schneller Holz abbauen", 1, 10, Ressourcen.Apfel, null, 42, SHOPTYPE.TOOLS));
+        items.add(new ShopItem(Material.IRON_AXE, "§fEisenaxt", "Damit kannst du schneller Holz abbauen", 1, 30, Ressourcen.Apfel, null, 33, SHOPTYPE.TOOLS));
+        items.add(new ShopItem(Material.DIAMOND_AXE, "§fDiamantaxt", "Damit kannst du schneller Holz abbauen", 1, 8, Ressourcen.Melone, null, 42, SHOPTYPE.TOOLS));
 
         //Blocks
-        items.add(new ShopItem(Material.WOOL, "§fWolle", "Zum bauen", 16, 6, Ressourcen.Apfel, null, 20, SHOPTYPE.BLOCKS));
-        items.add(new ShopItem(Material.WOOD, "§fHolz", "Zum bauen", 6, 2, Ressourcen.Melone, null, 21, SHOPTYPE.BLOCKS));
-        items.add(new ShopItem(Material.SANDSTONE, "§fSandstein", "Zum bauen", 8, 8, Ressourcen.Apfel, null, 23, SHOPTYPE.BLOCKS));
-        items.add(new ShopItem(Material.ENDER_STONE, "§fEndstein", "Zum bauen", 4, 16, Ressourcen.Apfel, null, 24, SHOPTYPE.BLOCKS));
+        items.add(new ShopItem(Material.WOOL, "§fWolle", "Zum bauen", 16, 4, Ressourcen.Apfel, null, 20, SHOPTYPE.BLOCKS));
+        items.add(new ShopItem(Material.WOOD, "§fHolz", "Zum bauen", 16, 4, Ressourcen.Melone, null, 21, SHOPTYPE.BLOCKS));
+        items.add(new ShopItem(Material.SANDSTONE, "§fSandstein", "Zum bauen", 16, 12, Ressourcen.Apfel, null, 23, SHOPTYPE.BLOCKS));
+        items.add(new ShopItem(Material.ENDER_STONE, "§fEndstein", "Zum bauen", 8, 24, Ressourcen.Apfel, null, 24, SHOPTYPE.BLOCKS));
         items.add(new ShopItem(Material.OBSIDIAN, "§fObsidian", "Zum bauen", 2, 4, Ressourcen.Karotte, null, 30, SHOPTYPE.BLOCKS));
         items.add(new ShopItem(Material.WEB, "§fSpinnweben", "Zum bauen", 2, 12, Ressourcen.Apfel, null, 31, SHOPTYPE.BLOCKS));
-        items.add(new ShopItem(Material.LADDER, "§fLeiter", "Zum bauen", 16, 10, Ressourcen.Apfel, null, 32, SHOPTYPE.BLOCKS));
+        items.add(new ShopItem(Material.LADDER, "§fLeiter", "Zum bauen", 16, 4, Ressourcen.Apfel, null, 32, SHOPTYPE.BLOCKS));
 
         //Extras
-        items.add(new ShopItem(Material.GOLDEN_APPLE, "§fGoldapfel", "Heilt dich", 1, 4, Ressourcen.Karotte, null, 20, SHOPTYPE.SONSTIGES));
-        items.add(new ShopItem(Material.WATER_BUCKET, "§fWassereimer", "Halt ein Wassereimer?", 1, 10, Ressourcen.Melone, null, 22, SHOPTYPE.SONSTIGES));
-        items.add(new ShopItem(Material.EGG, "§fBrückenei", ":/", 1, 2, Ressourcen.Karotte, null, 24, SHOPTYPE.SONSTIGES));
-        items.add(new ShopItem(Material.ENDER_PEARL, "§fEnderperle", "UwU", 1, 6, Ressourcen.Karotte, null, 30, SHOPTYPE.SONSTIGES));
+        items.add(new ShopItem(Material.GOLDEN_APPLE, "§fGoldapfel", "Heilt dich", 1, 3, Ressourcen.Melone, null, 20, SHOPTYPE.SONSTIGES));
+        items.add(new ShopItem(Material.WATER_BUCKET, "§fWassereimer", "Halt ein Wassereimer?", 1, 6, Ressourcen.Melone, null, 22, SHOPTYPE.SONSTIGES));
+        items.add(new ShopItem(Material.EGG, "§fBrückenei", ":/", 1, 2, Ressourcen.Karotte, null, 24, SHOPTYPE.SONSTIGES)); //Rdy
+        items.add(new ShopItem(Material.ENDER_PEARL, "§fEnderperle", "UwU", 1, 4, Ressourcen.Karotte, null, 30, SHOPTYPE.SONSTIGES));
         items.add(new ShopItem(Material.BLAZE_ROD, "§fRettungsplattform", "Rettet dich beim runterfallen", 1, 6, Ressourcen.Karotte, null, 32, SHOPTYPE.SONSTIGES));
 
     }
@@ -61,7 +63,6 @@ public class Shop {
     public static void openShop(Player p, SHOPTYPE type) {
         fillPrices();
         Inventory shop = null;
-
         switch(type) {
             case CHOOSE:
                 shop = Bukkit.createInventory(null, 9*6, "§cShop");
@@ -79,7 +80,7 @@ public class Shop {
                 shop.setItem(4, ItemManager.newItem(Material.STONE_SWORD, "§cWaffen-Shop", "", 0));
                 for(ShopItem item : items) {
                     if(item.getType() == type) {
-                        shop.setItem(item.getSlot(), item.getShopItem());
+                        shop.setItem(item.getSlot(), item.getShopItem(0));
                     }
                 }
                 break;
@@ -89,7 +90,7 @@ public class Shop {
                 shop.setItem(4, ItemManager.newItem(Material.IRON_CHESTPLATE, "§cRüstung-Shop", "", 0));
                 for(ShopItem item : items) {
                     if(item.getType() == type) {
-                        shop.setItem(item.getSlot(), item.getShopItem());
+                        shop.setItem(item.getSlot(), item.getShopItem(0));
                     }
                 }
                 break;
@@ -99,7 +100,7 @@ public class Shop {
                 shop.setItem(4, ItemManager.newItem(Material.IRON_PICKAXE, "§cTool-Shop", "", 0));
                 for(ShopItem item : items) {
                     if(item.getType() == type) {
-                        shop.setItem(item.getSlot(), item.getShopItem());
+                        shop.setItem(item.getSlot(), item.getShopItem(0));
                     }
                 }
                 break;
@@ -109,7 +110,18 @@ public class Shop {
                 shop.setItem(4, ItemManager.newItem(Material.SANDSTONE, "§cBlöcke-Shop", "", 2));
                 for(ShopItem item : items) {
                     if(item.getType() == type) {
-                        shop.setItem(item.getSlot(), item.getShopItem());
+                        if(!item.getType().equals(Material.WOOL)) {
+                            shop.setItem(item.getSlot(), item.getShopItem(0));
+                        } else {
+                            CTESystem.TEAM team = CTE.INSTANCE.getSystem().teams.get(p);
+                            if(team.equals(CTESystem.TEAM.BLUE)) {
+                                shop.setItem(item.getSlot(), item.getShopItem(11));
+                            } else if(team.equals(CTESystem.TEAM.RED)) {
+                                shop.setItem(item.getSlot(), item.getShopItem(14));
+                            } else {
+                                shop.setItem(item.getSlot(), item.getShopItem(0));
+                            }
+                        }
                     }
                 }
                 break;
@@ -119,7 +131,7 @@ public class Shop {
                 shop.setItem(4, ItemManager.newItem(Material.ENDER_PEARL, "§cSonstiges-Shop", "", 0));
                 for(ShopItem item : items) {
                     if(item.getType() == type) {
-                        shop.setItem(item.getSlot(), item.getShopItem());
+                        shop.setItem(item.getSlot(), item.getShopItem(0));
                     }
                 }
                 break;
@@ -201,7 +213,7 @@ public class Shop {
     public static ShopItem getShopItemByItemStack(ItemStack item) {
         ShopItem a = null;
         for(ShopItem i : items) {
-            if(i.getShopItem().isSimilar(item)) {
+            if(i.getShopItem(0).isSimilar(item)) {
                 a = i;
             }
         }

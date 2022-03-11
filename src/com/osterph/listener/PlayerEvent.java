@@ -9,14 +9,21 @@ import com.osterph.manager.ScoreboardManager;
 import com.osterph.spawner.Spawner;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.entity.Egg;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scoreboard.Team;
+
+import java.util.HashMap;
 
 public class PlayerEvent implements Listener {
 
@@ -125,4 +132,32 @@ public class PlayerEvent implements Listener {
             e.setQuitMessage(null);
         }
     }
+
+    @EventHandler
+    public void onProjectileLaunch(ProjectileLaunchEvent e) {
+        if(!(e.getEntity().getShooter() instanceof Player)) return;
+        if(e.getEntity() instanceof Egg) return;
+        Projectile tile = e.getEntity();
+        onEgg((Egg)tile);
+    }
+
+    private HashMap<Egg, Integer> eggTimer = new HashMap<>();
+    private HashMap<Egg, Integer> eggScheduler = new HashMap<>();
+
+    private void onEgg(Egg egg) {
+        int scheduler = 0;
+        scheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {
+            @Override
+            public void run() {
+                if (egg.getLocation().subtract(0,1,0).getBlock().getType().equals(Material.AIR)) egg.getLocation().subtract(0,1,0).getBlock().setType(Material.SANDSTONE);
+                eggTimer.put(egg, eggTimer.get(egg)+1);
+                if(eggTimer.get(egg) >= 10) {
+                    Bukkit.getScheduler().cancelTask(eggScheduler.get(egg));
+                }
+            }
+        },0 ,10L);
+        eggTimer.putIfAbsent(egg, 0);
+        eggScheduler.putIfAbsent(egg, scheduler);
+    }
+
 }

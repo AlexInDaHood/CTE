@@ -1,5 +1,6 @@
 package com.osterph.inventory;
 
+import com.osterph.cte.CTESystem;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -53,23 +54,23 @@ public class ShopItem {
         return item;
     }
 
-    public ItemStack getShopItem() {
-        ItemStack item = new ItemStack(mat, amount, (byte) 0);
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(name);
-        ArrayList<String> lore = new ArrayList<>();
-        lore.add("§7Cost: "  + ResourceToColor() + cost + " " + ResourceToString());
-        lore.add(" ");
-        lore.add("§7"+description);
-        meta.setLore(lore);
-        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        if(enchants != null) {
-            for (Enchantment ench : enchants.keySet()) {
-                meta.addEnchant(ench, enchants.get(ench), true);
+    public ItemStack getShopItem(int id) {
+            ItemStack item = new ItemStack(mat, amount, (byte) 0);
+            ItemMeta meta = item.getItemMeta();
+            meta.setDisplayName(name);
+            ArrayList<String> lore = new ArrayList<>();
+            lore.add("§7Cost: " + ResourceToColor() + cost + " " + ResourceToString());
+            lore.add(" ");
+            lore.add("§7" + description);
+            meta.setLore(lore);
+            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+            if (enchants != null) {
+                for (Enchantment ench : enchants.keySet()) {
+                    meta.addEnchant(ench, enchants.get(ench), true);
+                }
             }
-        }
-        item.setItemMeta(meta);
-        return item;
+            item.setItemMeta(meta);
+            return item;
     }
 
     private String ResourceToString() {
