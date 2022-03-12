@@ -1,7 +1,10 @@
 package com.osterph.inventory;
 
 import com.osterph.cte.CTE;
+import com.osterph.dev.devCMD;
 import com.osterph.manager.DropManager;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -9,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 
@@ -16,7 +20,8 @@ public class ShopListener implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent e) {
-        if(e.getView().getTopInventory().getName().contains("§cShop") && e.getAction() != InventoryAction.NOTHING) {
+    	if(e.getAction() == InventoryAction.NOTHING) return;
+        if(e.getView().getTopInventory().getName().contains("§cShop")) {
             e.setCancelled(true);
             Player p = (Player) e.getWhoClicked();
             ItemStack item = e.getCurrentItem();
@@ -107,7 +112,9 @@ public class ShopListener implements Listener {
             }
         }
     }
+    
 
+    
     private boolean checkItem(Shop.Ressourcen re, int amount, Player p) {
         ItemStack m = new ItemStack(Material.BARRIER);
         switch (re) {
