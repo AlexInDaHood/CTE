@@ -27,13 +27,22 @@ public class BlockListener implements Listener {
 	
 	@EventHandler
 	public void onPlace(BlockPlaceEvent e) {
-		for(Spawner sp : CTE.INSTANCE.getSpawnermanager().spawners) {
-			if(e.getBlock().getLocation().distance(sp.getLocation()) < 3) {
-				e.setCancelled(true);
-				e.getPlayer().sendMessage(CTE.prefix + "§cDu kannst hier keine Blöcke platzieren! [Spawner-Schutz]");
-				e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.VILLAGER_NO, 1, 1);
-			}
-		}
+        if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
+            for (Spawner sp : CTE.INSTANCE.getSpawnermanager().spawners) {
+                if (e.getBlock().getLocation().distance(sp.getLocation()) < 3) {
+                    e.setCancelled(true);
+                    e.getPlayer().sendMessage(CTE.prefix + "§cDu kannst hier keine Blöcke platzieren! [Spawner-Schutz]");
+                    e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.VILLAGER_NO, 1, 1);
+                    return;
+                }
+            }
+            if ((e.getBlock().getLocation().distance(CTE.INSTANCE.getLocations().redSPAWN()) < 2) || (e.getBlock().getLocation().distance(CTE.INSTANCE.getLocations().blueSPAWN()) < 2)) {
+                e.setCancelled(true);
+                e.getPlayer().sendMessage(CTE.prefix + "§cDu kannst hier keine Blöcke platzieren! [Spawn-Schutz]");
+                e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.VILLAGER_NO, 1, 1);
+                return;
+            }
+        }
 	}
 	
     @EventHandler

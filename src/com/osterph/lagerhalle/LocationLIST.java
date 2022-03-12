@@ -26,11 +26,11 @@ public class LocationLIST {
         return new Location(w, 927.5, 100, 1000.5, 270, 10);
     }
 
-    public Location blueEGG() {return new Location(w, 1080, 102, 1000);}
-    public Location redEGG() {return new Location(w, 920, 102, 1000);}
+    public Location blueEGG() {return new Location(w, 1078, 102, 1000);}
+    public Location redEGG() {return new Location(w, 922, 102, 1000);}
 
-    public Location blueNPC() {return new Location(w, 1069.5, 100, 1005.5, 220, 0);}
-    public Location redNPC() {return new Location(w, 931.5, 100, 995.5, 40, 0);}
+    public Location blueNPC() {return new Location(w, 1074.5, 100, 1006.5, -180, 0);}
+    public Location redNPC() {return new Location(w, 926.5, 100, 994.5, 00, 0);}
 
     public Location specSPAWN() {
         return new Location(w, 1000, 104, 1000, 180, 10);

@@ -37,8 +37,8 @@ public class ShopItem {
         this.type = type;
     }
 
-    public ItemStack getInventoryItem() {
-        ItemStack item = new ItemStack(mat, amount);
+    public ItemStack getInventoryItem(int id) {
+        ItemStack item = new ItemStack(mat, amount, (byte)id);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(name);
         if(enchants != null) {
