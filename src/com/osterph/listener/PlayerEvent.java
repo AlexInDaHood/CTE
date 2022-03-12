@@ -7,7 +7,6 @@ import com.osterph.lagerhalle.LocationLIST;
 import com.osterph.lagerhalle.TeamSelector;
 import com.osterph.manager.ScoreboardManager;
 import com.osterph.spawner.Spawner;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Egg;
@@ -21,7 +20,6 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scoreboard.Team;
 
 import java.util.HashMap;
 
@@ -105,6 +103,12 @@ public class PlayerEvent implements Listener {
     void onQuit(PlayerQuitEvent e) {
         sys.currentPlayers--;
         Player p = e.getPlayer();
+        if (e.getPlayer().getInventory().getHelmet().getType().equals(Material.SKULL_ITEM)) {
+            CTESystem system = CTE.INSTANCE.getSystem();
+            TEAM t = system.teams.get(p);
+
+
+        }
         sys.teams.remove(p);
         sys.blue.remove(p);
         sys.red.remove(p);

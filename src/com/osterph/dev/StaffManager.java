@@ -36,7 +36,7 @@ public class StaffManager {
     }
 
     public String devString() {
-        return "§3§l✫";
+        return "§c§l✫";
     }
 
     public String helperString() {
@@ -56,7 +56,7 @@ public class StaffManager {
 
     public TextComponent devTag() {
         TextComponent t = new TextComponent("§8["+devString()+"§8] ");
-        HoverEvent e = new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText("§3Event-Entwickler"));
+        HoverEvent e = new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText("§cEvent-Management"));
         t.setHoverEvent(e);
 
         return t;

@@ -41,20 +41,20 @@ public class ShopItem {
         ItemStack item = new ItemStack(mat, amount);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(name);
-        //ArrayList<String> lore = new ArrayList<>();
-        //lore.add("§7"+description);
-        //meta.setLore(lore);
         if(enchants != null) {
             for (Enchantment ench : enchants.keySet()) {
                 meta.addEnchant(ench, enchants.get(ench), true);
             }
         }
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        meta.spigot().setUnbreakable(true);
+        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         item.setItemMeta(meta);
+        item.setDurability((short) id);
         return item;
     }
 
-    public ItemStack getShopItem(int id) {
+    public ItemStack getShopItem() {
             ItemStack item = new ItemStack(mat, amount, (byte) 0);
             ItemMeta meta = item.getItemMeta();
             meta.setDisplayName(name);

@@ -1,19 +1,14 @@
 package com.osterph.cte;
 
-import com.osterph.dev.InventoryClickListener;
-import com.osterph.dev.StaffManager;
-import com.osterph.dev.countdownCMD;
-import com.osterph.dev.devCMD;
-import com.osterph.dev.startCMD;
-import com.osterph.dev.setteamCMD;
+import com.osterph.dev.*;
 import com.osterph.inventory.ShopListener;
 import com.osterph.lagerhalle.LocationLIST;
 import com.osterph.lagerhalle.MySQL;
 import com.osterph.lagerhalle.NPCListener;
 import com.osterph.lagerhalle.TeamSelector;
+import com.osterph.listener.*;
 import com.osterph.manager.ScoreboardManager;
 import com.osterph.spawner.SpawnerManager;
-import com.osterph.listener.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.entity.Player;
@@ -84,13 +79,13 @@ public class CTE extends JavaPlugin{
 		pm.registerEvents(new NPCListener(), this);
 		pm.registerEvents(new TeamSelector(), this);
 		pm.registerEvents(new WorldEvent(), this);
-		pm.registerEvents(new InventoryClickListener(), this);
+		//pm.registerEvents(new InventoryClickListener(), this);
 		
 		
 		getCommand("start").setExecutor(new startCMD());
 		getCommand("countdown").setExecutor(new countdownCMD());
 		getCommand("setteam").setExecutor(new setteamCMD());
-		getCommand("dev").setExecutor(new devCMD());
+		//getCommand("dev").setExecutor(new devCMD());
 	}
 	
 	public SpawnerManager getSpawnermanager() {

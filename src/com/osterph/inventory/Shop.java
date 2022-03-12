@@ -80,7 +80,7 @@ public class Shop {
                 shop.setItem(4, ItemManager.newItem(Material.STONE_SWORD, "§cWaffen-Shop", "", 0));
                 for(ShopItem item : items) {
                     if(item.getType() == type) {
-                        shop.setItem(item.getSlot(), item.getShopItem(0));
+                        shop.setItem(item.getSlot(), item.getShopItem());
                     }
                 }
                 break;
@@ -90,7 +90,7 @@ public class Shop {
                 shop.setItem(4, ItemManager.newItem(Material.IRON_CHESTPLATE, "§cRüstung-Shop", "", 0));
                 for(ShopItem item : items) {
                     if(item.getType() == type) {
-                        shop.setItem(item.getSlot(), item.getShopItem(0));
+                        shop.setItem(item.getSlot(), item.getShopItem());
                     }
                 }
                 break;
@@ -100,7 +100,7 @@ public class Shop {
                 shop.setItem(4, ItemManager.newItem(Material.IRON_PICKAXE, "§cTool-Shop", "", 0));
                 for(ShopItem item : items) {
                     if(item.getType() == type) {
-                        shop.setItem(item.getSlot(), item.getShopItem(0));
+                        shop.setItem(item.getSlot(), item.getShopItem());
                     }
                 }
                 break;
@@ -110,17 +110,11 @@ public class Shop {
                 shop.setItem(4, ItemManager.newItem(Material.SANDSTONE, "§cBlöcke-Shop", "", 2));
                 for(ShopItem item : items) {
                     if(item.getType() == type) {
-                        if(!item.getType().equals(Material.WOOL)) {
-                            shop.setItem(item.getSlot(), item.getShopItem(0));
+                        ItemStack i = item.getInventoryItem(0);
+                        if(!i.getType().equals(Material.WOOL)) {
+                            shop.setItem(item.getSlot(), item.getShopItem());
                         } else {
-                            CTESystem.TEAM team = CTE.INSTANCE.getSystem().teams.get(p);
-                            if(team.equals(CTESystem.TEAM.BLUE)) {
-                                shop.setItem(item.getSlot(), item.getShopItem(11));
-                            } else if(team.equals(CTESystem.TEAM.RED)) {
-                                shop.setItem(item.getSlot(), item.getShopItem(14));
-                            } else {
-                                shop.setItem(item.getSlot(), item.getShopItem(0));
-                            }
+                            shop.setItem(item.getSlot(), item.getShopItem());
                         }
                     }
                 }
@@ -131,7 +125,7 @@ public class Shop {
                 shop.setItem(4, ItemManager.newItem(Material.ENDER_PEARL, "§cSonstiges-Shop", "", 0));
                 for(ShopItem item : items) {
                     if(item.getType() == type) {
-                        shop.setItem(item.getSlot(), item.getShopItem(0));
+                        shop.setItem(item.getSlot(), item.getShopItem());
                     }
                 }
                 break;
@@ -213,7 +207,7 @@ public class Shop {
     public static ShopItem getShopItemByItemStack(ItemStack item) {
         ShopItem a = null;
         for(ShopItem i : items) {
-            if(i.getShopItem(0).isSimilar(item)) {
+            if(i.getShopItem().isSimilar(item)) {
                 a = i;
             }
         }

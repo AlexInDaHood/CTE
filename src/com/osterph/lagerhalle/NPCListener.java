@@ -57,9 +57,9 @@ public class NPCListener implements Listener {
         if (e.getRightClicked().getName() == null|| !e.getRightClicked().getName().equals("[SHOPKEEPER]")) return;
         if (sys.teams.get(e.getPlayer()).equals(TEAM.SPEC) || sys.teams.get(e.getPlayer()).equals(TEAM.DEFAULT)) return;
         
-        if(e.getPlayer().getInventory().getHelmet() != null && e.getPlayer().getInventory().getHelmet().getType().equals(Material.LEATHER_HELMET)) {
+        if(e.getPlayer().getInventory().getHelmet() == null || e.getPlayer().getInventory().getHelmet().getType().equals(Material.LEATHER_HELMET)) {
         	Shop.openShop(e.getPlayer(), Shop.SHOPTYPE.CHOOSE);
-        } else if(e.getPlayer().getInventory().getHelmet().getType().equals(Material.SKULL_ITEM)){
+        } else if (e.getPlayer().getInventory().getHelmet().getType().equals(Material.SKULL_ITEM)){
         	Player p = e.getPlayer();
         	CTESystem system = CTE.INSTANCE.getSystem();
         	TEAM t = system.teams.get(p);

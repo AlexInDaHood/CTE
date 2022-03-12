@@ -206,11 +206,11 @@ public class CTESystem {
     private int countdown = 60;
     
     public void startTimer() {
+        isStarting = true;
     	if(!Bukkit.getScheduler().isCurrentlyRunning(scheduler)) {
 	    	scheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {			
 				@Override
 				public void run() {
-					isStarting = true;
 					
 					for(Player all : Bukkit.getOnlinePlayers()) {
 						all.setLevel(countdown);

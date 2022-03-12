@@ -1,10 +1,8 @@
 package com.osterph.inventory;
 
 import com.osterph.cte.CTE;
-import com.osterph.dev.devCMD;
+import com.osterph.cte.CTESystem;
 import com.osterph.manager.DropManager;
-
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -12,11 +10,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 
 public class ShopListener implements Listener {
+
+    private CTESystem sys = CTE.INSTANCE.getSystem();
 
     @EventHandler
     public void onClick(InventoryClickEvent e) {
@@ -55,7 +54,7 @@ public class ShopListener implements Listener {
                                         isFull = false;
                                         break;
                                     }
-                                    if(a.isSimilar(shop.getInventoryItem())) {
+                                    if(a.isSimilar(shop.getInventoryItem(a.getDurability()))) {
                                         if(a.getAmount()+shop.getAmount() < a.getMaxStackSize()) {
                                             isFull = false;
                                             break;
@@ -78,7 +77,6 @@ public class ShopListener implements Listener {
                                             b = new DropManager(DropManager.DROP.APPLE).getItem(1);
                                             break;
                                     }
-                                    p.getInventory().addItem(shop.getInventoryItem());
                                     p.sendMessage(CTE.prefix + "§eDu hast §6" + shop.getName() + " §efür " + shop.getCost() + " " + shop.getRessource() + " §egekauft!");
                                     ItemStack[] list = p.getInventory().getContents();
                                     int cost = shop.getCost();
@@ -89,7 +87,7 @@ public class ShopListener implements Listener {
                                         if (i.getItemMeta() == null) continue;
                                         if (i.getItemMeta().getDisplayName() == null) continue;
                                         if (!i.getItemMeta().getDisplayName().equals(b.getItemMeta().getDisplayName())) continue;
-                                        while (i != null && i.getAmount() > 0 && cost > 0) {
+                                        while (i.getAmount() > 0 && cost > 0) {
                                         	cost--;
                                         	if(i.getAmount() == 1) {
                                         		p.getInventory().remove(i);
@@ -99,9 +97,38 @@ public class ShopListener implements Listener {
                                         	}
                                         }
                                     }
+                                    switch (shop.getInventoryItem(0).getType()) {
+                                        case CHAINMAIL_CHESTPLATE:
+                                        case IRON_CHESTPLATE:
+                                        case DIAMOND_CHESTPLATE:
+                                            p.getInventory().setChestplate(shop.getInventoryItem(0));
+                                            return;
+                                        case WOOL:
+                                            if (sys.teams.get(p).equals(CTESystem.TEAM.RED)) {
+                                                p.getInventory().setChestplate(shop.getInventoryItem(14));
+                                            } else if (sys.teams.get(p).equals(CTESystem.TEAM.BLUE)) {
+                                                p.getInventory().setChestplate(shop.getInventoryItem(11));
+                                            }
+                                            return;
+                                    }
+                                    p.getInventory().addItem(shop.getInventoryItem(0));
                                 }
                             } else {
-                                p.getInventory().addItem(shop.getInventoryItem());
+                                switch (shop.getInventoryItem(0).getType()) {
+                                    case CHAINMAIL_CHESTPLATE:
+                                    case IRON_CHESTPLATE:
+                                    case DIAMOND_CHESTPLATE:
+                                        p.getInventory().setChestplate(shop.getInventoryItem(0));
+                                        return;
+                                    case WOOL:
+                                        if (sys.teams.get(p).equals(CTESystem.TEAM.RED)) {
+                                            p.getInventory().setChestplate(shop.getInventoryItem(14));
+                                        } else if (sys.teams.get(p).equals(CTESystem.TEAM.BLUE)) {
+                                            p.getInventory().setChestplate(shop.getInventoryItem(11));
+                                        }
+                                        return;
+                                }
+                                p.getInventory().addItem(shop.getInventoryItem(0));
                             }
                         } else {
                             p.playSound(p.getLocation(), Sound.VILLAGER_NO, 1, 1);
