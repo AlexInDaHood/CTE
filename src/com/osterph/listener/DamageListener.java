@@ -1,25 +1,26 @@
 package com.osterph.listener;
 
-import com.osterph.cte.CTE;
-import com.osterph.cte.CTESystem;
-import com.osterph.cte.CTESystem.TEAM;
-import com.osterph.lagerhalle.LocationLIST;
-import com.osterph.manager.ScoreboardManager;
-
 import java.util.HashMap;
-import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.*;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.scoreboard.Team;
+
+import com.osterph.cte.CTE;
+import com.osterph.cte.CTESystem;
+import com.osterph.cte.CTESystem.GAMESTATE;
+import com.osterph.cte.CTESystem.TEAM;
+import com.osterph.lagerhalle.LocationLIST;
+import com.osterph.manager.ScoreboardManager;
 
 public class DamageListener implements Listener {
 
@@ -27,23 +28,20 @@ public class DamageListener implements Listener {
 
     public HashMap<Player, String[]> combat = new HashMap<>(); //TARGET | DAMAGER
 
-
 	private int Scheduler;
 
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
     	if(!(e.getPlayer().getLocation().getY() < 30)) return;
-    	if(!sys.isRunning) return;
+    	if(!sys.gamestate.equals(GAMESTATE.RUNNING)) return;
     	if(!e.getPlayer().getGameMode().equals(GameMode.SURVIVAL) && !e.getPlayer().getGameMode().equals(GameMode.ADVENTURE)) return;
     	Player p = e.getPlayer();
 		onDeath(p);
     }
     
-    
-    
     @EventHandler
     public void onDamage(EntityDamageEvent e) {
-        if (!sys.isRunning) {
+        if (!sys.gamestate.equals(GAMESTATE.RUNNING)) {
             e.setCancelled(true);
             return;
         }
@@ -56,7 +54,6 @@ public class DamageListener implements Listener {
 			e.setCancelled(true);
 		}
 
-
 		if(!(e.getEntity() instanceof Player)) return;
 		if(cause.equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK) || cause.equals(EntityDamageEvent.DamageCause.PROJECTILE) || cause.equals(EntityDamageEvent.DamageCause.ENTITY_EXPLOSION)) return;
 		if(e.getDamage() >= ((Player) e.getEntity()).getHealth()) {
@@ -67,7 +64,7 @@ public class DamageListener implements Listener {
     
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent e) {
-    	if(!sys.isRunning) {
+    	if(!sys.gamestate.equals(GAMESTATE.RUNNING)) {
     		e.setCancelled(true);
     		return;
     	}
@@ -112,12 +109,10 @@ public class DamageListener implements Listener {
 				t.setHealth(20);
 				onDeath(t);
 			}
-    		
     	} else {
     		e.setCancelled(true);
     		return;
     	}
-    	
     }
 
     public void onDeath(Player p) {
@@ -204,50 +199,4 @@ public class DamageListener implements Listener {
     		}
     	}
     }
-    
-    /**
-    @EventHandler
-    public void onDamage(EntityDamageByEntityEvent e) {
-        if (!sys.isRunning) {
-            e.setCancelled(true);
-            return;
-        }
-        if (e.getEntity() instanceof ArmorStand) {
-            e.setCancelled(true);
-            return;
-        }
-
-        if (e.getEntity() instanceof Player && ((Player) e.getEntity()).getOpenInventory() != null) ((Player) e.getEntity()).closeInventory();
-
-        if (!(e.getEntity() instanceof Player)) return;
-        Player p = (Player) e.getEntity();
-        
-        if (sys.teams.get(p).equals(CTESystem.TEAM.SPEC) || sys.teams.get(p).equals(CTESystem.TEAM.DEFAULT)) {
-            e.setCancelled(true);
-            return;
-        }
-
-        if (e.getDamager() instanceof Projectile) {
-            Projectile pro = (Projectile) e.getDamager();
-            if (pro instanceof Fireball) return;
-            Player Shooter = (Player) pro.getShooter();
-            if (sys.teams.get(Shooter).equals(CTESystem.TEAM.SPEC) || sys.teams.get(Shooter).equals(CTESystem.TEAM.DEFAULT)) {
-                e.setCancelled(true);
-                return;
-            }
-            if (sys.teams.get(p).equals(sys.teams.get(Shooter))) {
-                e.setCancelled(true);
-            }
-        } else if (e.getDamager() instanceof Player) {
-            Player Damager = (Player) e.getDamager();
-            if (sys.teams.get(Damager).equals(CTESystem.TEAM.SPEC) || sys.teams.get(Damager).equals(CTESystem.TEAM.DEFAULT)) {
-                e.setCancelled(true);
-                return;
-            }
-            if (sys.teams.get(p).equals(sys.teams.get(Damager))) {
-                e.setCancelled(true);
-            }
-        }
-    }
-    **/
 }

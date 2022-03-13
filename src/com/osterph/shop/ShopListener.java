@@ -1,8 +1,5 @@
-package com.osterph.inventory;
+package com.osterph.shop;
 
-import com.osterph.cte.CTE;
-import com.osterph.cte.CTESystem;
-import com.osterph.manager.DropManager;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -11,6 +8,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+
+import com.osterph.cte.CTE;
+import com.osterph.cte.CTESystem;
+import com.osterph.manager.DropManager;
 
 
 public class ShopListener implements Listener {
@@ -81,7 +82,7 @@ public class ShopListener implements Listener {
                                     ItemStack[] list = p.getInventory().getContents();
                                     int cost = shop.getCost();
                                     for (ItemStack i : list) {
-                                        if (cost == 0) return;
+                                        if (cost == 0) break;
                                         if (i == null) continue;
                                         if (i.getAmount() == 0) continue;
                                         if (i.getItemMeta() == null) continue;
@@ -105,11 +106,17 @@ public class ShopListener implements Listener {
                                             return;
                                         case WOOL:
                                             if (sys.teams.get(p).equals(CTESystem.TEAM.RED)) {
-                                                p.getInventory().setChestplate(shop.getInventoryItem(14));
+                                                p.getInventory().addItem(shop.getInventoryItem(14));
                                             } else if (sys.teams.get(p).equals(CTESystem.TEAM.BLUE)) {
-                                                p.getInventory().setChestplate(shop.getInventoryItem(11));
+                                                p.getInventory().addItem(shop.getInventoryItem(11));
                                             }
                                             return;
+                                        case STONE_SWORD:
+                                        case IRON_SWORD:
+                                        case DIAMOND_SWORD:
+                                        	p.getInventory().remove(Material.WOOD_SWORD);
+                                        	p.getInventory().addItem(shop.getInventoryItem(0));
+                                        	return;
                                     }
                                     p.getInventory().addItem(shop.getInventoryItem(0));
                                 }

@@ -5,9 +5,9 @@ import org.bukkit.Location;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.util.Vector;
 
 import com.osterph.cte.CTE;
-import org.bukkit.util.Vector;
 
 
 public class Spawner {
@@ -19,6 +19,8 @@ public class Spawner {
 	int amount;
 	int max;
 	
+	boolean activated;
+	
 	int currentitems = 0;
 	
 	private int scheduler;
@@ -29,6 +31,7 @@ public class Spawner {
 		this.max = max;
 		this.amount = amount;
 		this.name = name;
+		activated = false;
 		
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(meta.getDisplayName() + "[" + name + "]");
@@ -37,6 +40,7 @@ public class Spawner {
 	}
 	
 	public void onStart() {
+		activated = true;
 		scheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {			
 			@Override
 			public void run() {
@@ -52,7 +56,10 @@ public class Spawner {
 	}
 	
 	public void onStop() {
-		Bukkit.getScheduler().cancelTask(scheduler);
+		activated = false;
+		try {
+			Bukkit.getScheduler().cancelTask(scheduler);
+		} catch(Exception e) {}
 		currentitems = 0;
 	}
 	
@@ -62,9 +69,16 @@ public class Spawner {
 	
 	public void setDelay(int delay) {
 		this.delay = delay;
-		onStop();
-		onStart();
+		if(activated) {
+			onStop();
+			onStart();
+		}
 	}
+	
+	public void setMax(int max) {
+		this.max = max;
+	}
+	
 	
 	public ItemStack getItem() {
 		return item;
@@ -98,4 +112,25 @@ public class Spawner {
 	public String getName() {
 		return name;
 	}
+	
+	public void toggle() {
+		if(activated) {
+			onStop();
+		} else {
+			onStart();
+		}		
+	}
+	
+	public void setActivated(boolean activated) {
+		if(activated) {
+			onStart();
+		} else {
+			onStop();
+		}
+	}
+	
+	public boolean isActivated() {
+		return activated;
+	}
+	
 }

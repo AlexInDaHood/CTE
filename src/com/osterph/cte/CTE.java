@@ -1,19 +1,30 @@
 package com.osterph.cte;
 
-import com.osterph.dev.*;
-import com.osterph.inventory.ShopListener;
-import com.osterph.lagerhalle.LocationLIST;
-import com.osterph.lagerhalle.MySQL;
-import com.osterph.lagerhalle.NPCListener;
-import com.osterph.lagerhalle.TeamSelector;
-import com.osterph.listener.*;
-import com.osterph.manager.ScoreboardManager;
-import com.osterph.spawner.SpawnerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.osterph.dev.DevListener;
+import com.osterph.dev.countdownCMD;
+import com.osterph.dev.devCMD;
+import com.osterph.dev.setteamCMD;
+import com.osterph.dev.startCMD;
+import com.osterph.lagerhalle.LocationLIST;
+import com.osterph.lagerhalle.MySQL;
+import com.osterph.lagerhalle.NPCListener;
+import com.osterph.lagerhalle.TeamSelector;
+import com.osterph.listener.BlockListener;
+import com.osterph.listener.ChatListener;
+import com.osterph.listener.DamageListener;
+import com.osterph.listener.EggListener;
+import com.osterph.listener.InteractEvent;
+import com.osterph.listener.PlayerEvent;
+import com.osterph.listener.WorldEvent;
+import com.osterph.manager.ScoreboardManager;
+import com.osterph.shop.ShopListener;
+import com.osterph.spawner.SpawnerManager;
 
 public class CTE extends JavaPlugin{
 	
@@ -24,13 +35,14 @@ public class CTE extends JavaPlugin{
 	private CTESystem system;
 	private SpawnerManager spawnermanager;
 	private LocationLIST locations;
-	
+	private TeamSelector selector;
 	@Override
 	public void onEnable() {
 		INSTANCE = this;
 		system = new CTESystem();
 		spawnermanager = new SpawnerManager();
 		locations = new LocationLIST();
+		selector = new TeamSelector();
 		onSettings();
 		register();
 		
@@ -64,6 +76,7 @@ public class CTE extends JavaPlugin{
 		Bukkit.getWorld("world").setGameRuleValue("mobGriefing", "false");
 		Bukkit.getWorld("world").setTime(6000);
 		
+		spawnermanager.addSpawner();
 	}
 
 	private void register() {
@@ -79,13 +92,13 @@ public class CTE extends JavaPlugin{
 		pm.registerEvents(new NPCListener(), this);
 		pm.registerEvents(new TeamSelector(), this);
 		pm.registerEvents(new WorldEvent(), this);
-		//pm.registerEvents(new InventoryClickListener(), this);
+		pm.registerEvents(new DevListener(), this);
 		
 		
+		getCommand("dev").setExecutor(new devCMD());
 		getCommand("start").setExecutor(new startCMD());
 		getCommand("countdown").setExecutor(new countdownCMD());
 		getCommand("setteam").setExecutor(new setteamCMD());
-		//getCommand("dev").setExecutor(new devCMD());
 	}
 	
 	public SpawnerManager getSpawnermanager() {
@@ -98,6 +111,9 @@ public class CTE extends JavaPlugin{
 	
 	public CTESystem getSystem() {
 		return system;
+	}
+	public TeamSelector getSelector() {
+		return selector;
 	}
 	
 }

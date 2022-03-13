@@ -1,5 +1,8 @@
 package com.osterph.listener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -19,9 +22,6 @@ import org.bukkit.event.entity.ExplosionPrimeEvent;
 
 import com.osterph.cte.CTE;
 import com.osterph.spawner.Spawner;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class BlockListener implements Listener {
 	
@@ -91,13 +91,11 @@ public class BlockListener implements Listener {
         if (e.getEntityType().equals(EntityType.CHICKEN)) e.setCancelled(true);
         if (!e.getEntityType().equals(EntityType.DROPPED_ITEM)) return;
         Item i = (Item) e.getEntity();
-
         if (!isDropped(i.getItemStack().getType())) i.remove();
     }
 
     @SuppressWarnings("deprecation")
 	public boolean isBreakable(Block b) {
-
         if (b.getType().equals(Material.WOOL)) {
             return b.getData() == 11 || b.getData() == 14;
         }
@@ -111,14 +109,12 @@ public class BlockListener implements Listener {
             b.getType().equals(Material.OBSIDIAN)||
             b.getType().equals(Material.WEB)||
             b.getType().equals(Material.LADDER)) {
-
             return true;
         }
         return false;
     }
 
     private boolean isDropped(Material m) {
-
         if (m.equals(Material.ENDER_STONE)||
             m.equals(Material.WOOD)||
             m.equals(Material.SANDSTONE)||
@@ -138,11 +134,10 @@ public class BlockListener implements Listener {
             m.equals(Material.CARROT_ITEM)||
             m.equals(Material.ENDER_PEARL)||
             m.equals(Material.BLAZE_ROD)||
-            m.equals(Material.EGG)) {
-
+            m.equals(Material.EGG) ||
+        	m.equals(Material.WOOL)) {
             return true;
         }
-
         return false;
     }
 }

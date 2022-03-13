@@ -1,10 +1,11 @@
 package com.osterph.dev;
 
-import com.osterph.cte.CTE;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import com.osterph.cte.CTE;
 
 public class countdownCMD implements CommandExecutor {
     @Override

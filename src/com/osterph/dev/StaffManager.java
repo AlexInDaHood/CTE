@@ -1,8 +1,9 @@
 package com.osterph.dev;
 
+import org.bukkit.entity.Player;
+
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.entity.Player;
 
 public class StaffManager {
 
@@ -21,7 +22,7 @@ public class StaffManager {
     public boolean isHelper() {
         if (isDev()) return true;
 
-        return UUID.equals("470f8310-3eed-4c6b-a730-52e0fe3579f3") || UUID.equals("08bbb829-5667-4bee-9e79-8fbdaef9d68c");
+        return UUID.equals("470f8310-3eed-4c6b-a730-52e0fe3579f3") || UUID.equals("08bbb829-5667-4bee-9e79-8fbdaef9d68c") || UUID.equals("1ea78772-cb82-48ca-b68f-25f64eb55391");
     }
 
     public boolean hasRoles() {

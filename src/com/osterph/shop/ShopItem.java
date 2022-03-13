@@ -1,14 +1,13 @@
-package com.osterph.inventory;
+package com.osterph.shop;
 
-import com.osterph.cte.CTESystem;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class ShopItem {
 
@@ -50,12 +49,11 @@ public class ShopItem {
         meta.spigot().setUnbreakable(true);
         meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         item.setItemMeta(meta);
-        item.setDurability((short) id);
         return item;
     }
 
     public ItemStack getShopItem() {
-            ItemStack item = new ItemStack(mat, amount, (byte) 0);
+            ItemStack item = new ItemStack(mat, amount);
             ItemMeta meta = item.getItemMeta();
             meta.setDisplayName(name);
             ArrayList<String> lore = new ArrayList<>();

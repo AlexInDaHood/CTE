@@ -1,13 +1,14 @@
 package com.osterph.dev;
 
-import com.osterph.cte.CTE;
-import com.osterph.cte.CTESystem;
-import com.osterph.manager.ScoreboardManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import com.osterph.cte.CTE;
+import com.osterph.cte.CTESystem;
+import com.osterph.manager.ScoreboardManager;
 
 public class setteamCMD implements CommandExecutor {
     @Override

@@ -1,12 +1,7 @@
 package com.osterph.listener;
 
-import com.osterph.cte.CTE;
-import com.osterph.cte.CTESystem;
-import com.osterph.cte.CTESystem.TEAM;
-import com.osterph.lagerhalle.LocationLIST;
-import com.osterph.lagerhalle.TeamSelector;
-import com.osterph.manager.ScoreboardManager;
-import com.osterph.spawner.Spawner;
+import java.util.HashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Egg;
@@ -21,7 +16,17 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.HashMap;
+import com.google.gson.JsonObject;
+import com.osterph.cte.CTE;
+import com.osterph.cte.CTESystem;
+import com.osterph.cte.CTESystem.GAMESTATE;
+import com.osterph.cte.CTESystem.TEAM;
+import com.osterph.lagerhalle.LabyModProtocol;
+import com.osterph.lagerhalle.LocationLIST;
+import com.osterph.lagerhalle.TeamSelector;
+import com.osterph.manager.ScoreboardManager;
+import com.osterph.manager.TablistManager;
+import com.osterph.spawner.Spawner;
 
 public class PlayerEvent implements Listener {
 
@@ -42,20 +47,19 @@ public class PlayerEvent implements Listener {
     
     @EventHandler
     public void onLogin(PlayerLoginEvent e) {
-        if (sys.currentPlayers == sys.maxPlayers && sys.isStarting) {
+        if (Bukkit.getOnlinePlayers().size() == sys.maxPlayers && sys.gamestate.equals(GAMESTATE.STARTING)) {
             e.disallow(PlayerLoginEvent.Result.KICK_OTHER, CTE.prefix + "Die Runde ist voll!");
             return;
         }
-        if (sys.isEnding) {
+        if (sys.gamestate.equals(GAMESTATE.ENDING)) {
             e.disallow(PlayerLoginEvent.Result.KICK_OTHER, CTE.prefix + "Die Runde ist vorbei!");
             return;
         }
 
         if (!e.getResult().equals(PlayerLoginEvent.Result.ALLOWED)) return;
 
-        sys.currentPlayers++;
-        if (sys.currentPlayers < sys.minPlayers) {
-            if (sys.currentPlayers == sys.maxPlayers && sys.c > 11) sys.c = 10;
+        if (Bukkit.getOnlinePlayers().size() < sys.minPlayers) {
+            if (Bukkit.getOnlinePlayers().size() == sys.maxPlayers && sys.c > 11) sys.c = 10;
             return;
         }
 
@@ -65,23 +69,26 @@ public class PlayerEvent implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
+        sendPlayingGamemode(p);
+        sendServerBanner(p);
+        TablistManager.displayTablist(p);
         p.setHealth(20);
         p.getActivePotionEffects().clear();
         sys.clear(p);
         sys.teams.put(p, CTESystem.TEAM.DEFAULT);
 
-        if (sys.isRunning) {
+        if (sys.gamestate.equals(GAMESTATE.RUNNING)) {
             sys.teams.put(p, CTESystem.TEAM.SPEC);
-            p.teleport(new LocationLIST().specSPAWN());
+            p.teleport(CTE.INSTANCE.getLocations().specSPAWN());
         } else {
-            p.teleport(new LocationLIST().lobbySPAWN());
-            p.getInventory().setItem(0, new TeamSelector().team);
+            p.teleport(CTE.INSTANCE.getLocations().lobbySPAWN());
+            p.getInventory().setItem(0, CTE.INSTANCE.getSelector().team);
         }
 
-        if(sys.isStarting) {
+        if(sys.gamestate.equals(GAMESTATE.STARTING)) {
             e.setJoinMessage("§8[§a+§8] §7" + p.getName());
             
-            if(sys.currentPlayers >= sys.minPlayers) {
+            if(Bukkit.getOnlinePlayers().size() >= sys.minPlayers) {
             	sys.startTimer();
             }
             
@@ -95,18 +102,16 @@ public class PlayerEvent implements Listener {
         for (Player all: Bukkit.getOnlinePlayers()) {
             ScoreboardManager.refreshBoard(all);
             all.setLevel(sys.c);
-            if (sys.isRunning) all.hidePlayer(p);
+            if (sys.gamestate.equals(GAMESTATE.RUNNING)) all.hidePlayer(p);
         }
     }
 
     @EventHandler
     void onQuit(PlayerQuitEvent e) {
-        sys.currentPlayers--;
         Player p = e.getPlayer();
-        if (e.getPlayer().getInventory().getHelmet().getType().equals(Material.SKULL_ITEM)) {
+        if (e.getPlayer().getInventory().getHelmet() != null && e.getPlayer().getInventory().getHelmet().getType().equals(Material.SKULL_ITEM)) {
             CTESystem system = CTE.INSTANCE.getSystem();
             TEAM t = system.teams.get(p);
-
 
         }
         sys.teams.remove(p);
@@ -121,14 +126,14 @@ public class PlayerEvent implements Listener {
             }
         },5);
 
-        if(sys.isStarting) {
+        if(sys.gamestate.equals(GAMESTATE.STARTING)) {
             e.setQuitMessage("§8[§c-§8] §7" + p.getName());
-            System.out.println(sys.currentPlayers + " : " + sys.minPlayers);
-            if(sys.currentPlayers < sys.minPlayers) {
+            System.out.println(Bukkit.getOnlinePlayers().size() + " : " + sys.minPlayers);
+            if(Bukkit.getOnlinePlayers().size() < sys.minPlayers) {
             	sys.stopStartTimer();
             	sys.sendAllMessage(CTE.prefix + "Der Start wurde abgebrochen!");
             }
-        } else if(sys.isRunning) {
+        } else if(sys.gamestate.equals(GAMESTATE.RUNNING)) {
             e.setQuitMessage("§8[§c-§8] §7" + p.getName());
             sys.teams.put(e.getPlayer(), TEAM.SPEC);
             sys.checkTeamSizes();
@@ -163,5 +168,18 @@ public class PlayerEvent implements Listener {
         eggTimer.putIfAbsent(egg, 0);
         eggScheduler.putIfAbsent(egg, scheduler);
     }
-
+    
+    private void sendPlayingGamemode(Player p) {
+    	JsonObject obj = new JsonObject();
+    	obj.addProperty("show_gamemode", true);
+    	obj.addProperty("gamemode_name", "§ePlayHills.eu §8» §6§lCapture the Egg");
+    	LabyModProtocol.sendClientMessage(p, "server_gamemode", obj);
+    }
+    
+    public void sendServerBanner(Player player) {
+        JsonObject object = new JsonObject();
+        object.addProperty("url", "https://cdn.discordapp.com/attachments/846451756816138250/952402124065607710/PBanner.png"); 
+        LabyModProtocol.sendClientMessage(player, "server_banner", object);
+    }
+    
 }

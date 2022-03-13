@@ -1,19 +1,27 @@
 package com.osterph.manager;
 
-import com.mojang.authlib.GameProfile;
-import com.osterph.lagerhalle.NMSHelper;
-import net.minecraft.server.v1_8_R3.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
+import com.mojang.authlib.GameProfile;
+import com.osterph.lagerhalle.NMSHelper;
+
+import net.minecraft.server.v1_8_R3.EntityPlayer;
+import net.minecraft.server.v1_8_R3.IChatBaseComponent;
+import net.minecraft.server.v1_8_R3.MinecraftServer;
+import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo;
+import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerListHeaderFooter;
+import net.minecraft.server.v1_8_R3.PlayerInteractManager;
+import net.minecraft.server.v1_8_R3.WorldServer;
 
 public class TablistManager {
 
-    private static String header = "";
-    private static String footer = "";
+    private static String header = "\n§8» §6§lCAPTURE THE EGG §8«\n";
+    private static String footer = "\n§7Frohe Ostern oder so\n";
 
     public static void displayTablist(Player p) {
         sendTablist(p);

@@ -1,18 +1,21 @@
 package com.osterph.listener;
 
-import com.osterph.cte.CTE;
-import com.osterph.cte.CTESystem;
-import com.osterph.dev.StaffManager;
-import com.osterph.inventory.Shop;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
+import java.util.ArrayList;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import java.util.ArrayList;
+import com.osterph.cte.CTE;
+import com.osterph.cte.CTESystem;
+import com.osterph.cte.CTESystem.GAMESTATE;
+import com.osterph.dev.StaffManager;
+import com.osterph.shop.Shop;
+
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class ChatListener implements Listener {
 
@@ -23,11 +26,11 @@ public class ChatListener implements Listener {
 	@EventHandler
     void onChat(AsyncPlayerChatEvent e) {
         Player p = e.getPlayer();
-        Shop.openShop(p, Shop.SHOPTYPE.WEAPON);
         String msg = e.getMessage();
         msg = UwU(msg);
         CTESystem.TEAM team = sys.teams.get(p);
-        if (sys.isRunning) {
+        StaffManager staff = new StaffManager(p);
+        if (sys.gamestate.equals(GAMESTATE.RUNNING)) {
             if (msg.toLowerCase().startsWith("@a ") || msg.toLowerCase().startsWith("@all ")) {
                 String[] gmsg = msg.split(" ");
                 msg = "";
@@ -43,19 +46,19 @@ public class ChatListener implements Listener {
                     case RED:
                         prefix.setText("§8[§5@all§8] ");
                         txt.setText("§8[§cROT§8] §c" + p.getName() + " §8» §f" + msg);
-                        if (new StaffManager(p).hasRoles()) break;
+                        if (staff.hasRoles()) break;
                         cooldown.add(p.getName());
                         break;
                     case BLUE:
                         prefix.setText("§8[§5@all§8] ");
                         txt.setText("§8[§9BLAU§8] §9" + p.getName() + " §8» §f" + msg);
-                        if (new StaffManager(p).hasRoles()) break;
+                        if (staff.hasRoles()) break;
                         cooldown.add(p.getName());
                         break;
                     case SPEC:
                         e.setCancelled(true);
                         txt.setText("§8[§7SPEC§8] §7" + p.getName() + " §8» §7" + msg);
-                        if (new StaffManager(p).hasRoles()) b.addExtra(new StaffManager(p).activeTag());
+                        if (staff.hasRoles()) b.addExtra(staff.activeTag());
                         b.addExtra(txt);
                         for (Player all : Bukkit.getOnlinePlayers()) {
                             if (sys.teams.get(all) == CTESystem.TEAM.SPEC) {
@@ -65,12 +68,12 @@ public class ChatListener implements Listener {
                         return;
                 }
                 b.addExtra(prefix);
-                if (new StaffManager(p).hasRoles()) b.addExtra(new StaffManager(p).activeTag());
+                if (staff.hasRoles()) b.addExtra(staff.activeTag());
                 b.addExtra(txt);
                 for (Player all: Bukkit.getOnlinePlayers()) {
                     all.spigot().sendMessage(b);
                 }
-                if (new StaffManager(p).hasRoles()) return;
+                if (staff.hasRoles()) return;
                 Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, new Runnable() {
                     @Override
                     public void run() {
@@ -88,7 +91,7 @@ public class ChatListener implements Listener {
                         prefix.setText("§8[§eTEAM§8] ");
                         txt.setText("§8[§cROT§8] §c" + p.getName() + " §8» §f" + msg);
                         b.addExtra(prefix);
-                        if (new StaffManager(p).hasRoles()) b.addExtra(new StaffManager(p).activeTag());
+                        if (staff.hasRoles()) b.addExtra(staff.activeTag());
                         b.addExtra(txt);
 
                         for (Player all : Bukkit.getOnlinePlayers()) {
@@ -102,7 +105,7 @@ public class ChatListener implements Listener {
                         txt.setText("§8[§9BLAU§8] §9" + p.getName() + " §8» §f" + msg);
                         b.addExtra(prefix);
 
-                        if (new StaffManager(p).hasRoles()) b.addExtra(new StaffManager(p).activeTag());
+                        if (staff.hasRoles()) b.addExtra(staff.activeTag());
                         b.addExtra(txt);
                         for (Player all : Bukkit.getOnlinePlayers()) {
                             if (!sys.teams.get(all).equals(CTESystem.TEAM.BLUE)) continue;
@@ -113,7 +116,7 @@ public class ChatListener implements Listener {
                         e.setCancelled(true);
                         txt.setText("§8[§7SPEC§8] §7" + p.getName() + " §8» §7" + msg);
 
-                        if (new StaffManager(p).hasRoles()) b.addExtra(new StaffManager(p).activeTag());
+                        if (staff.hasRoles()) b.addExtra(staff.activeTag());
                         b.addExtra(txt);
                         for (Player all : Bukkit.getOnlinePlayers()) {
                             if (!sys.teams.get(all).equals(CTESystem.TEAM.SPEC)) continue;
@@ -141,8 +144,8 @@ public class ChatListener implements Listener {
                     txt.setText("§8[§7WAITING§8] §7" + p.getName() +" §8» §7" + msg);
                     break;
             }
-            if (new StaffManager(p).hasRoles()) {
-                b.addExtra(new StaffManager(p).activeTag());
+            if (staff.hasRoles()) {
+                b.addExtra(staff.activeTag());
             }
 
             b.addExtra(txt);
@@ -159,7 +162,8 @@ public class ChatListener implements Listener {
         msg = msg.replace("UwU","§dUwU§f");
         msg = msg.replace("OwO","§5OwO§f");
         msg = msg.replace(":3","§c:3§f");
-
+        
+        
         return msg;
     }
 }

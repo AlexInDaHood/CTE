@@ -1,10 +1,8 @@
 package com.osterph.lagerhalle;
 
-import com.osterph.cte.CTE;
-import com.osterph.cte.CTESystem;
-import com.osterph.inventory.Shop;
-import com.osterph.manager.ItemManager;
-import com.osterph.manager.ScoreboardManager;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -19,10 +17,12 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scoreboard.Scoreboard;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.osterph.cte.CTE;
+import com.osterph.cte.CTESystem;
+import com.osterph.manager.ItemManager;
+import com.osterph.manager.ScoreboardManager;
+import com.osterph.shop.Shop;
 
 public class TeamSelector implements Listener {
 

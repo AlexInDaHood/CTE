@@ -1,10 +1,8 @@
 package com.osterph.listener;
 
-import com.osterph.cte.CTE;
-import com.osterph.cte.CTESystem;
-import com.osterph.manager.ItemManager;
-import com.osterph.lagerhalle.LocationLIST;
-import com.osterph.manager.ScoreboardManager;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -18,8 +16,12 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.osterph.cte.CTE;
+import com.osterph.cte.CTESystem;
+import com.osterph.cte.CTESystem.GAMESTATE;
+import com.osterph.lagerhalle.LocationLIST;
+import com.osterph.manager.ItemManager;
+import com.osterph.manager.ScoreboardManager;
 
 public class EggListener implements Listener {
 
@@ -33,7 +35,7 @@ public class EggListener implements Listener {
             e.setCancelled(true);
             return;
         }
-        if (!sys.isRunning) {
+        if (!sys.gamestate.equals(GAMESTATE.RUNNING)) {
             e.setCancelled(true);
             return;
         }
@@ -46,7 +48,7 @@ public class EggListener implements Listener {
 
         e.setCancelled(true);
         String stolenegg = "";
-        if (e.getClickedBlock().getLocation().equals(new LocationLIST().blueEGG())) {
+        if (e.getClickedBlock().getLocation().equals(CTE.INSTANCE.getLocations().blueEGG())) {
             if (sys.teams.get(p).equals(CTESystem.TEAM.BLUE)) {
                 p.sendMessage(CTE.prefix + "Das ist das falsche Ei...");
                 return;
@@ -55,7 +57,7 @@ public class EggListener implements Listener {
             sys.sendAllSound(Sound.WITHER_DEATH, 1, 1);
             sys.BLUE_EGG = CTESystem.EGG_STATE.STOLEN;
             stolenegg = "blue";
-        } else if (e.getClickedBlock().getLocation().equals(new LocationLIST().redEGG())) {
+        } else if (e.getClickedBlock().getLocation().equals(CTE.INSTANCE.getLocations().redEGG())) {
             if (sys.teams.get(p).equals(CTESystem.TEAM.RED)) {
                 p.sendMessage(CTE.prefix + "Das ist das falsche Ei...");
                 return;

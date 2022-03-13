@@ -1,8 +1,12 @@
 package com.osterph.lagerhalle;
 
-import com.osterph.cte.CTE;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import java.sql.*;
+import com.osterph.cte.CTE;
 
 public class MySQL {
 
@@ -23,10 +27,10 @@ public class MySQL {
     private void connect() {
         try {
             con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database +"?user="+username+"&password="+password + "&characterEncoding=latin1");
-            java.lang.System.out.println("[MySQL] Connected");
+            System.out.println("[MySQL] Connected");
         } catch (SQLException e) {
             e.printStackTrace();
-            java.lang.System.out.println("[MySQL] disconnected");
+            System.out.println("[MySQL] disconnected");
         }
     }
 
@@ -34,7 +38,7 @@ public class MySQL {
         try {
             if (this.con != null) {
                 this.con.close();
-                java.lang.System.out.println("[MySQL] disconnected");
+                System.out.println("[MySQL] disconnected");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -47,7 +51,7 @@ public class MySQL {
             PreparedStatement ps = con.prepareStatement(query);
             ps.executeUpdate();
         } catch (SQLException e) {
-            java.lang.System.out.println(e);
+            System.out.println(e);
         }
         disconnect();
     }
@@ -59,13 +63,12 @@ public class MySQL {
             PreparedStatement ps = con.prepareStatement(query);
             return ps.executeQuery();
         } catch (SQLException e) {
-
-            java.lang.System.out.println(e);
+            System.out.println(e);
         }
         disconnect();
         return rs;
     }
-
+    
     public void setDatabase(String Tabelle, String SpalteKategorie, String SpalteInhalt, String WertKategorie, Object WertInhalt) {
         try {
             this.update("INSERT INTO " + Tabelle + " (" + SpalteKategorie + "," + WertKategorie + ") VALUES ('" + SpalteInhalt + "','" + WertInhalt + "')");
@@ -73,11 +76,10 @@ public class MySQL {
             e.printStackTrace();
         }
     }
-
+    
     public Object getDatabase(String Tabelle, String SpalteKategorie, String SpalteInhalt, String WertKategorie) {
         ResultSet rs = CTE.mysql.query("SELECT " + WertKategorie + " FROM " + Tabelle + " WHERE " + SpalteKategorie + "='" + SpalteInhalt + "'");
         Object out = null;
-
         try{
             while (rs.next()){
                 out = rs.getString(1);

@@ -9,22 +9,13 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 public class LocationLIST {
-    private World w;
+    private World w = Bukkit.getWorld("world");
+    
+    public Location lobbySPAWN() {return new Location(w, 0, 30, 0, 90, 10);}
 
-    public LocationLIST() {
-        w = Bukkit.getWorld("world");
-    }
-
-    public Location lobbySPAWN() {
-        return new Location(w, 0, 30, 0, 90, 10);
-    }
-
-    public Location blueSPAWN() {
-        return new Location(w, 1073.5, 100, 1000.5, 90, 10);
-    }
-    public Location redSPAWN() {
-        return new Location(w, 927.5, 100, 1000.5, 270, 10);
-    }
+    public Location blueSPAWN() {return new Location(w, 1073.5, 100, 1000.5, 90, 10);}
+    
+    public Location redSPAWN() {return new Location(w, 927.5, 100, 1000.5, 270, 10);}
 
     public Location blueEGG() {return new Location(w, 1078, 102, 1000);}
     public Location redEGG() {return new Location(w, 922, 102, 1000);}
@@ -32,9 +23,9 @@ public class LocationLIST {
     public Location blueNPC() {return new Location(w, 1074.5, 100, 1006.5, -180, 0);}
     public Location redNPC() {return new Location(w, 926.5, 100, 994.5, 00, 0);}
 
-    public Location specSPAWN() {
-        return new Location(w, 1000, 104, 1000, 180, 10);
-    }
+    public Location specSPAWN() {return new Location(w, 1000, 104, 1000, 180, 10);}
+    
+    
     public void shopkeeperStand() {
         for (Entity all: w.getEntities()) {
             if (all instanceof Player) continue;

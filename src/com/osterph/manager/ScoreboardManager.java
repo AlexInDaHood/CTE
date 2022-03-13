@@ -1,14 +1,20 @@
 package com.osterph.manager;
 
-import com.osterph.cte.CTE;
-import com.osterph.cte.CTESystem;
-import com.osterph.dev.StaffManager;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scoreboard.*;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.NameTagVisibility;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
+
+import com.osterph.cte.CTE;
+import com.osterph.cte.CTESystem;
+import com.osterph.cte.CTESystem.GAMESTATE;
+import com.osterph.dev.StaffManager;
 
 public class ScoreboardManager {
 
@@ -83,7 +89,7 @@ public class ScoreboardManager {
             if (new StaffManager(all).hasRoles()) all.setPlayerListName(all.getPlayerListName()+" §8["+new StaffManager(all).activeString()+"§8]");
         }
 
-        if (sys.isRunning || sys.isEnding) {
+        if (sys.gamestate.equals(GAMESTATE.RUNNING) || sys.gamestate.equals(GAMESTATE.ENDING)) {
             Objective o = board.getObjective(p.getName());
             try {
                 if (o == null) o = board.registerNewObjective(p.getName(), "");

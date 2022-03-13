@@ -1,11 +1,12 @@
 package com.osterph.lagerhalle;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
-import org.bukkit.entity.Player;
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
+
+import org.bukkit.entity.Player;
+
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 
 public class NMSHelper {
 
