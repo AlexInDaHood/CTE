@@ -9,3 +9,10 @@ commands:
   countdown:
   setteam:
   dev:
+  emotes:
+    aliases:
+      - emote
+      - e
+      - listemote
+      - listemotes
+      - emotelist

@@ -1,21 +1,20 @@
 package com.osterph.listener;
 
-import java.util.ArrayList;
-
+import com.osterph.cte.CTE;
+import com.osterph.cte.CTESystem;
+import com.osterph.cte.CTESystem.GAMESTATE;
+import com.osterph.dev.StaffManager;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import com.osterph.cte.CTE;
-import com.osterph.cte.CTESystem;
-import com.osterph.cte.CTESystem.GAMESTATE;
-import com.osterph.dev.StaffManager;
-import com.osterph.shop.Shop;
-
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
 
 public class ChatListener implements Listener {
 
@@ -27,7 +26,11 @@ public class ChatListener implements Listener {
     void onChat(AsyncPlayerChatEvent e) {
         Player p = e.getPlayer();
         String msg = e.getMessage();
-        msg = UwU(msg);
+        String[] bmsg = msg.split(" ");
+        msg = "";
+        for (String s : bmsg) {
+            msg += UwU(p, s) + " ";
+        }
         CTESystem.TEAM team = sys.teams.get(p);
         StaffManager staff = new StaffManager(p);
         if (sys.gamestate.equals(GAMESTATE.RUNNING)) {
@@ -157,13 +160,53 @@ public class ChatListener implements Listener {
         System.out.println(p.getName() + " > " + msg);
     }
 
-    private String UwU(String msg) {
+    private String UwU(Player p, String msg) {
 
-        msg = msg.replace("UwU","§dUwU§f");
-        msg = msg.replace("OwO","§5OwO§f");
-        msg = msg.replace(":3","§c:3§f");
+        HashMap<String, String> emotes = new HashMap<>();
+        emotes.put("ez", "Frohe Ostern!");
+        int r = new Random().nextInt(6)+1;
+        switch (r) {
+            case 1:
+                emotes.put("l", "Alle suchen nach Ostereiern... Ich suche nach dem Lebenswillen...");
+                break;
+            case 2:
+                emotes.put("l", "Alles Gute, nur das Beste, gerade jetzt zum Osterfeste!");
+                break;
+            case 3:
+                emotes.put("l", "Jedes Jahr zur Osterfeier klaut der Has dem Huhn die Eier, woraufhin er sie versteckt. So kommts, dass wir in jedem Jahr die Eier suchen ist doch klar!");
+                break;
+            case 4:
+                emotes.put("l", "Endlich ist es soweit, willkommen in der Osterzeit!");
+                break;
+            case 5:
+                emotes.put("l", "Legt der Has Eier ins Nest, dann feiern wir das Osterfest!");
+                break;
+            case 6:
+                emotes.put("l", "Was hoppelt da im grünen Gras, mein Kind es ist der Osterhas!");
+                break;
+        }
+
+        emotes.put("#ukraine", "§9#ukr§eaine");
+        emotes.put(":d", "§5:D");
+        emotes.put("d:", "§9D:");
+        emotes.put(";d", "§5;D");
+        emotes.put("d;", "§9D;");
+        emotes.put("uwu", "§dUwU");
+        emotes.put("owo", "§4OwO");
+        emotes.put(":)", "§6:)");
+        emotes.put(";)", "§6;)");
+        emotes.put(":(", "§1:(");
+        emotes.put(";(", "§1;(");
+        if (new StaffManager(p).isHelper()) {
+            emotes.put("gg", "§6§kO§r §e§lGG§r §6§kO");
+            emotes.put("xd", "§3xD");
+            emotes.put("<3", "§c<3");
+            emotes.put("pog", "§2§kO§r §aPOG§r §2§kO");
+            emotes.put("pogchamp", "§2§kO§r §aPOGCHAMP§r §2§kO");
+        }
+
+        if (emotes.containsKey(msg.toLowerCase())) msg = emotes.get(msg.toLowerCase());
         
-        
-        return msg;
+        return msg+"§f";
     }
 }

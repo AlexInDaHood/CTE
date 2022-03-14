@@ -1,5 +1,6 @@
 package com.osterph.cte;
 
+import com.osterph.lagerhalle.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.entity.Player;
@@ -11,10 +12,6 @@ import com.osterph.dev.countdownCMD;
 import com.osterph.dev.devCMD;
 import com.osterph.dev.setteamCMD;
 import com.osterph.dev.startCMD;
-import com.osterph.lagerhalle.LocationLIST;
-import com.osterph.lagerhalle.MySQL;
-import com.osterph.lagerhalle.NPCListener;
-import com.osterph.lagerhalle.TeamSelector;
 import com.osterph.listener.BlockListener;
 import com.osterph.listener.ChatListener;
 import com.osterph.listener.DamageListener;
@@ -67,7 +64,8 @@ public class CTE extends JavaPlugin{
 	private void onSettings() {
 		Bukkit.getWorld("world").setThundering(false);
 		Bukkit.getWorld("world").setStorm(false);
-		Bukkit.getWorld("world").setDifficulty(Difficulty.PEACEFUL);
+		Bukkit.getWorld("world").getWorldBorder().setCenter(0.5, 0.5);
+		Bukkit.getWorld("world").setDifficulty(Difficulty.EASY);
 		Bukkit.getWorld("world").setGameRuleValue("doMobSpawning", "false");
 		Bukkit.getWorld("world").setGameRuleValue("doMobLoot", "false");
 		Bukkit.getWorld("world").setGameRuleValue("randomTickSpeed", "0");
@@ -99,6 +97,8 @@ public class CTE extends JavaPlugin{
 		getCommand("start").setExecutor(new startCMD());
 		getCommand("countdown").setExecutor(new countdownCMD());
 		getCommand("setteam").setExecutor(new setteamCMD());
+		getCommand("emotes").setExecutor(new Emotes());
+
 	}
 	
 	public SpawnerManager getSpawnermanager() {

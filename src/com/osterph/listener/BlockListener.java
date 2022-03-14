@@ -134,7 +134,7 @@ public class BlockListener implements Listener {
             m.equals(Material.CARROT_ITEM)||
             m.equals(Material.ENDER_PEARL)||
             m.equals(Material.BLAZE_ROD)||
-            m.equals(Material.EGG) ||
+            m.equals(Material.FIREBALL)||
         	m.equals(Material.WOOL)) {
             return true;
         }

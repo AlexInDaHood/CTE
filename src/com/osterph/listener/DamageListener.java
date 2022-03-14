@@ -116,6 +116,7 @@ public class DamageListener implements Listener {
     }
 
     public void onDeath(Player p) {
+		p.closeInventory();
 		LocationLIST locs = CTE.INSTANCE.getLocations();
 		if (sys.teams.get(p).equals(TEAM.SPEC) || sys.teams.get(p).equals(TEAM.DEFAULT)) {
 			p.teleport(locs.specSPAWN());
@@ -177,7 +178,7 @@ public class DamageListener implements Listener {
 		}
     }
     
-    private void onEgg(Player p) {
+    public void onEgg(Player p) {
     	TEAM t = sys.teams.get(p);
     	if(t == TEAM.BLUE) {
     		if(p.getInventory().getHelmet() != null && p.getInventory().getHelmet().getItemMeta().getDisplayName().equals("§cRotes-Ei")) {

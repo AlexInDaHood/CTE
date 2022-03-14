@@ -2,6 +2,7 @@ package com.osterph.cte;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -77,6 +78,7 @@ public class CTESystem {
     
     public void startEquip(Player p) {
 
+        clear(p);
         ItemStack i = new ItemStack(Material.LEATHER_HELMET);
         LeatherArmorMeta m = (LeatherArmorMeta) i.getItemMeta();
         if (teams.get(p).equals(TEAM.SPEC) || teams.get(p).equals(TEAM.DEFAULT)) return;
@@ -100,6 +102,28 @@ public class CTESystem {
     }
     
     public void forceStart() {
+        Bukkit.getWorld("world").getWorldBorder().setCenter(1000.5, 1000.5);
+        for (Player all: Bukkit.getOnlinePlayers()) {
+            all.closeInventory();
+            if (!teams.get(all).equals(TEAM.DEFAULT)) continue;
+            if (red.size() < blue.size()) {
+                teams.put(all, TEAM.RED);
+                red.add(all);
+            } else if (red.size() > blue.size()) {
+                teams.put(all, TEAM.BLUE);
+                blue.add(all);
+            } else {
+                boolean Bred = new Random().nextBoolean();
+                if (Bred) {
+                    teams.put(all, TEAM.RED);
+                    red.add(all);
+                } else {
+                    teams.put(all, TEAM.BLUE);
+                    blue.add(all);
+                }
+            }
+        }
+
     	gamestate =GAMESTATE.RUNNING;
         stopStartTimer();
         RED_EGG = EGG_STATE.OKAY;
@@ -123,6 +147,8 @@ public class CTESystem {
 
     @SuppressWarnings("incomplete-switch")
 	public void endGame() {
+
+        Bukkit.getWorld("world").getWorldBorder().setCenter(0.5, 0.5);
         gamestate = GAMESTATE.ENDING;
         switch (winnerTeam) {
             case DEFAULT: {
@@ -142,13 +168,23 @@ public class CTESystem {
             }
         }
         for(Player all : Bukkit.getOnlinePlayers()) {
-        	all.getInventory().clear();
+        	clear(all);
+            all.teleport(CTE.INSTANCE.getLocations().lobbySPAWN());
+            all.playSound(all.getLocation(), Sound.WITHER_DEATH, 1, 1);
+            all.sendMessage(CTE.prefix + "Der Server startet in 15 Sekunden neu.");
         }
         for(Entity t : Bukkit.getWorld("world").getEntities()) {
         	if(t instanceof Item) {
         		t.remove();
         	}
         }
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, new Runnable() {
+            @Override
+            public void run() {
+                moveHub();
+            }
+        }, 20*15L);
 
     }
 
@@ -201,7 +237,12 @@ public class CTESystem {
 	    	scheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {			
 				@Override
 				public void run() {
-					
+
+                    if (!gamestate.equals(GAMESTATE.STARTING)) {
+                        Bukkit.getScheduler().cancelTask(scheduler);
+                        countdown = 0;
+                        return;
+                    }
 					for(Player all : Bukkit.getOnlinePlayers()) {
 						all.setLevel(countdown);
 					}

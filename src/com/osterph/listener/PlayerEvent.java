@@ -1,32 +1,24 @@
 package com.osterph.listener;
 
-import java.util.HashMap;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.entity.Egg;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.meta.ItemMeta;
-
 import com.google.gson.JsonObject;
 import com.osterph.cte.CTE;
 import com.osterph.cte.CTESystem;
 import com.osterph.cte.CTESystem.GAMESTATE;
 import com.osterph.cte.CTESystem.TEAM;
+import com.osterph.dev.StaffManager;
 import com.osterph.lagerhalle.LabyModProtocol;
-import com.osterph.lagerhalle.LocationLIST;
-import com.osterph.lagerhalle.TeamSelector;
+import com.osterph.manager.ItemManager;
 import com.osterph.manager.ScoreboardManager;
 import com.osterph.manager.TablistManager;
 import com.osterph.spawner.Spawner;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.player.*;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class PlayerEvent implements Listener {
 
@@ -64,6 +56,11 @@ public class PlayerEvent implements Listener {
         }
 
         sys.startTimer();
+    }
+
+    @EventHandler
+    public void onFood(FoodLevelChangeEvent e) {
+        e.setCancelled(true);
     }
 
     @EventHandler
@@ -110,9 +107,7 @@ public class PlayerEvent implements Listener {
     void onQuit(PlayerQuitEvent e) {
         Player p = e.getPlayer();
         if (e.getPlayer().getInventory().getHelmet() != null && e.getPlayer().getInventory().getHelmet().getType().equals(Material.SKULL_ITEM)) {
-            CTESystem system = CTE.INSTANCE.getSystem();
-            TEAM t = system.teams.get(p);
-
+            new DamageListener().onEgg(p);
         }
         sys.teams.remove(p);
         sys.blue.remove(p);
@@ -140,33 +135,6 @@ public class PlayerEvent implements Listener {
         } else {
             e.setQuitMessage(null);
         }
-    }
-
-    @EventHandler
-    public void onProjectileLaunch(ProjectileLaunchEvent e) {
-        if(!(e.getEntity().getShooter() instanceof Player)) return;
-        if(e.getEntity() instanceof Egg) return;
-        Projectile tile = e.getEntity();
-        onEgg((Egg)tile);
-    }
-
-    private HashMap<Egg, Integer> eggTimer = new HashMap<>();
-    private HashMap<Egg, Integer> eggScheduler = new HashMap<>();
-
-    private void onEgg(Egg egg) {
-        int scheduler = 0;
-        scheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {
-            @Override
-            public void run() {
-                if (egg.getLocation().subtract(0,1,0).getBlock().getType().equals(Material.AIR)) egg.getLocation().subtract(0,1,0).getBlock().setType(Material.SANDSTONE);
-                eggTimer.put(egg, eggTimer.get(egg)+1);
-                if(eggTimer.get(egg) >= 10) {
-                    Bukkit.getScheduler().cancelTask(eggScheduler.get(egg));
-                }
-            }
-        },0 ,10L);
-        eggTimer.putIfAbsent(egg, 0);
-        eggScheduler.putIfAbsent(egg, scheduler);
     }
     
     private void sendPlayingGamemode(Player p) {

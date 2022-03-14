@@ -26,7 +26,7 @@ public class SpawnerManager {
 		//MIDDLE
 		spawners.add(new Spawner("MIDDLE-CARROT-1", carrot.getItem(1), new Location(Bukkit.getWorld("world"), 1001.5, 100, 1011.5), 20*30, 1, 2));
 		spawners.add(new Spawner("MIDDLE-CARROT-2", carrot.getItem(1), new Location(Bukkit.getWorld("world"), 988.5, 100, 999.5), 20*30, 1, 2));
-		spawners.add(new Spawner("MIDDLE-CARROT-1", carrot.getItem(1), new Location(Bukkit.getWorld("world"), 1005.5, 100, 997.5), 20*30, 1, 2));
+		spawners.add(new Spawner("MIDDLE-CARROT-3", carrot.getItem(1), new Location(Bukkit.getWorld("world"), 1005.5, 100, 997.5), 20*30, 1, 2));
 		
 		//RED
 		spawners.add(new Spawner("RED-APPLE", apple.getItem(1), new Location(Bukkit.getWorld("world"), 927.5, 100, 1007.5), 20, 1, 30));
