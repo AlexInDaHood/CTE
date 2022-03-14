@@ -60,7 +60,7 @@ public class ChatListener implements Listener {
                         break;
                     case SPEC:
                         e.setCancelled(true);
-                        txt.setText("§8[§7SPEC§8] §7" + p.getName() + " §8» §7" + msg);
+                        txt.setText("§8[§7SPEC§8] §7" + p.getName() + " §8» §f" + msg);
                         if (staff.hasRoles()) b.addExtra(staff.activeTag());
                         b.addExtra(txt);
                         for (Player all : Bukkit.getOnlinePlayers()) {
@@ -68,7 +68,17 @@ public class ChatListener implements Listener {
                                 all.spigot().sendMessage(b);
                             }
                         }
-                        return;
+                    case DEFAULT:
+                        e.setCancelled(true);
+                        txt.setText("§8[§7SPEC§8] §7" + p.getName() + " §8» §f" + msg);
+                        if (staff.hasRoles()) b.addExtra(staff.activeTag());
+                        b.addExtra(txt);
+                        for (Player all : Bukkit.getOnlinePlayers()) {
+                            if (sys.teams.get(all) == CTESystem.TEAM.SPEC) {
+                                all.spigot().sendMessage(b);
+                            }
+                        }
+                        break;
                 }
                 b.addExtra(prefix);
                 if (staff.hasRoles()) b.addExtra(staff.activeTag());
@@ -117,7 +127,7 @@ public class ChatListener implements Listener {
                         return;
                     case SPEC:
                         e.setCancelled(true);
-                        txt.setText("§8[§7SPEC§8] §7" + p.getName() + " §8» §7" + msg);
+                        txt.setText("§8[§7SPEC§8] §7" + p.getName() + " §8» §f" + msg);
 
                         if (staff.hasRoles()) b.addExtra(staff.activeTag());
                         b.addExtra(txt);
@@ -141,10 +151,10 @@ public class ChatListener implements Listener {
                     txt.setText("§8[§9BLAU§8] §9" + p.getName() + " §8» §f" + msg);
                     break;
                 case SPEC:
-                    txt.setText("§8[§7SPEC§8] §7" + p.getName() +  " §8» §7" + msg);
+                    txt.setText("§8[§7SPEC§8] §7" + p.getName() +  " §8» §f" + msg);
                     break;
                 case DEFAULT:
-                    txt.setText("§8[§7WAITING§8] §7" + p.getName() +" §8» §7" + msg);
+                    txt.setText("§8[§7WAITING§8] §7" + p.getName() +" §8» §f" + msg);
                     break;
             }
             if (staff.hasRoles()) {

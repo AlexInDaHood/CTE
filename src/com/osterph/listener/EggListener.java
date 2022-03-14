@@ -142,6 +142,8 @@ public class EggListener implements Listener {
         list.add(Material.IRON_CHESTPLATE);
         list.add(Material.DIAMOND_CHESTPLATE);
         list.add(Material.SKULL_ITEM);
+        list.add(Material.BED);
+        list.add(Material.REDSTONE_COMPARATOR);
 
         return list;
     }

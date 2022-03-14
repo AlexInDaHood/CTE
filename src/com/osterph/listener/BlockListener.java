@@ -27,6 +27,16 @@ public class BlockListener implements Listener {
 	
 	@EventHandler
 	public void onPlace(BlockPlaceEvent e) {
+        if(e.getBlock().getType().equals(Material.TNT)) {
+            e.setCancelled(true);
+            if(e.getPlayer().getItemInHand().getAmount() >1) {
+                e.getPlayer().getItemInHand().setAmount(-1);
+            } else {
+                e.getPlayer().getInventory().remove(e.getPlayer().getItemInHand());
+            }
+            e.getBlock().getLocation().getWorld().spawn(e.getBlock().getLocation(), TNTPrimed.class);
+            return;
+        }
         if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
             for (Spawner sp : CTE.INSTANCE.getSpawnermanager().spawners) {
                 if (e.getBlock().getLocation().distance(sp.getLocation()) < 3) {

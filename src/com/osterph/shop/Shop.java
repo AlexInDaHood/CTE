@@ -52,8 +52,8 @@ public class Shop {
 
         //Extras
         items.add(new ShopItem(Material.GOLDEN_APPLE, "§fGoldapfel", "Heilt dich", 1, 3, Ressourcen.Melone, null, 20, SHOPTYPE.SONSTIGES));
-        items.add(new ShopItem(Material.WATER_BUCKET, "§fWassereimer", "Halt ein Wassereimer?", 1, 6, Ressourcen.Melone, null, 22, SHOPTYPE.SONSTIGES));
-        items.add(new ShopItem(Material.EGG, "§fBrückenei", ":/", 1, 2, Ressourcen.Karotte, null, 24, SHOPTYPE.SONSTIGES)); //Rdy
+        items.add(new ShopItem(Material.TNT, "§fTNT", "Halt ein Wassereimer?", 1, 6, Ressourcen.Melone, null, 22, SHOPTYPE.SONSTIGES));
+        items.add(new ShopItem(Material.FIREBALL, "§fFeuerkugel", ":/", 1, 40, Ressourcen.Apfel, null, 24, SHOPTYPE.SONSTIGES));
         items.add(new ShopItem(Material.ENDER_PEARL, "§fEnderperle", "UwU", 1, 4, Ressourcen.Karotte, null, 30, SHOPTYPE.SONSTIGES));
         items.add(new ShopItem(Material.BLAZE_ROD, "§fRettungsplattform", "Rettet dich beim runterfallen", 1, 6, Ressourcen.Karotte, null, 32, SHOPTYPE.SONSTIGES));
 

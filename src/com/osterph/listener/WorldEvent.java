@@ -1,5 +1,6 @@
 package com.osterph.listener;
 
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPhysicsEvent;
@@ -15,7 +16,9 @@ public class WorldEvent implements Listener{
 	
 	@EventHandler
 	public void onBlocks(BlockPhysicsEvent e) {
-		e.setCancelled(true);
+		if(!e.getChangedType().equals(Material.WATER) && !e.getChangedType().equals(Material.STATIONARY_WATER)) {
+			e.setCancelled(true);
+		}
 	}
 	
 	@EventHandler

@@ -145,6 +145,8 @@ public class CTESystem {
         CTE.INSTANCE.getSpawnermanager().aktivateSpawner();
     }
 
+
+
     @SuppressWarnings("incomplete-switch")
 	public void endGame() {
 
@@ -157,12 +159,12 @@ public class CTESystem {
                 break;
             }
             case RED: {
-                sendAllMessage(CTE.prefix + "Das §c§lRote-Team §ehat die Runde §6§lCAPTURE THE EGG §egewonnen!");
+                sendAllMessage(CTE.prefix + "Das §c§lROTE Team §ehat die Runde §6§lCAPTURE THE EGG §egewonnen!");
                 sendAllTitle("§4§k0§r §cROT §4§k0","§ehat das Spiel gewonnen!");
                 break;
             }
             case BLUE: {
-                sendAllMessage(CTE.prefix + "Das §c§lBlaue-Team §ehat die Runde §6§lCAPTURE THE EGG §egewonnen!");
+                sendAllMessage(CTE.prefix + "Das §9§lBLAUE Team §ehat die Runde §6§lCAPTURE THE EGG §egewonnen!");
                 sendAllTitle("§1§k0§r §9BLAU §1§k0","§ehat das Spiel gewonnen!");
                 break;
             }

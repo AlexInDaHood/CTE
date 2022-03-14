@@ -3,6 +3,7 @@ package com.osterph.lagerhalle;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.osterph.dev.devCMD;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -32,9 +33,14 @@ public class TeamSelector implements Listener {
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
         if (e.getAction().equals(Action.PHYSICAL)) return;
-        if (e.getPlayer().getItemInHand() == null || !e.getPlayer().getItemInHand().isSimilar(team)) return;
-
-        openTeams(e.getPlayer());
+        if (e.getPlayer().getItemInHand() == null) return;
+        if (e.getPlayer().getItemInHand().getItemMeta() == null) return;
+        if (e.getPlayer().getItemInHand().getItemMeta().getDisplayName() == null) return;
+        if(e.getPlayer().getItemInHand().isSimilar(team)) {
+            openTeams(e.getPlayer());
+        } else if(e.getPlayer().getItemInHand().getItemMeta().getDisplayName().contains("§bDev-Settings")) {
+            devCMD.openInventory(e.getPlayer());
+        }
     }
 
     @EventHandler

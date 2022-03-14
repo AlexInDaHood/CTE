@@ -26,6 +26,7 @@ public class PlayerEvent implements Listener {
     
     @EventHandler
     public void onPickupItems(PlayerPickupItemEvent e) {
+        if(sys.teams.get(e.getPlayer()).equals(TEAM.DEFAULT) || sys.teams.get(e.getPlayer()).equals(TEAM.SPEC)) {e.setCancelled(true);return;}
         if (e.getItem().getItemStack().getItemMeta() == null || e.getItem().getItemStack().getItemMeta().getDisplayName() == null) return;
     	if (e.getItem().getItemStack().getItemMeta().getDisplayName().contains("[") && e.getItem().getItemStack().getItemMeta().getDisplayName().contains("]")) {
     		String name = e.getItem().getItemStack().getItemMeta().getDisplayName();
@@ -83,6 +84,9 @@ public class PlayerEvent implements Listener {
         }
 
         if(sys.gamestate.equals(GAMESTATE.STARTING)) {
+            if(new StaffManager(p).isDev()) {
+                p.getInventory().setItem(8, ItemManager.newItem(Material.REDSTONE_COMPARATOR, "§8» §bDev-Settings §8«", "", 0));
+            }
             e.setJoinMessage("§8[§a+§8] §7" + p.getName());
             
             if(Bukkit.getOnlinePlayers().size() >= sys.minPlayers) {
