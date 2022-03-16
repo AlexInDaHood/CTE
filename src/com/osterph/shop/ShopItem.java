@@ -40,40 +40,49 @@ public class ShopItem {
         ItemStack item = new ItemStack(mat, amount, (byte)id);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(name);
-        if(enchants != null) {
-            for (Enchantment ench : enchants.keySet()) {
-                meta.addEnchant(ench, enchants.get(ench), true);
-            }
-        }
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         meta.spigot().setUnbreakable(true);
         meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         item.setItemMeta(meta);
+        if(enchants != null) {
+            for (Enchantment ench : enchants.keySet()) {
+                try {
+                    item.addEnchantment(ench, enchants.get(ench));
+                } catch (Exception e) {
+                    item.addUnsafeEnchantment(ench, enchants.get(ench));
+                }
+            }
+        }
         return item;
     }
 
     public ItemStack getShopItem() {
-            ItemStack item = new ItemStack(mat, amount);
-            ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName(name);
-            ArrayList<String> lore = new ArrayList<>();
-            lore.add("§7Cost: " + ResourceToColor() + cost + " " + ResourceToString());
-            lore.add(" ");
-            lore.add("§7" + description);
-            meta.setLore(lore);
-            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-            if (enchants != null) {
-                for (Enchantment ench : enchants.keySet()) {
-                    meta.addEnchant(ench, enchants.get(ench), true);
+        ItemStack item = new ItemStack(mat, amount);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(name);
+        ArrayList<String> lore = new ArrayList<>();
+        lore.add(" ");
+        lore.add("§7" + description);
+        lore.add("§7Kosten§8: " + ResourceToColor() + cost + " " + ResourceToString());
+        meta.setLore(lore);
+        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        item.setItemMeta(meta);
+        if (enchants != null) {
+            for (Enchantment ench : enchants.keySet()) {
+                try {
+                    item.addEnchantment(ench, enchants.get(ench));
+                } catch (Exception e) {
+                    item.addUnsafeEnchantment(ench, enchants.get(ench));
                 }
             }
-            item.setItemMeta(meta);
-            return item;
+        }
+        return item;
     }
 
-    private String ResourceToString() {
+    public String ResourceToString() {
         String a = "";
-        if(amount > 1) {
+        if(cost > 1) {
             switch (ressource) {
                 case Apfel:
                     a = "Äpfel";

@@ -27,6 +27,8 @@ public class ItemManager {
     private List<String> lores = new ArrayList<>();
     private boolean unbreakable;
     private boolean HIDEunbreakable;
+    private HashMap<Enchantment, Integer> ench = new HashMap<>();
+    private boolean HIDEench = false;
 
     public ItemManager(Material m) {
         this.m = m;
@@ -37,6 +39,8 @@ public class ItemManager {
         this.lores = new ArrayList<>();
         this.unbreakable = false;
         this.HIDEunbreakable = false;
+        this.ench = new HashMap<>();
+        this.HIDEench = false;
     }
 
     public ItemManager withName(String ItemName) {
@@ -56,6 +60,12 @@ public class ItemManager {
 
     public ItemManager withMeta(ItemMeta meta) {
         this.meta = meta;
+        return this;
+    }
+
+    public ItemManager withEnchantment(Enchantment e, int level, boolean hide) {
+        this.ench.put(e, level);
+        this.HIDEench = hide;
         return this;
     }
 
@@ -82,6 +92,7 @@ public class ItemManager {
 
         meta.spigot().setUnbreakable(unbreakable);
         if (HIDEunbreakable) meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        if (HIDEench) meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
         meta.setLore(this.lores);
@@ -90,63 +101,17 @@ public class ItemManager {
         item.setItemMeta(meta);
         item.setAmount(amount);
         item.setDurability((short) data);
+        if (!ench.isEmpty()) {
+            for (Enchantment e : ench.keySet()) {
+                try {
+                    item.addEnchantment(e, ench.get(e));
+                } catch (Exception ex) {
+                    item.addUnsafeEnchantment(e, ench.get(e));
+                }
+            }
+        }
 
         return item;
-    }
-
-    public static ItemStack newItem(Material item, String name, String lore, int id) {
-        ItemStack stack;
-        if(id <= 0) {
-            stack = new ItemStack(item);
-        } else {
-            stack = new ItemStack(item, 1, (byte) id);
-        }
-        ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(name);
-        if(!lore.isEmpty() && lore != "null" && lore != " ") {
-            ArrayList<String> lr = new ArrayList<>();
-            if(lore.contains("-/-")) {
-                String[] la = lore.split("-/-");
-                for(int i=0;i<la.length;i++) {
-                    lr.add(la[i]);
-                }
-            } else {
-                lr.add(lore);
-            }
-            meta.setLore(lr);
-        }
-        stack.setItemMeta(meta);
-        return stack;
-    }
-
-    public static ItemStack newItem(Material item, String name, String lore, int id, HashMap<Enchantment, Integer> enchantments) {
-        ItemStack stack;
-        if(id <= 0) {
-            stack = new ItemStack(item);
-        } else {
-            stack = new ItemStack(item, 1, (byte) id);
-        }
-        ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(name);
-        if(!lore.isEmpty() && lore != "null" && lore != " " && lore != "") {
-            ArrayList<String> lr = new ArrayList<>();
-            if(lore.contains("-/-")) {
-                String[] la = lore.split("-/-");
-                for(int i=0;i<la.length;i++) {
-                    lr.add(la[i]);
-                }
-            } else {
-                lr.add(lore);
-            }
-            meta.setLore(lr);
-        }
-        if(enchantments != null) {
-            for(Enchantment ench : enchantments.keySet()) {
-                meta.addEnchant(ench, enchantments.get(ench), true);
-            }
-        }
-        stack.setItemMeta(meta);
-        return stack;
     }
 
     public static ItemStack customHead(String name, String lore, String value) {

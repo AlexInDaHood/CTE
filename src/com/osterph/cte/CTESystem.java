@@ -52,6 +52,7 @@ public class CTESystem {
         p.getInventory().setChestplate(null);
         p.getInventory().setLeggings(null);
         p.getInventory().setBoots(null);
+        p.setHealth(20);
         p.getInventory().clear();
     }
 

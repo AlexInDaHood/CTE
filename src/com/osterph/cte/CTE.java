@@ -49,9 +49,9 @@ public class CTE extends JavaPlugin{
 		String db = "Ostern";
 		String user = "PlayHills";
 
-		mysql = new MySQL(host, db, user, pw);
-
-		mysql.update("CREATE TABLE IF NOT EXISTS `PLAYERPOINTS` (`UUID` text NOT NULL, `POINTS` int NOT NULL);");
+		//TODO DATENBANK REPARIEREN
+		//mysql = new MySQL(host, db, user, pw);
+		//mysql.update("CREATE TABLE IF NOT EXISTS `PLAYERPOINTS` (`UUID` text NOT NULL, `POINTS` int NOT NULL);");
 
 		for (Player all: Bukkit.getOnlinePlayers()) {
 			ScoreboardManager.refreshBoard(all);

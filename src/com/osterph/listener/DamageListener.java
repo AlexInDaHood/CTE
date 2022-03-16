@@ -107,6 +107,7 @@ public class DamageListener implements Listener {
 
     		if(e.getDamage() >= t.getHealth()) {
 				t.setHealth(20);
+				e.setCancelled(true);
 				onDeath(t);
 			}
     	} else {

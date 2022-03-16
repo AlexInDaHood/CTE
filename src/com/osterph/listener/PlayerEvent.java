@@ -17,7 +17,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class PlayerEvent implements Listener {
@@ -85,7 +88,7 @@ public class PlayerEvent implements Listener {
 
         if(sys.gamestate.equals(GAMESTATE.STARTING)) {
             if(new StaffManager(p).isDev()) {
-                p.getInventory().setItem(8, ItemManager.newItem(Material.REDSTONE_COMPARATOR, "§8» §bDev-Settings §8«", "", 0));
+                p.getInventory().setItem(8, new ItemManager(Material.REDSTONE_COMPARATOR).withName("§8» §bDev-Settings §8«").complete());
             }
             e.setJoinMessage("§8[§a+§8] §7" + p.getName());
             

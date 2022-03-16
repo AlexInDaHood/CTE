@@ -126,7 +126,7 @@ public class ScoreboardManager {
             o.getScore("§cROTES TEAM§8: §e" + sys.red.size()+"§7/§e"+sys.maxPlayers/2).setScore(4);
             o.getScore("§3").setScore(3);
             o.getScore("§3GES. PUNKTE").setScore(2);
-            o.getScore("§8➥ §7"+CTE.mysql.getDatabase("PLAYERPOINTS", "UUID", p.getUniqueId().toString(), "POINTS")).setScore(1);
+            //o.getScore("§8➥ §7"+CTE.mysql.getDatabase("PLAYERPOINTS", "UUID", p.getUniqueId().toString(), "POINTS")).setScore(1);
         }
 
         p.setScoreboard(board);

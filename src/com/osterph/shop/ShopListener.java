@@ -21,12 +21,12 @@ public class ShopListener implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent e) {
     	if(e.getAction() == InventoryAction.NOTHING) return;
-        if(e.getView().getTopInventory().getName().contains("§cShop")) {
+        if(e.getView().getTopInventory().getName().contains("§aShop")) {
             e.setCancelled(true);
             Player p = (Player) e.getWhoClicked();
             ItemStack item = e.getCurrentItem();
             String name = item.getItemMeta().getDisplayName();
-            if(e.getView().getTopInventory().getName() == "§cShop") {
+            if(e.getView().getTopInventory().getName().equals("§aShop")) {
                 if(item.getType().equals(Material.ARROW)) {
                     p.closeInventory();
                 } else if(name.contains("Waffen")) {
@@ -44,7 +44,7 @@ public class ShopListener implements Listener {
                 if(name.contains("Zurück")) {
                     Shop.openShop(p, Shop.SHOPTYPE.CHOOSE);
                 }
-                if(item.getItemMeta().getLore() != null && item.getItemMeta().getLore().get(0).contains("§7Cost: ")) {
+                if(item.getItemMeta().getLore() != null && item.getItemMeta().getLore().get(0).contains("§7Kosten: ")) {
                     ShopItem shop = Shop.getShopItemByItemStack(item);
                     if(shop != null) {
                         if(checkItem(shop.getRessource(), shop.cost, p)) {
@@ -78,7 +78,7 @@ public class ShopListener implements Listener {
                                             b = new DropManager(DropManager.DROP.APPLE).getItem(1);
                                             break;
                                     }
-                                    p.sendMessage(CTE.prefix + "§eDu hast §6" + shop.getName() + " §efür " + shop.getCost() + " " + shop.getRessource() + " §egekauft!");
+                                    p.sendMessage(CTE.prefix + "§eDu hast §6" + shop.getName() + " §efür " + shop.getCost() + " " + shop.ResourceToString() + " §egekauft!");
                                     ItemStack[] list = p.getInventory().getContents();
                                     int cost = shop.getCost();
                                     for (ItemStack i : list) {
@@ -110,6 +110,9 @@ public class ShopListener implements Listener {
                                             } else if (sys.teams.get(p).equals(CTESystem.TEAM.BLUE)) {
                                                 p.getInventory().addItem(shop.getInventoryItem(11));
                                             }
+                                            return;
+                                        case SANDSTONE:
+                                            p.getInventory().addItem(shop.getInventoryItem(2));
                                             return;
                                         case STONE_SWORD:
                                         case IRON_SWORD:

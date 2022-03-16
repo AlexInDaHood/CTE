@@ -3,6 +3,9 @@ package com.osterph.listener;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.osterph.manager.ItemManager;
+import com.osterph.shop.Shop;
+import com.osterph.shop.ShopItem;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -22,6 +25,8 @@ import org.bukkit.event.entity.ExplosionPrimeEvent;
 
 import com.osterph.cte.CTE;
 import com.osterph.spawner.Spawner;
+import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class BlockListener implements Listener {
 	
@@ -87,6 +92,33 @@ public class BlockListener implements Listener {
         }
         e.blockList().clear();
         e.blockList().addAll(d);
+    }
+
+    @EventHandler
+    public void onPickup(PlayerPickupItemEvent e) {
+        Material m = e.getItem().getItemStack().getType();
+        ItemStack i = e.getItem().getItemStack();
+        switch (m) {
+            case WOOL:
+                i = new ShopItem(Material.WOOL, "§7Wolle", "Zum bauen", 16, 4, Shop.Ressourcen.Apfel, null, 20, Shop.SHOPTYPE.BLOCKS).getInventoryItem(i.getDurability());
+                break;
+            case WOOD:
+                i = new ShopItem(Material.WOOD, "§7Holz", "Zum bauen", 16, 4, Shop.Ressourcen.Melone, null, 21, Shop.SHOPTYPE.BLOCKS).getInventoryItem(0);
+                break;
+            case SANDSTONE:
+                i = new ShopItem(Material.SANDSTONE, "§7Sandstein", "Zum bauen", 16, 12, Shop.Ressourcen.Apfel, null, 23, Shop.SHOPTYPE.BLOCKS).getInventoryItem(2);
+                break;
+            case ENDER_STONE:
+                i = new ShopItem(Material.ENDER_STONE, "§7Endstein", "Zum bauen", 8, 24, Shop.Ressourcen.Apfel, null, 24, Shop.SHOPTYPE.BLOCKS).getInventoryItem(0);
+                break;
+            case OBSIDIAN:
+                i = new ShopItem(Material.OBSIDIAN, "§7Obsidian", "Zum bauen", 2, 4, Shop.Ressourcen.Karotte, null, 30, Shop.SHOPTYPE.BLOCKS).getInventoryItem(0);
+                break;
+            case LADDER:
+                i = new ShopItem(Material.LADDER, "§7Leiter", "Zum bauen", 16, 4, Shop.Ressourcen.Apfel, null, 32, Shop.SHOPTYPE.BLOCKS).getInventoryItem(0);
+                break;
+        }
+        e.getItem().setItemStack(i);
     }
 
     @EventHandler
