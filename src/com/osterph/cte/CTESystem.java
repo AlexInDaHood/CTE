@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -103,6 +100,7 @@ public class CTESystem {
     }
     
     public void forceStart() {
+        startLoop();
         Bukkit.getWorld("world").getWorldBorder().setCenter(1000.5, 1000.5);
         for (Player all: Bukkit.getOnlinePlayers()) {
             all.closeInventory();
@@ -150,7 +148,7 @@ public class CTESystem {
 
     @SuppressWarnings("incomplete-switch")
 	public void endGame() {
-
+        stopLoop();
         Bukkit.getWorld("world").getWorldBorder().setCenter(0.5, 0.5);
         gamestate = GAMESTATE.ENDING;
         switch (winnerTeam) {
@@ -303,5 +301,27 @@ public class CTESystem {
 
 	 public enum GAMESTATE {
     	STARTING, RUNNING, ENDING;
+    }
+
+    public void stopLoop() {
+        Bukkit.getScheduler().cancelTask(loop);
+    }
+
+    int loop;
+
+    public void startLoop() {
+        loop = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {
+            @Override
+            public void run() {
+                for(Player all : Bukkit.getOnlinePlayers()) {
+                    if(all.getGameMode().equals(GameMode.CREATIVE) || all.getGameMode().equals(GameMode.SPECTATOR)) continue;;
+                    if(teams.get(all).equals(TEAM.SPEC) || teams.get(all).equals(TEAM.DEFAULT)) continue;
+                    if(all.getLocation().getY() < 113) continue;
+                    if(all.getLocation().getX() < 1100 && all.getLocation().getX() > 900 && all.getLocation().getZ() > 945 && all.getLocation().getZ() < 1055) continue;
+                    sendActionBar(all, "§cDu hast dich zu weit von der Map entfernt!");
+                    all.damage(1);
+                }
+            }
+        }, 20, 20L);
     }
 }

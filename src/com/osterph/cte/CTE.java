@@ -33,6 +33,8 @@ public class CTE extends JavaPlugin{
 	private SpawnerManager spawnermanager;
 	private LocationLIST locations;
 	private TeamSelector selector;
+
+
 	@Override
 	public void onEnable() {
 		INSTANCE = this;

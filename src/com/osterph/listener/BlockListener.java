@@ -57,6 +57,19 @@ public class BlockListener implements Listener {
                 e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.VILLAGER_NO, 1, 1);
                 return;
             }
+
+            if(e.getBlock().getLocation().getY() >= 110) {
+                e.setCancelled(true);
+                e.getPlayer().sendMessage(CTE.prefix + "§cDu hast die maximale Bauhöhe erreicht!");
+                return;
+            }
+
+            if(e.getBlock().getLocation().getX() > 1100 || e.getBlock().getLocation().getX() < 900 || e.getBlock().getLocation().getZ() < 945 || e.getBlock().getLocation().getZ() > 1055) {
+                e.setCancelled(true);
+                e.getPlayer().sendMessage(CTE.prefix + "§cDu kannst dich nicht weiter von der Map entfernen!");
+                return;
+            }
+
         }
 	}
 	

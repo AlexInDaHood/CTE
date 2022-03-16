@@ -21,6 +21,7 @@ import com.osterph.cte.CTESystem.GAMESTATE;
 import com.osterph.cte.CTESystem.TEAM;
 import com.osterph.lagerhalle.LocationLIST;
 import com.osterph.manager.ScoreboardManager;
+import org.bukkit.inventory.ItemStack;
 
 public class DamageListener implements Listener {
 
@@ -77,6 +78,13 @@ public class DamageListener implements Listener {
     		Player damager = null;
     		if(e.getDamager() instanceof Player) {
     			damager = (Player)e.getDamager();
+
+				if(((Player) e.getDamager()).getItemInHand() != null) {
+					Material hand = ((Player) e.getDamager()).getItemInHand().getType();
+					if(hand.equals(Material.STONE_AXE) || hand.equals(Material.IRON_AXE) || hand.equals(Material.DIAMOND_AXE) || hand.equals(Material.STONE_PICKAXE) || hand.equals(Material.IRON_PICKAXE) || hand.equals(Material.DIAMOND_PICKAXE)) {
+						e.setDamage(1);
+					}
+				}
     		} else if(e.getDamager() instanceof Projectile) {
     			Projectile pro = (Projectile) e.getDamager();
     			if(pro.getShooter() instanceof Player)
