@@ -9,6 +9,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -56,7 +57,7 @@ public class DamageListener implements Listener {
 		}
 
 		if(!(e.getEntity() instanceof Player)) return;
-		if(cause.equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK) || cause.equals(EntityDamageEvent.DamageCause.PROJECTILE) || cause.equals(EntityDamageEvent.DamageCause.ENTITY_EXPLOSION)) return;
+		if(cause.equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK) || cause.equals(EntityDamageEvent.DamageCause.PROJECTILE)) return;
 		if(e.getDamage() >= ((Player) e.getEntity()).getHealth()) {
 			e.setCancelled(true);
 			onDeath((Player)e.getEntity());

@@ -33,8 +33,8 @@ public class BlockListener implements Listener {
 	public void onPlace(BlockPlaceEvent e) {
         if(e.getBlock().getType().equals(Material.TNT)) {
             e.setCancelled(true);
-            if(e.getPlayer().getItemInHand().getAmount() >1) {
-                e.getPlayer().getItemInHand().setAmount(-1);
+            if(e.getPlayer().getItemInHand().getAmount() > 1) {
+                e.getPlayer().getItemInHand().setAmount(e.getPlayer().getItemInHand().getAmount()-1);
             } else {
                 e.getPlayer().getInventory().remove(e.getPlayer().getItemInHand());
             }
@@ -116,7 +116,7 @@ public class BlockListener implements Listener {
         e.blockList().addAll(d);
     }
 
-    @EventHandler
+  /*  @EventHandler
     public void onPickup(PlayerPickupItemEvent e) {
         Material m = e.getItem().getItemStack().getType();
         ItemStack i = e.getItem().getItemStack();
@@ -141,7 +141,7 @@ public class BlockListener implements Listener {
                 break;
         }
         e.getItem().setItemStack(i);
-    }
+   }*/
 
     @EventHandler
     public void onExplode(ExplosionPrimeEvent e) {

@@ -1,5 +1,7 @@
 package com.osterph.dev;
 
+import java.util.stream.Stream;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -220,6 +222,14 @@ public class DevListener implements Listener {
 			inv = Bukkit.createInventory(null, 9*5, "§8» §bDev §8§l> §cSpieler Einstellungen");
 			inv.setContents(CTE.INSTANCE.getShop().getStandardGUI45(true));
 			inv.setItem(4, new ItemManager(Material.SKULL_ITEM).withName("§3§lSpawner Einstellungen").complete());
+			for(int i=0;i<7;i++) {
+				inv.setItem(i+10, new ItemStack(Material.AIR));
+				inv.setItem(i+19, new ItemStack(Material.AIR));
+				inv.setItem(i+28, new ItemStack(Material.AIR));
+			}
+			for(Player all : Bukkit.getOnlinePlayers()) {
+				inv.addItem(new ItemManager(Material.SKULL_ITEM).withData(3).withName("§8» " + all.getPlayerListName() +" §8«").withLores(Stream.of("Test", "Test1").toArray(String[]::new)).complete());
+			}
 			break;
 		case SPAWNER:
 			inv = Bukkit.createInventory(null, 9*5, "§8» §bDev §8§l> §cSpawner Einstellungen");
@@ -277,7 +287,7 @@ public class DevListener implements Listener {
 	}
 	
 	private enum settingstype {
-		SPAWNER, PLAYER, GAME, APPLE, MELON, CARROT;
+		SPAWNER, PLAYER, GAME, APPLE, MELON, CARROT, PLAYERSET;
 	}
 	
 }

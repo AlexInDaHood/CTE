@@ -70,7 +70,6 @@ public class eggCMD implements CommandExecutor{
 			public void run() {
 				timer++;
 				if(timer%2 == 0) {
-					System.out.println("JZ " + timer);
 					as.teleport(as.getLocation().add(0, 0.1, 0));
 				}
 				as.setHeadPose(new EulerAngle(0, as.getHeadPose().getY() + 0.1, 0));
@@ -93,7 +92,6 @@ public class eggCMD implements CommandExecutor{
 	
 	private void itemSpawnAnimation(Location p) {
 		int items = new Random().nextInt(5)+5;
-		Player t = Bukkit.getPlayer("i4m2g00d4u");
 		spawnScheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {
 			@Override
 			public void run() {
@@ -103,7 +101,9 @@ public class eggCMD implements CommandExecutor{
 				Location item = new Location(p.getWorld(), p.getX()+x, p.getY(), p.getZ()+z);
 				drawLine(p, item, 0.5);
 				item.getWorld().dropItem(item, new ItemStack(Material.CARROT));
-				particle1(t, item);
+				for(Player all : Bukkit.getOnlinePlayers()) {
+					particle1(all, item);
+				}
 				if(spawnTimer == items) {
 					Bukkit.getScheduler().cancelTask(spawnScheduler);
 					spawnTimer = 0;
@@ -117,11 +117,12 @@ public class eggCMD implements CommandExecutor{
 		Location Loc1 = new Location(Bukkit.getWorld("world"), point1.getX(), point1.getY()+4.5, point1.getZ());
         Location Loc2 = new Location(Bukkit.getWorld("world"), point2.getX(), point2.getY(), point2.getZ());
         Vector vector = getDirectionBetweenLocations(Loc1, Loc2);
-        Player t = Bukkit.getPlayer("i4m2g00d4u");
         for (double i = 1; i <= Loc1.distance(Loc2); i += 0.5) {
             vector.multiply(i);
             Loc1.add(vector);
-            particle(t, Loc1);
+            for(Player all : Bukkit.getOnlinePlayers()) {
+				particle(all, Loc1);
+			}
             Loc1.subtract(vector);
             vector.normalize();
         }
