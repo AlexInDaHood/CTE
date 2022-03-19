@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import com.osterph.listener.DamageListener;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.GameMode;
@@ -102,10 +103,10 @@ public class CTESystem {
         if (teams.get(p).equals(TEAM.BLUE)) m.setColor(Color.BLUE);
         p.getInventory().setHelmet(new ItemManager(Material.LEATHER_HELMET).withName("§7Lederhelm").unbreakable(true).withMeta(m).complete());
     }
-    
+
     public void forceStart() {
+        if (gamestate.equals(GAMESTATE.RUNNING)) return;
         startLoop();
-        Bukkit.getWorld("world").getWorldBorder().setCenter(1000.5, 1000.5);
         for (Player all: Bukkit.getOnlinePlayers()) {
             all.closeInventory();
             if (!teams.get(all).equals(TEAM.DEFAULT)) continue;
@@ -314,12 +315,13 @@ public class CTESystem {
         loop = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {
             @Override
             public void run() {
+                if (gamestate.equals(GAMESTATE.RUNNING)) return;
                 for(Player all : Bukkit.getOnlinePlayers()) {
                     if(all.getGameMode().equals(GameMode.CREATIVE) || all.getGameMode().equals(GameMode.SPECTATOR)) continue;;
                     if(teams.get(all).equals(TEAM.SPEC) || teams.get(all).equals(TEAM.DEFAULT)) continue;
                     if(all.getLocation().getY() < 113 && all.getLocation().getX() < 1100 && all.getLocation().getX() > 900 && all.getLocation().getZ() > 945 && all.getLocation().getZ() < 1055) continue;
                     sendActionBar(all, "§cDu hast dich zu weit von der Map entfernt!");
-                    all.damage(4);
+                    all.damage(1.5);
                 }
             }
         }, 20, 20L);

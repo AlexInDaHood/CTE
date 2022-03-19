@@ -61,7 +61,6 @@ public class PlayerEvent implements Listener {
             return;
         }
 
-        sys.startTimer();
     }
 
     @EventHandler
@@ -105,7 +104,7 @@ public class PlayerEvent implements Listener {
             if(Bukkit.getOnlinePlayers().size() >= sys.minPlayers) {
             	sys.startTimer();
             }
-            
+            return;
         } else {
             e.setJoinMessage(null);
         }
@@ -123,6 +122,7 @@ public class PlayerEvent implements Listener {
     @EventHandler
     void onQuit(PlayerQuitEvent e) {
         Player p = e.getPlayer();
+        TablistManager.removeFakePlayer(p.getName());
         if (e.getPlayer().getInventory().getHelmet() != null && e.getPlayer().getInventory().getHelmet().getType().equals(Material.SKULL_ITEM)) {
             new DamageListener().onEgg(p);
         }

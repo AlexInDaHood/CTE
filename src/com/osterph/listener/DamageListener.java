@@ -47,6 +47,7 @@ public class DamageListener implements Listener {
             //e.setCancelled(true); //TODO
             return;
         }
+		System.out.println(e.getCause());
         
         Enum<EntityDamageEvent.DamageCause> cause = e.getCause();
 
@@ -57,7 +58,7 @@ public class DamageListener implements Listener {
 		}
 
 		if(!(e.getEntity() instanceof Player)) return;
-		if(cause.equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK) || cause.equals(EntityDamageEvent.DamageCause.PROJECTILE)) return;
+		if(cause.equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK) || cause.equals(EntityDamageEvent.DamageCause.PROJECTILE)) {return;}
 		if(e.getDamage() >= ((Player) e.getEntity()).getHealth()) {
 			e.setCancelled(true);
 			onDeath((Player)e.getEntity());
@@ -66,14 +67,6 @@ public class DamageListener implements Listener {
     
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent e) {
-    	if(!sys.gamestate.equals(GAMESTATE.RUNNING)) {
-    		//e.setCancelled(true);
-    		return;
-    	}
-    	if(e.getEntity() instanceof ArmorStand) {
-    		//e.setCancelled(true); //TODO
-    		return;
-    	}    	
     	if(e.getEntity() instanceof Player && !sys.teams.get((Player)e.getEntity()).equals(TEAM.DEFAULT) && !sys.teams.get((Player)e.getEntity()).equals(TEAM.SPEC)) {
     		Player t = (Player) e.getEntity();
     		Player damager = null;
@@ -90,7 +83,11 @@ public class DamageListener implements Listener {
     			Projectile pro = (Projectile) e.getDamager();
     			if(pro.getShooter() instanceof Player)
     				damager = (Player)pro.getShooter();
-    		}
+    		} else if(e.getDamager() instanceof TNTPrimed) {
+				TNTPrimed pro = (TNTPrimed) e.getDamager();
+				if(pro.getSource() instanceof Player)
+					damager = (Player)pro.getSource();
+			}
     		
     		if(damager != null && (sys.teams.get(damager).equals(TEAM.DEFAULT) || sys.teams.get(damager).equals(TEAM.SPEC))) {
     			e.setCancelled(true);

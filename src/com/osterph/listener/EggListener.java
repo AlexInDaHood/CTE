@@ -93,6 +93,10 @@ public class EggListener implements Listener {
             return;
         }
         Player p = e.getPlayer();
+        if (!sys.gamestate.equals(GAMESTATE.RUNNING)) {
+            e.setCancelled(true);
+            return;
+        }
 
         if (p.getInventory().contains(Material.DIAMOND_SWORD)||p.getInventory().contains(Material.IRON_SWORD)||p.getInventory().contains(Material.STONE_SWORD)||p.getInventory().contains(Material.WOOD_SWORD)) return;
         p.getInventory().addItem(new ItemManager(Material.WOOD_SWORD).withName("§7Holzschwert").unbreakable(true).complete());

@@ -81,9 +81,8 @@ public class BlockListener implements Listener {
             return;
         }
         
-        
-        
         e.setCancelled(true);
+        if (CTE.INSTANCE.getShop().getShopItemByMaterial(e.getBlock().getType()).getInventoryItem(e.getBlock().getData()) == null) return;
         ItemStack drops = CTE.INSTANCE.getShop().getShopItemByMaterial(e.getBlock().getType()).getInventoryItem(e.getBlock().getData());
         drops.setAmount(1);
         e.getBlock().setType(Material.AIR);
@@ -166,42 +165,37 @@ public class BlockListener implements Listener {
         if (b.getType().equals(Material.LONG_GRASS)) {
             return b.getData() == 1 || b.getData() == 2;
         }
-        if (b.getType().equals(Material.ENDER_STONE)||
-            b.getType().equals(Material.WOOD)||
-            b.getType().equals(Material.RED_ROSE)||
-            b.getType().equals(Material.SANDSTONE)||
-            b.getType().equals(Material.OBSIDIAN)||
-            b.getType().equals(Material.WEB)||
-            b.getType().equals(Material.LADDER)) {
-            return true;
-        }
-        return false;
+        if (b.getType().equals(Material.WOOD)) return b.getData() == 0;
+
+        return b.getType().equals(Material.ENDER_STONE) ||
+                b.getType().equals(Material.RED_ROSE) ||
+                b.getType().equals(Material.SANDSTONE) ||
+                b.getType().equals(Material.OBSIDIAN) ||
+                b.getType().equals(Material.WEB) ||
+                b.getType().equals(Material.LADDER);
     }
 
     private boolean isDropped(Material m) {
-        if (m.equals(Material.ENDER_STONE)||
-            m.equals(Material.WOOD)||
-            m.equals(Material.SANDSTONE)||
-            m.equals(Material.OBSIDIAN)||
-            m.equals(Material.LADDER)||
-            m.equals(Material.STONE_SWORD)||
-            m.equals(Material.IRON_SWORD)||
-            m.equals(Material.DIAMOND_SWORD)||
-            m.equals(Material.BOW)||
-            m.equals(Material.ARROW)||
-            m.equals(Material.WEB)||
-            m.equals(Material.WATER_BUCKET)||
-            m.equals(Material.GOLDEN_APPLE)||
-            m.equals(Material.TNT)||
-            m.equals(Material.APPLE)||
-            m.equals(Material.MELON)||
-            m.equals(Material.CARROT_ITEM)||
-            m.equals(Material.ENDER_PEARL)||
-            m.equals(Material.BLAZE_ROD)||
-            m.equals(Material.FIREBALL)||
-        	m.equals(Material.WOOL)) {
-            return true;
-        }
-        return false;
+        return m.equals(Material.ENDER_STONE) ||
+                m.equals(Material.WOOD) ||
+                m.equals(Material.SANDSTONE) ||
+                m.equals(Material.OBSIDIAN) ||
+                m.equals(Material.LADDER) ||
+                m.equals(Material.STONE_SWORD) ||
+                m.equals(Material.IRON_SWORD) ||
+                m.equals(Material.DIAMOND_SWORD) ||
+                m.equals(Material.BOW) ||
+                m.equals(Material.ARROW) ||
+                m.equals(Material.WEB) ||
+                m.equals(Material.WATER_BUCKET) ||
+                m.equals(Material.GOLDEN_APPLE) ||
+                m.equals(Material.TNT) ||
+                m.equals(Material.APPLE) ||
+                m.equals(Material.MELON) ||
+                m.equals(Material.CARROT_ITEM) ||
+                m.equals(Material.ENDER_PEARL) ||
+                m.equals(Material.BLAZE_ROD) ||
+                m.equals(Material.FIREBALL) ||
+                m.equals(Material.WOOL);
     }
 }

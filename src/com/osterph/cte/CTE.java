@@ -73,7 +73,6 @@ public class CTE extends JavaPlugin{
 	private void onSettings() {
 		Bukkit.getWorld("world").setThundering(false);
 		Bukkit.getWorld("world").setStorm(false);
-		Bukkit.getWorld("world").getWorldBorder().setCenter(0.5, 0.5);
 		Bukkit.getWorld("world").setDifficulty(Difficulty.EASY);
 		Bukkit.getWorld("world").setGameRuleValue("doMobSpawning", "false");
 		Bukkit.getWorld("world").setGameRuleValue("doMobLoot", "false");
