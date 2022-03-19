@@ -14,9 +14,16 @@ import com.osterph.manager.ItemManager;
 
 public class Shop {
 
-    public static ArrayList<ShopItem> items = new ArrayList<>();
+    public static ArrayList<ShopItem> items;
 
-    private static void fillPrices() {
+    
+    public Shop() {
+    	items = new ArrayList<>();
+    	fillPrices();
+    	
+    }
+    
+    private void fillPrices() {
         //WEAPON
         items.add(new ShopItem(Material.STONE_SWORD, "§7Steinschwert", "Macht mehr Damage als ein Holz schwert", 1, 10, Ressourcen.Apfel, null, 19, SHOPTYPE.WEAPON));
         items.add(new ShopItem(Material.IRON_SWORD, "§7Eisenschwert", "Macht mehr Damage als ein Stein schwert", 1, 7, Ressourcen.Melone, null, 21, SHOPTYPE.WEAPON));
@@ -64,14 +71,13 @@ public class Shop {
 
     }
 
-    public static void openShop(Player p, SHOPTYPE type) {
-        fillPrices();
+    public void openShop(Player p, SHOPTYPE type) {
         Inventory shop = null;
         switch(type) {
             case CHOOSE:
-                shop = Bukkit.createInventory(null, 9*6, "§aShop");
+                shop = Bukkit.createInventory(null, 9*6, "§cShop");
                 shop.setContents(getStandardGUI(false));
-                shop.setItem(4, new ItemManager(Material.EMERALD).withName("§aShop").withEnchantment(Enchantment.DURABILITY, 1, true).complete());
+                shop.setItem(4, new ItemManager(Material.EMERALD).withName("§cShop").withEnchantment(Enchantment.DURABILITY, 1, true).complete());
                 shop.setItem(20, new ItemManager(Material.STONE_SWORD).withName("§7Waffen").complete());
                 shop.setItem(22, new ItemManager(Material.IRON_CHESTPLATE).withName("§7Brustpanzer").complete());
                 shop.setItem(24, new ItemManager(Material.DIAMOND_PICKAXE).withName("§7Werkzeuge").complete());
@@ -79,7 +85,7 @@ public class Shop {
                 shop.setItem(41, new ItemManager(Material.TNT).withName("§7Extras").complete());
                 break;
             case WEAPON:
-                shop = Bukkit.createInventory(null, 9*6, "§aShop §8» §2Waffen");
+                shop = Bukkit.createInventory(null, 9*6, "§cShop §8» §2Waffen");
                 shop.setContents(getStandardGUI(true));
                 shop.setItem(4, new ItemManager(Material.STONE_SWORD).withName("§7Waffen").complete());
                 for(ShopItem item : items) {
@@ -89,7 +95,7 @@ public class Shop {
                 }
                 break;
             case ARMOR:
-                shop = Bukkit.createInventory(null, 9*6, "§aShop §8» §2Brustpanzer");
+                shop = Bukkit.createInventory(null, 9*6, "§cShop §8» §2Brustpanzer");
                 shop.setContents(getStandardGUI(true));
                 shop.setItem(4, new ItemManager(Material.IRON_CHESTPLATE).withName("§7Brustpanzer").complete());
                 for(ShopItem item : items) {
@@ -144,7 +150,7 @@ public class Shop {
         CHOOSE, WEAPON, ARMOR, TOOLS, BLOCKS, SONSTIGES;
     }
 
-    public static ItemStack[] getStandardGUI(boolean back) {
+    public ItemStack[] getStandardGUI(boolean back) {
         Inventory inv = Bukkit.createInventory(null, 9*6, "");
         ItemStack glass = new ItemManager(Material.STAINED_GLASS_PANE).withName("§7").withData(7).complete();
         ItemStack bglass = new ItemManager(Material.STAINED_GLASS_PANE).withName("§7").withData(15).complete();
@@ -174,7 +180,7 @@ public class Shop {
         return inv.getContents();
     }
 
-    public static ItemStack[] getStandardGUI45(boolean back) {
+    public ItemStack[] getStandardGUI45(boolean back) {
         Inventory inv = Bukkit.createInventory(null, 9*5, "");
         ItemStack glass = new ItemManager(Material.STAINED_GLASS_PANE).withName("§7").withData(7).complete();
         ItemStack bglass = new ItemManager(Material.STAINED_GLASS_PANE).withName("§7").withData(15).complete();
@@ -208,7 +214,7 @@ public class Shop {
         Apfel, Melone, Karotte,
     }
 
-    public static ShopItem getShopItemByItemStack(ItemStack item) {
+    public ShopItem getShopItemByItemStack(ItemStack item) {
         ShopItem a = null;
         for(ShopItem i : items) {
             if(i.getShopItem().isSimilar(item)) {
@@ -218,4 +224,15 @@ public class Shop {
         return a;
     }
 
+    public ShopItem getShopItemByMaterial(Material mat) {
+    	ShopItem a = null;
+    	for(ShopItem i : items) {
+    		if(i.getInventoryItem(1).getType().equals(mat)) {
+    			return i;
+    		}
+    	}
+    	
+    	return a;
+    }
+    
 }

@@ -43,7 +43,7 @@ public class DamageListener implements Listener {
     @EventHandler
     public void onDamage(EntityDamageEvent e) {
         if (!sys.gamestate.equals(GAMESTATE.RUNNING)) {
-            e.setCancelled(true);
+            //e.setCancelled(true); //TODO
             return;
         }
         
@@ -66,11 +66,11 @@ public class DamageListener implements Listener {
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent e) {
     	if(!sys.gamestate.equals(GAMESTATE.RUNNING)) {
-    		e.setCancelled(true);
+    		//e.setCancelled(true);
     		return;
     	}
     	if(e.getEntity() instanceof ArmorStand) {
-    		e.setCancelled(true);
+    		//e.setCancelled(true); //TODO
     		return;
     	}    	
     	if(e.getEntity() instanceof Player && !sys.teams.get((Player)e.getEntity()).equals(TEAM.DEFAULT) && !sys.teams.get((Player)e.getEntity()).equals(TEAM.SPEC)) {
@@ -82,7 +82,7 @@ public class DamageListener implements Listener {
 				if(((Player) e.getDamager()).getItemInHand() != null) {
 					Material hand = ((Player) e.getDamager()).getItemInHand().getType();
 					if(hand.equals(Material.STONE_AXE) || hand.equals(Material.IRON_AXE) || hand.equals(Material.DIAMOND_AXE) || hand.equals(Material.STONE_PICKAXE) || hand.equals(Material.IRON_PICKAXE) || hand.equals(Material.DIAMOND_PICKAXE)) {
-						e.setDamage(1);
+						e.setDamage(2);
 					}
 				}
     		} else if(e.getDamager() instanceof Projectile) {
@@ -124,6 +124,11 @@ public class DamageListener implements Listener {
     	}
     }
 
+    private HashMap<Player, Integer> deathScheduler = new HashMap<>();
+    private HashMap<Player, Integer> deathTimer = new HashMap<>();
+    
+    int scheduler;
+    
     public void onDeath(Player p) {
 		p.closeInventory();
 		LocationLIST locs = CTE.INSTANCE.getLocations();
@@ -161,7 +166,7 @@ public class DamageListener implements Listener {
 		sys.clear(p);
 		if((taa == TEAM.BLUE && sys.BLUE_EGG != sys.BLUE_EGG.GONE) || (taa == TEAM.RED && sys.RED_EGG != sys.RED_EGG.GONE)) {
 			p.sendMessage(CTE.prefix + "Du wirst in §c5 Sekunden §ewiederbelebt.");
-	    	Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, new Runnable() {
+	    	/*Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, new Runnable() {
 				@Override
 				public void run() {
 					sys.teams.put(p, taa);
@@ -180,7 +185,38 @@ public class DamageListener implements Listener {
 						ScoreboardManager.refreshBoard(all);
 					}
 				}
-			},20*5L);
+			},20*5L);*/
+			deathTimer.put(p, 0);
+			scheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {
+				@Override
+				public void run() {
+					if(deathTimer.get(p) == 5) {
+						sys.teams.put(p, taa);
+						if(sys.teams.get(p).equals(TEAM.BLUE)) {
+							p.teleport(locs.blueSPAWN());
+						} else if(sys.teams.get(p).equals(TEAM.RED)){
+							p.teleport(locs.redSPAWN());
+						}
+						p.setGameMode(GameMode.SURVIVAL);
+						p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1, 1);
+						sys.startEquip(p);
+						p.setFlying(false);
+						p.setHealth(20);
+						p.sendMessage(CTE.prefix + "Du wurdest wiederbelebt.");
+						for(Player all : Bukkit.getOnlinePlayers()) {
+							ScoreboardManager.refreshBoard(all);
+						}
+						Bukkit.getScheduler().cancelTask(deathScheduler.get(p));
+						deathScheduler.remove(p);
+						deathTimer.remove(p);
+						return;
+					}
+					sys.sendActionBar(p, "§7Respawn in §e" + (5-deathTimer.get(p)));
+					
+					deathTimer.put(p, deathTimer.get(p)+1);
+				}
+			}, 0, 20);
+			deathScheduler.put(p, scheduler);
 		} else {
 			p.sendMessage(CTE.prefix + "Du bist nun eliminiert!");
 			sys.checkTeamSizes();

@@ -37,5 +37,4 @@ public class LabyModProtocol {
         buf.writeByte(bytes.length);
         buf.writeBytes(bytes);
     }
-    //https://cdn.gommehd.net/f/lmbanner.png
 }

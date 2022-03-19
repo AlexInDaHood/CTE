@@ -1,6 +1,5 @@
 package com.osterph.cte;
 
-import com.osterph.lagerhalle.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.entity.Player;
@@ -10,8 +9,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.osterph.dev.DevListener;
 import com.osterph.dev.countdownCMD;
 import com.osterph.dev.devCMD;
+import com.osterph.dev.eggCMD;
 import com.osterph.dev.setteamCMD;
 import com.osterph.dev.startCMD;
+import com.osterph.lagerhalle.Emotes;
+import com.osterph.lagerhalle.LocationLIST;
+import com.osterph.lagerhalle.MySQL;
+import com.osterph.lagerhalle.NPCListener;
+import com.osterph.lagerhalle.TeamSelector;
 import com.osterph.listener.BlockListener;
 import com.osterph.listener.ChatListener;
 import com.osterph.listener.DamageListener;
@@ -20,6 +25,7 @@ import com.osterph.listener.InteractEvent;
 import com.osterph.listener.PlayerEvent;
 import com.osterph.listener.WorldEvent;
 import com.osterph.manager.ScoreboardManager;
+import com.osterph.shop.Shop;
 import com.osterph.shop.ShopListener;
 import com.osterph.spawner.SpawnerManager;
 
@@ -33,7 +39,7 @@ public class CTE extends JavaPlugin{
 	private SpawnerManager spawnermanager;
 	private LocationLIST locations;
 	private TeamSelector selector;
-
+	private Shop shop;
 
 	@Override
 	public void onEnable() {
@@ -42,6 +48,7 @@ public class CTE extends JavaPlugin{
 		spawnermanager = new SpawnerManager();
 		locations = new LocationLIST();
 		selector = new TeamSelector();
+		shop = new Shop();
 		onSettings();
 		register();
 		
@@ -100,6 +107,7 @@ public class CTE extends JavaPlugin{
 		getCommand("countdown").setExecutor(new countdownCMD());
 		getCommand("setteam").setExecutor(new setteamCMD());
 		getCommand("emotes").setExecutor(new Emotes());
+		getCommand("egg").setExecutor(new eggCMD());
 
 	}
 	
@@ -116,6 +124,10 @@ public class CTE extends JavaPlugin{
 	}
 	public TeamSelector getSelector() {
 		return selector;
+	}
+	
+	public Shop getShop() {
+		return shop;
 	}
 	
 }

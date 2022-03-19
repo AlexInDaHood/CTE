@@ -3,7 +3,6 @@ package com.osterph.listener;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.osterph.manager.ItemManager;
 import com.osterph.shop.Shop;
 import com.osterph.shop.ShopItem;
 import org.bukkit.GameMode;
@@ -76,9 +75,19 @@ public class BlockListener implements Listener {
     @EventHandler
     public void onBreak(BlockBreakEvent e) {
         if (e.getPlayer().getGameMode().equals(GameMode.CREATIVE)) return;
+        if(e.getBlock().getType().equals(Material.WEB)) return;
         if (!isBreakable(e.getBlock())) {
             e.setCancelled(true);
+            return;
         }
+        
+        
+        
+        e.setCancelled(true);
+        ItemStack drops = CTE.INSTANCE.getShop().getShopItemByMaterial(e.getBlock().getType()).getInventoryItem(e.getBlock().getData());
+        drops.setAmount(1);
+        e.getBlock().setType(Material.AIR);
+        e.getBlock().getLocation().getWorld().dropItem(e.getBlock().getLocation(), drops);
     }
 
     @EventHandler
@@ -137,8 +146,8 @@ public class BlockListener implements Listener {
     @EventHandler
     public void onExplode(ExplosionPrimeEvent e) {
         e.setFire(false);
-        if (e.getEntity() instanceof TNTPrimed) e.setRadius(3);
-        if (e.getEntity() instanceof Fireball) e.setRadius(2);
+        if (e.getEntity() instanceof TNTPrimed) e.setRadius(4);
+        if (e.getEntity() instanceof Fireball) e.setRadius(3);
     }
 
     @EventHandler

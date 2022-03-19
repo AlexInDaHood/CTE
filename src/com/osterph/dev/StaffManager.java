@@ -21,8 +21,8 @@ public class StaffManager {
 
     public boolean isHelper() {
         if (isDev()) return true;
-
-        return UUID.equals("470f8310-3eed-4c6b-a730-52e0fe3579f3") || UUID.equals("08bbb829-5667-4bee-9e79-8fbdaef9d68c") || UUID.equals("1ea78772-cb82-48ca-b68f-25f64eb55391");
+        				//KartoffelPanzxr | Map Builder                            Koshix | Map Builder										//Jerry_2002 | Bugfinder, Ideen										
+        return UUID.equals("470f8310-3eed-4c6b-a730-52e0fe3579f3") || UUID.equals("08bbb829-5667-4bee-9e79-8fbdaef9d68c") || UUID.equals("6e7f94c1-1f49-4b69-835f-56ff23160d43");
     }
 
     public boolean hasRoles() {

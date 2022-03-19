@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -146,27 +150,24 @@ public class CTESystem {
 
 
 
-    @SuppressWarnings("incomplete-switch")
 	public void endGame() {
         stopLoop();
         Bukkit.getWorld("world").getWorldBorder().setCenter(0.5, 0.5);
         gamestate = GAMESTATE.ENDING;
         switch (winnerTeam) {
-            case DEFAULT: {
+        	case SPEC:
+            case DEFAULT: 
                 sendAllMessage(CTE.prefix + "Die Runde §6§lCAPTURE THE EGG §eendete mit einem §7§lUnentschieden§e!");
                 sendAllTitle("§7UNENTSCHIEDEN", "§eDas Spiel endete mit einem Unentschieden!");
                 break;
-            }
-            case RED: {
+            case RED: 
                 sendAllMessage(CTE.prefix + "Das §c§lROTE Team §ehat die Runde §6§lCAPTURE THE EGG §egewonnen!");
                 sendAllTitle("§4§k0§r §cROT §4§k0","§ehat das Spiel gewonnen!");
                 break;
-            }
-            case BLUE: {
+            case BLUE: 
                 sendAllMessage(CTE.prefix + "Das §9§lBLAUE Team §ehat die Runde §6§lCAPTURE THE EGG §egewonnen!");
                 sendAllTitle("§1§k0§r §9BLAU §1§k0","§ehat das Spiel gewonnen!");
                 break;
-            }
         }
         for(Player all : Bukkit.getOnlinePlayers()) {
         	clear(all);
@@ -209,7 +210,7 @@ public class CTESystem {
         }
     }
 
-    @SuppressWarnings("deprecation")
+	@SuppressWarnings("deprecation")
 	public void sendAllTitle(String title, String subtitle) {
         for(Player all : Bukkit.getOnlinePlayers()) {
             all.sendTitle(title, subtitle);
@@ -316,10 +317,9 @@ public class CTESystem {
                 for(Player all : Bukkit.getOnlinePlayers()) {
                     if(all.getGameMode().equals(GameMode.CREATIVE) || all.getGameMode().equals(GameMode.SPECTATOR)) continue;;
                     if(teams.get(all).equals(TEAM.SPEC) || teams.get(all).equals(TEAM.DEFAULT)) continue;
-                    if(all.getLocation().getY() < 113) continue;
-                    if(all.getLocation().getX() < 1100 && all.getLocation().getX() > 900 && all.getLocation().getZ() > 945 && all.getLocation().getZ() < 1055) continue;
+                    if(all.getLocation().getY() < 113 && all.getLocation().getX() < 1100 && all.getLocation().getX() > 900 && all.getLocation().getZ() > 945 && all.getLocation().getZ() < 1055) continue;
                     sendActionBar(all, "§cDu hast dich zu weit von der Map entfernt!");
-                    all.damage(1);
+                    all.damage(4);
                 }
             }
         }, 20, 20L);

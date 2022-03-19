@@ -21,6 +21,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class PlayerEvent implements Listener {
@@ -84,6 +86,14 @@ public class PlayerEvent implements Listener {
         } else {
             p.teleport(CTE.INSTANCE.getLocations().lobbySPAWN());
             p.getInventory().setItem(0, CTE.INSTANCE.getSelector().team);
+            
+            ItemStack tutorial = new ItemStack(Material.WRITTEN_BOOK);
+            BookMeta meta = (BookMeta)tutorial.getItemMeta();
+            meta.setDisplayName("§8» §3Spielanleitung §8«");
+            meta.setAuthor("Osterhase");					//TODO
+            meta.addPage(":D");
+            tutorial.setItemMeta(meta);
+            p.getInventory().setItem(4, tutorial);
         }
 
         if(sys.gamestate.equals(GAMESTATE.STARTING)) {
@@ -130,7 +140,6 @@ public class PlayerEvent implements Listener {
 
         if(sys.gamestate.equals(GAMESTATE.STARTING)) {
             e.setQuitMessage("§8[§c-§8] §7" + p.getName());
-            System.out.println(Bukkit.getOnlinePlayers().size() + " : " + sys.minPlayers);
             if(Bukkit.getOnlinePlayers().size() < sys.minPlayers) {
             	sys.stopStartTimer();
             	sys.sendAllMessage(CTE.prefix + "Der Start wurde abgebrochen!");
@@ -148,10 +157,10 @@ public class PlayerEvent implements Listener {
     	JsonObject obj = new JsonObject();
     	obj.addProperty("show_gamemode", true);
     	obj.addProperty("gamemode_name", "§ePlayHills.eu §8» §6§lCapture the Egg");
-    	LabyModProtocol.sendClientMessage(p, "server_gamemode", obj);
+    	//LabyModProtocol.sendClientMessage(p, "server_gamemode", obj); //TODO
     }
     
-    public void sendServerBanner(Player player) {
+    private void sendServerBanner(Player player) {
         JsonObject object = new JsonObject();
         object.addProperty("url", "https://cdn.discordapp.com/attachments/846451756816138250/952402124065607710/PBanner.png"); 
         LabyModProtocol.sendClientMessage(player, "server_banner", object);

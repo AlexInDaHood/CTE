@@ -32,7 +32,7 @@ public class devCMD implements CommandExecutor{
 	
 	public static void openInventory(Player p) {
 		Inventory inv = Bukkit.createInventory(null, 9*5, "§8» §bDev");
-		inv.setContents(Shop.getStandardGUI45(false));
+		inv.setContents(CTE.INSTANCE.getShop().getStandardGUI45(false));
 		inv.setItem(20, new ItemManager(Material.DRAGON_EGG).withName("§3§lSpiel Einstellungen").complete());
 		inv.setItem(22, new ItemManager(Material.MELON_BLOCK).withName("§3§lSpawner Einstellungen").complete());
 		inv.setItem(24, new ItemManager(Material.SKULL_ITEM).withName("§3§lSpieler Einstellungen").complete());

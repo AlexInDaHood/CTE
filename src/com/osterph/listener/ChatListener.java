@@ -21,6 +21,9 @@ public class ChatListener implements Listener {
     private CTESystem sys = CTE.INSTANCE.getSystem();
     private ArrayList<String> cooldown = new ArrayList<>();
 
+    private ArrayList<Player> antiLSpam = new ArrayList<>();
+    
+    
     @SuppressWarnings("incomplete-switch")
 	@EventHandler
     void onChat(AsyncPlayerChatEvent e) {
@@ -29,12 +32,20 @@ public class ChatListener implements Listener {
         String[] bmsg = msg.split(" ");
         msg = "";
         for (String s : bmsg) {
-            msg += UwU(p, s) + " ";
+        	if(s.equalsIgnoreCase("l") || s.equalsIgnoreCase("ez") || s.equalsIgnoreCase("easy")) {
+        		if(!antiLSpam.contains(p)) {
+        		 msg += UwU(p, s) + " ";
+        		 antiLSpam.add(p);
+        		}
+        	} else {
+        		 msg += UwU(p, s) + " ";
+        	}
         }
+        antiLSpam.remove(p);
         CTESystem.TEAM team = sys.teams.get(p);
         StaffManager staff = new StaffManager(p);
         if (sys.gamestate.equals(GAMESTATE.RUNNING)) {
-            if (msg.toLowerCase().startsWith("@a ") || msg.toLowerCase().startsWith("@all ")) {
+            if (msg.toLowerCase().startsWith("@a§f ") || msg.toLowerCase().startsWith("@all§f ") ) {
                 String[] gmsg = msg.split(" ");
                 msg = "";
                 for (int i = 1; i < gmsg.length; i++) {
@@ -174,6 +185,7 @@ public class ChatListener implements Listener {
 
         HashMap<String, String> emotes = new HashMap<>();
         emotes.put("ez", "Frohe Ostern!");
+        emotes.put("easy", "Frohe Ostern!");
         int r = new Random().nextInt(6)+1;
         switch (r) {
             case 1:

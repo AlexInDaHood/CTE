@@ -22,22 +22,34 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 public class InteractEvent implements Listener {
 
     //
-    //FIREBALL
+    //FIREBALL + RETTUNGSPLATFORM
     //
+	
+	ArrayList<Player> fireball = new ArrayList<>();
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
         if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Player p = e.getPlayer();
             if (p.getItemInHand() == null) return;
-            if(p.getItemInHand().getType().equals(Material.FIREBALL)) {
+            if(p.getItemInHand().getType().equals(Material.FIREBALL) && !fireball.contains(p)) {
                 if (p.getItemInHand().getAmount() == 1) p.getInventory().clear(p.getInventory().getHeldItemSlot());
                 p.getItemInHand().setAmount(p.getItemInHand().getAmount()-1);
-                p.launchProjectile(Fireball.class);
+                Fireball a = p.launchProjectile(Fireball.class);
+                a.setVelocity(a.getVelocity().multiply(1.5));
                 e.setCancelled(true);
+                fireball.add(p);
+                Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, new Runnable() {
+				@Override
+				public void run() {
+					fireball.remove(p);
+					}
+				},20);
+                return;
             } else if(p.getItemInHand().getType().equals(Material.BLAZE_ROD)) {
                 if (p.getItemInHand().getAmount() == 1) p.getInventory().clear(p.getInventory().getHeldItemSlot());
                 p.getItemInHand().setAmount(p.getItemInHand().getAmount()-1);
                 onSave(e.getPlayer());
+                return;
             }
         }
     }
@@ -99,7 +111,7 @@ public class InteractEvent implements Listener {
     @EventHandler
     public void onLand(ProjectileHitEvent e) {
         if(e.getEntity() instanceof Fireball) {
-            e.getEntity().getLocation().getWorld().createExplosion(e.getEntity().getLocation(), 1.35F);
+            e.getEntity().getLocation().getWorld().createExplosion(e.getEntity().getLocation(), 1.45F);
         }
         e.getEntity().remove();
     }

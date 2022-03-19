@@ -6,16 +6,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 import com.osterph.manager.DropManager;
-import com.osterph.manager.DropManager.DROP;
+import com.osterph.shop.Shop.Ressourcen;
 
 public class SpawnerManager {
 	
 	public ArrayList<Spawner> spawners = new ArrayList<>();
 	
 	public void addSpawner() {
-		DropManager apple = new DropManager(DROP.APPLE);
-		DropManager carrot = new DropManager(DROP.CARROT);
-		DropManager melon = new DropManager(DROP.MELON);
+		DropManager apple = new DropManager(Ressourcen.Apfel);
+		DropManager carrot = new DropManager(Ressourcen.Karotte);
+		DropManager melon = new DropManager(Ressourcen.Melone);
 		
 		
 		//BLUE

@@ -10,27 +10,29 @@ import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import com.osterph.shop.Shop.Ressourcen;
+
 public class DropManager {
 
-    private DROP d;
+    private Ressourcen d;
 
-    public DropManager(DROP d) {
+    public DropManager(Ressourcen d) {
         this.d = d;
     }
 
-    public enum DROP {
+   /* public enum DROP {
         CARROT, MELON, APPLE
-    }
+    }*/
 
     public ItemStack getItem(int amount) {
         switch (this.d) {
-            case CARROT: {
+            case Karotte: {
                 return new Carrot().getItem(amount);
             }
-            case MELON: {
+            case Melone: {
                 return new Melon().getItem(amount);
             }
-            case APPLE: {
+            case Apfel: {
                 return new Apple().getItem(amount);
             }
         }
@@ -39,13 +41,13 @@ public class DropManager {
 
     public List<Location> getLocations() {
         switch (this.d) {
-            case CARROT: {
+            case Karotte: {
                 return new Carrot().getLocations();
             }
-            case MELON: {
+            case Melone: {
                 return new Melon().getLocations();
             }
-            case APPLE: {
+            case Apfel: {
                 return new Apple().getLocations();
             }
         }
@@ -55,15 +57,15 @@ public class DropManager {
 
     public void spawnItem(Location l) {
         switch (this.d) {
-            case CARROT: {
+            case Karotte: {
                 new Carrot().spawnCarrot(l);
                 return;
             }
-            case MELON: {
+            case Melone: {
                 new Melon().spawnMelon(l);
                 return;
             }
-            case APPLE: {
+            case Apfel: {
                 new Apple().spawnApple(l);
                 return;
             }
@@ -72,15 +74,15 @@ public class DropManager {
 
     public void spawnAllItems() {
         switch (this.d) {
-            case CARROT: {
+            case Karotte: {
                 new Carrot().spawnAllCarrots();
                 return;
             }
-            case MELON: {
+            case Melone: {
                 new Melon().spawnAllMelons();
                 return;
             }
-            case APPLE: {
+            case Apfel: {
                 new Apple().spawnAllApples();
                 return;
             }

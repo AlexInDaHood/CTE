@@ -1,5 +1,7 @@
 package com.osterph.shop;
 
+import java.time.format.ResolverStyle;
+
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -12,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import com.osterph.cte.CTE;
 import com.osterph.cte.CTESystem;
 import com.osterph.manager.DropManager;
+import com.osterph.shop.Shop.Ressourcen;
 
 
 public class ShopListener implements Listener {
@@ -21,31 +24,31 @@ public class ShopListener implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent e) {
     	if(e.getAction() == InventoryAction.NOTHING) return;
-        if(e.getView().getTopInventory().getName().contains("§aShop")) {
+        if(e.getView().getTopInventory().getName().contains("§cShop")) {
             e.setCancelled(true);
             Player p = (Player) e.getWhoClicked();
             ItemStack item = e.getCurrentItem();
             String name = item.getItemMeta().getDisplayName();
-            if(e.getView().getTopInventory().getName().equals("§aShop")) {
+            if(e.getView().getTopInventory().getName().equals("§cShop")) {
                 if(item.getType().equals(Material.ARROW)) {
                     p.closeInventory();
                 } else if(name.contains("Waffen")) {
-                    Shop.openShop(p, Shop.SHOPTYPE.WEAPON);
-                } else if(name.contains("Rüstung")) {
-                    Shop.openShop(p, Shop.SHOPTYPE.ARMOR);
-                } else if(name.contains("Tools")) {
-                    Shop.openShop(p, Shop.SHOPTYPE.TOOLS);
+                	CTE.INSTANCE.getShop().openShop(p, Shop.SHOPTYPE.WEAPON);
+                } else if(name.contains("Brustpanzer")) {
+                	CTE.INSTANCE.getShop().openShop(p, Shop.SHOPTYPE.ARMOR);
+                } else if(name.contains("Werkzeuge")) {
+                	CTE.INSTANCE.getShop().openShop(p, Shop.SHOPTYPE.TOOLS);
                 } else if(name.contains("Blöcke")) {
-                    Shop.openShop(p, Shop.SHOPTYPE.BLOCKS);
+                	CTE.INSTANCE.getShop().openShop(p, Shop.SHOPTYPE.BLOCKS);
                 } else if(name.contains("Extras")) {
-                    Shop.openShop(p, Shop.SHOPTYPE.SONSTIGES);
+                	CTE.INSTANCE.getShop().openShop(p, Shop.SHOPTYPE.SONSTIGES);
                 }
-            } else {
+            } else if(e.getView().getTopInventory().getName().contains("§cShop")){
                 if(name.contains("Zurück")) {
-                    Shop.openShop(p, Shop.SHOPTYPE.CHOOSE);
+                	CTE.INSTANCE.getShop().openShop(p, Shop.SHOPTYPE.CHOOSE);
                 }
-                if(item.getItemMeta().getLore() != null && item.getItemMeta().getLore().get(0).contains("§7Kosten: ")) {
-                    ShopItem shop = Shop.getShopItemByItemStack(item);
+                if(item.getItemMeta().getLore() != null && item.getItemMeta().getLore().get(2).contains("§7Kosten§8: ")) {
+                    ShopItem shop = CTE.INSTANCE.getShop().getShopItemByItemStack(item);
                     if(shop != null) {
                         if(checkItem(shop.getRessource(), shop.cost, p)) {
                             if(p.getInventory().getContents().length == 36) {
@@ -66,18 +69,13 @@ public class ShopListener implements Listener {
                                     p.playSound(p.getLocation(), Sound.VILLAGER_NO, 1, 1);
                                     p.sendMessage(CTE.prefix + "§cDein Inventar ist voll!");
                                 } else {
-                                    ItemStack b = null;
-                                    switch(shop.getRessource()) {
-                                        case Karotte:
-                                            b = new DropManager(DropManager.DROP.CARROT).getItem(1);
-                                            break;
-                                        case Melone:
-                                            b = new DropManager(DropManager.DROP.MELON).getItem(1);
-                                            break;
-                                        case Apfel:
-                                            b = new DropManager(DropManager.DROP.APPLE).getItem(1);
-                                            break;
-                                    }
+                                	if(shop.getShopItem().getType().equals(Material.CHAINMAIL_CHESTPLATE) || shop.getShopItem().getType().equals(Material.IRON_CHESTPLATE) ||shop.getShopItem().getType().equals(Material.DIAMOND_CHESTPLATE)) {
+                                		if(!checkArmor(p, shop.getShopItem().getType())) {
+                                			p.sendMessage(CTE.prefix + "§cDu kannst keine schlechtere oder die selbe Rüstung kaufen!");
+                                			return;
+                                		}
+                                	}
+                                    ItemStack b = new DropManager(shop.getRessource()).getItem(1);
                                     p.sendMessage(CTE.prefix + "§eDu hast §6" + shop.getName() + " §efür " + shop.getCost() + " " + shop.ResourceToString() + " §egekauft!");
                                     ItemStack[] list = p.getInventory().getContents();
                                     int cost = shop.getCost();
@@ -144,6 +142,8 @@ public class ShopListener implements Listener {
                             p.playSound(p.getLocation(), Sound.VILLAGER_NO, 1, 1);
                             p.sendMessage(CTE.prefix + "§cDieses Item kannst du nicht bezahlen!");
                         }
+                    } else {
+                    	System.out.println("NULL");
                     }
                 }
             }
@@ -151,21 +151,18 @@ public class ShopListener implements Listener {
     }
     
 
+    private boolean checkArmor(Player p, Material item) {
+    	if(p.getInventory().getChestplate() == null) return true;
+    	if(p.getInventory().getChestplate().getType().equals(Material.LEATHER_CHESTPLATE)) return true;
+    	if(p.getInventory().getChestplate().getType().equals(Material.CHAINMAIL_CHESTPLATE) && !item.equals(Material.CHAINMAIL_CHESTPLATE)) return true;
+    	if(p.getInventory().getChestplate().getType().equals(Material.IRON_CHESTPLATE) && (!item.equals(Material.CHAINMAIL_CHESTPLATE) && !item.equals(Material.IRON_CHESTPLATE))) return true;
+    	if(p.getInventory().getChestplate().getType().equals(Material.DIAMOND_CHESTPLATE)) return false;
+    	return false;
+    }
     
     private boolean checkItem(Shop.Ressourcen re, int amount, Player p) {
         ItemStack m = new ItemStack(Material.BARRIER);
-        switch (re) {
-            case Karotte:
-                m = new DropManager(DropManager.DROP.CARROT).getItem(1);
-                break;
-            case Apfel:
-                m = new DropManager(DropManager.DROP.APPLE).getItem(1);
-                break;
-            case Melone:
-                m = new DropManager(DropManager.DROP.MELON).getItem(1);
-                break;
-        }
-
+        m = new DropManager(re).getItem(1);
         return p.getInventory().containsAtLeast(m, amount);
     }
 

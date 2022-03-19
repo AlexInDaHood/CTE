@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -31,7 +32,7 @@ public class EggListener implements Listener {
     private void onInteract(PlayerInteractEvent e) {
         Player p = e.getPlayer();
 
-        if (sys.teams.get(p).equals(CTESystem.TEAM.SPEC) || sys.teams.get(p).equals(CTESystem.TEAM.DEFAULT)) {
+        if ((sys.teams.get(p).equals(CTESystem.TEAM.SPEC) || sys.teams.get(p).equals(CTESystem.TEAM.DEFAULT))) {
             e.setCancelled(true);
             return;
         }
@@ -102,7 +103,7 @@ public class EggListener implements Listener {
         if (e.getSlot() == -999) return;
         if (e.getWhoClicked().getGameMode().equals(GameMode.CREATIVE)) return;
         if (e.getCurrentItem()== null) return;
-
+        if(sys.gamestate.equals(GAMESTATE.STARTING) && e.getAction().equals(InventoryAction.HOTBAR_SWAP)) { e.setCancelled(true); return;}
         if (notClickable().contains(e.getCurrentItem().getType())) e.setCancelled(true);
     }
 
@@ -144,7 +145,8 @@ public class EggListener implements Listener {
         list.add(Material.SKULL_ITEM);
         list.add(Material.BED);
         list.add(Material.REDSTONE_COMPARATOR);
-
+        list.add(Material.WRITTEN_BOOK);
+        
         return list;
     }
 }

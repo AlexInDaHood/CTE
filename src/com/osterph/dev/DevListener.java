@@ -204,7 +204,7 @@ public class DevListener implements Listener {
 		switch (type) {
 		case GAME:
 			inv = Bukkit.createInventory(null, 9*5, "§8» §bDev §8§l> §cSpiel Einstellungen");
-			inv.setContents(Shop.getStandardGUI45(true));
+			inv.setContents(CTE.INSTANCE.getShop().getStandardGUI45(true));
 			inv.setItem(4, new ItemManager(Material.DRAGON_EGG).withName("§3§lSpiel Einstellungen").complete());
 			if(CTE.INSTANCE.getSystem().gamestate.equals(GAMESTATE.RUNNING)) {
 				inv.setItem(20, new ItemManager(Material.INK_SACK).withName("§cStop Game").withLores("§cBeendet die Runde mit §7§lUNENTSCHIEDEN§c.").withData(14).complete());
@@ -218,12 +218,12 @@ public class DevListener implements Listener {
 			break;
 		case PLAYER:
 			inv = Bukkit.createInventory(null, 9*5, "§8» §bDev §8§l> §cSpieler Einstellungen");
-			inv.setContents(Shop.getStandardGUI45(true));
+			inv.setContents(CTE.INSTANCE.getShop().getStandardGUI45(true));
 			inv.setItem(4, new ItemManager(Material.SKULL_ITEM).withName("§3§lSpawner Einstellungen").complete());
 			break;
 		case SPAWNER:
 			inv = Bukkit.createInventory(null, 9*5, "§8» §bDev §8§l> §cSpawner Einstellungen");
-			inv.setContents(Shop.getStandardGUI45(true));
+			inv.setContents(CTE.INSTANCE.getShop().getStandardGUI45(true));
 			inv.setItem(4, new ItemManager(Material.MELON_BLOCK).withName("§3§lSpawner Einstellungen").complete());
 			inv.setItem(20, new ItemManager(Material.APPLE).withName("§cApfel-Spawner").complete());
 			inv.setItem(22, new ItemManager(Material.MELON).withName("§aMelonen-Spawner").complete());
@@ -231,7 +231,7 @@ public class DevListener implements Listener {
 			break;
 		case APPLE:
 			inv = Bukkit.createInventory(null, 9*5, "§8» §bDev §8§l> §cApfel Spawner");
-			inv.setContents(Shop.getStandardGUI45(true));
+			inv.setContents(CTE.INSTANCE.getShop().getStandardGUI45(true));
 			inv.setItem(4, new ItemManager(Material.APPLE).withName("§cApfel Spawner Einstellungen").complete());
 			Spawner apple = CTE.INSTANCE.getSpawnermanager().getSpawnerByName("BLUE-APPLE");
 			if(apple.isActivated()) {
@@ -245,7 +245,7 @@ public class DevListener implements Listener {
 			break;
 		case MELON:
 			inv = Bukkit.createInventory(null, 9*5, "§8» §bDev §8§l> §aMelonen Spawner");
-			inv.setContents(Shop.getStandardGUI45(true));
+			inv.setContents(CTE.INSTANCE.getShop().getStandardGUI45(true));
 			inv.setItem(4, new ItemManager(Material.MELON).withName("§aMelonen Spawner Einstellungen").complete());
 			Spawner melon = CTE.INSTANCE.getSpawnermanager().getSpawnerByName("BLUE-MELON-1");
 			if(melon.isActivated()) {
@@ -259,7 +259,7 @@ public class DevListener implements Listener {
 			break;
 		case CARROT:
 			inv = Bukkit.createInventory(null, 9*5, "§8» §bDev §8§l> §6Karotten Spawner");
-			inv.setContents(Shop.getStandardGUI45(true));
+			inv.setContents(CTE.INSTANCE.getShop().getStandardGUI45(true));
 			inv.setItem(4, new ItemManager(Material.CARROT_ITEM).withName("§cKarotten Spawner Einstellungen").complete());
 			Spawner carrot = CTE.INSTANCE.getSpawnermanager().getSpawnerByName("MIDDLE-CARROT-1");
 			if(carrot.isActivated()) {

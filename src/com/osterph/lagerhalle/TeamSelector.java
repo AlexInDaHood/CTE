@@ -7,6 +7,7 @@ import com.osterph.dev.devCMD;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,6 +22,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.osterph.cte.CTE;
 import com.osterph.cte.CTESystem;
+import com.osterph.cte.CTESystem.GAMESTATE;
 import com.osterph.manager.ItemManager;
 import com.osterph.manager.ScoreboardManager;
 import com.osterph.shop.Shop;
@@ -40,13 +42,14 @@ public class TeamSelector implements Listener {
             openTeams(e.getPlayer());
         } else if(e.getPlayer().getItemInHand().getItemMeta().getDisplayName().contains("§bDev-Settings")) {
             devCMD.openInventory(e.getPlayer());
+        } else if(e.getPlayer().getItemInHand().getItemMeta().getDisplayName().contains("Spielanleitung")) {
+        	((org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer) e.getPlayer()).getHandle().openBook(CraftItemStack.asNMSCopy(e.getPlayer().getItemInHand()));
         }
     }
 
     @EventHandler
     public void onClick(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
-
         if (e.getSlot() == -999) return;
         if (e.getCurrentItem() == null) return;
         if (e.getView().getTopInventory() == null) return;
@@ -102,7 +105,7 @@ public class TeamSelector implements Listener {
     private void openTeams(Player p) {
 
         Inventory inv = Bukkit.createInventory(null, 45, "§8» §eTeam-Auswahl");
-        inv.setContents(Shop.getStandardGUI45(false));
+        inv.setContents(CTE.INSTANCE.getShop().getStandardGUI45(false));
         ItemMeta meta = new ItemManager(Material.BARRIER).complete().getItemMeta();
         meta.addEnchant(Enchantment.DURABILITY, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

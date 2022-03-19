@@ -9,6 +9,7 @@ commands:
   countdown:
   setteam:
   dev:
+  egg:
   emotes:
     aliases:
       - emote
