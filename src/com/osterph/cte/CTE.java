@@ -24,6 +24,7 @@ import com.osterph.listener.EggListener;
 import com.osterph.listener.InteractEvent;
 import com.osterph.listener.PlayerEvent;
 import com.osterph.listener.WorldEvent;
+import com.osterph.manager.LootEggManager;
 import com.osterph.manager.ScoreboardManager;
 import com.osterph.shop.Shop;
 import com.osterph.shop.ShopListener;
@@ -40,7 +41,9 @@ public class CTE extends JavaPlugin{
 	private LocationLIST locations;
 	private TeamSelector selector;
 	private Shop shop;
-
+	private LootEggManager lootEgg;
+	
+	
 	@Override
 	public void onEnable() {
 		INSTANCE = this;
@@ -49,6 +52,7 @@ public class CTE extends JavaPlugin{
 		locations = new LocationLIST();
 		selector = new TeamSelector();
 		shop = new Shop();
+		lootEgg = new LootEggManager();
 		onSettings();
 		register();
 		
@@ -99,6 +103,7 @@ public class CTE extends JavaPlugin{
 		pm.registerEvents(new TeamSelector(), this);
 		pm.registerEvents(new WorldEvent(), this);
 		pm.registerEvents(new DevListener(), this);
+		pm.registerEvents(new LootEggManager(), this);
 		
 		
 		getCommand("dev").setExecutor(new devCMD());
@@ -127,6 +132,10 @@ public class CTE extends JavaPlugin{
 	
 	public Shop getShop() {
 		return shop;
+	}
+	
+	public LootEggManager getLootEgg() {
+		return lootEgg;
 	}
 	
 }

@@ -107,6 +107,7 @@ public class CTESystem {
     public void forceStart() {
         if (gamestate.equals(GAMESTATE.RUNNING)) return;
         startLoop();
+       // CTE.INSTANCE.getLootEgg().startQueue();
         for (Player all: Bukkit.getOnlinePlayers()) {
             all.closeInventory();
             if (!teams.get(all).equals(TEAM.DEFAULT)) continue;
@@ -139,6 +140,8 @@ public class CTESystem {
         new LocationLIST().redEGG().getBlock().setType(Material.DRAGON_EGG);
 
         for(Player all : Bukkit.getOnlinePlayers()) {
+        	kills.put(all, 0);
+        	punkte.put(all, 0);
             ScoreboardManager.refreshBoard(all);
             NPCListener.show(all);
             startEquip(all);

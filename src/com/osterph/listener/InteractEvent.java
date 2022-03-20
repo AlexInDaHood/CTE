@@ -35,7 +35,7 @@ public class InteractEvent implements Listener {
                 if (p.getItemInHand().getAmount() == 1) p.getInventory().clear(p.getInventory().getHeldItemSlot());
                 p.getItemInHand().setAmount(p.getItemInHand().getAmount()-1);
                 Fireball a = p.launchProjectile(Fireball.class);
-                a.setVelocity(a.getVelocity().multiply(1.5));
+                a.setVelocity(a.getVelocity().multiply(1));
                 e.setCancelled(true);
                 fireball.add(p);
                 Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, new Runnable() {

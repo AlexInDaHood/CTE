@@ -13,6 +13,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.osterph.cte.CTE;
+import com.osterph.cte.CTESystem;
 import com.osterph.cte.CTESystem.GAMESTATE;
 import com.osterph.manager.ItemManager;
 import com.osterph.shop.Shop;
@@ -55,10 +56,17 @@ public class DevListener implements Listener {
 				} else if(item.getItemMeta().getDisplayName().contains("Karotten")) {
 					openInventory(p, settingstype.CARROT);
 				}
-				
-			} else if(e.getInventory().getTitle().contains("Spieler Einstellungen")) {
+				//
+				//
+				// PLAYER SETTINGS
+				//
+				//
+			} else if(e.getInventory().getTitle().contains("Spieler Einstellungen")) { 
 				if(item.getItemMeta().getDisplayName().contains("Zurück")) {
 					devCMD.openInventory(p);
+				}
+				if(item.getType().equals(Material.SKULL_ITEM) && item.getDurability() == 3) {
+					System.out.println(item.getItemMeta().getDisplayName().split("]")[1].split(" ")[1].substring(2));
 				}
 				
 			} else if(e.getInventory().getTitle().contains("Spiel Einstellungen")) {
@@ -227,8 +235,9 @@ public class DevListener implements Listener {
 				inv.setItem(i+19, new ItemStack(Material.AIR));
 				inv.setItem(i+28, new ItemStack(Material.AIR));
 			}
+			CTESystem sys = CTE.INSTANCE.getSystem();
 			for(Player all : Bukkit.getOnlinePlayers()) {
-				inv.addItem(new ItemManager(Material.SKULL_ITEM).withData(3).withName("§8» " + all.getPlayerListName() +" §8«").withLores(Stream.of("Test", "Test1").toArray(String[]::new)).complete());
+				inv.addItem(ItemManager.newHead("§8» " + all.getPlayerListName() +" §8«", Stream.of("§7Team§8: §e" + sys.teams.get(all), "§7HP§8: §e" + all.getHealth()).toArray(String[]::new), all.getName()));
 			}
 			break;
 		case SPAWNER:
@@ -286,8 +295,18 @@ public class DevListener implements Listener {
 		p.openInventory(inv);
 	}
 	
+	private void openPlayerSettingsInventory(Player p, String t) {
+		Inventory inv = Bukkit.createInventory(null, 9*5, "§8» §bDev §8§l> §6" + t);
+		inv.setContents(CTE.INSTANCE.getShop().getStandardGUI(true));
+		Player target = Bukkit.getPlayer(t);
+		inv.setItem(4, ItemManager.newHead("§8» " + target.getPlayerListName() +" §8«", null, target.getName()));
+		
+		
+		p.openInventory(inv);
+	}
+	
 	private enum settingstype {
-		SPAWNER, PLAYER, GAME, APPLE, MELON, CARROT, PLAYERSET;
+		SPAWNER, PLAYER, GAME, APPLE, MELON, CARROT;
 	}
 	
 }

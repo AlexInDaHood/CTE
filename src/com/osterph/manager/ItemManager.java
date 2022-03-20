@@ -114,6 +114,17 @@ public class ItemManager {
         return item;
     }
 
+    public static ItemStack newHead(String name, String[] lore, String owner) {
+        ItemStack stack = new ItemStack(Material.SKULL_ITEM, 1, (byte) 3);
+        SkullMeta meta = (SkullMeta) stack.getItemMeta();
+        meta.setOwner(owner);
+        meta.setDisplayName(name);
+        if(lore != null)
+        	meta.setLore(Arrays.asList(lore));
+        stack.setItemMeta(meta);
+        return stack;
+    }
+    
     public static ItemStack customHead(String name, String lore, String value) {
         ItemStack stack = new ItemStack(Material.SKULL_ITEM, 1, (byte) 3);
         if(value.isEmpty()) return stack;

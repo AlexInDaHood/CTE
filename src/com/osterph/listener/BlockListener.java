@@ -81,12 +81,13 @@ public class BlockListener implements Listener {
             return;
         }
         
-        e.setCancelled(true);
-        if (CTE.INSTANCE.getShop().getShopItemByMaterial(e.getBlock().getType()).getInventoryItem(e.getBlock().getData()) == null) return;
-        ItemStack drops = CTE.INSTANCE.getShop().getShopItemByMaterial(e.getBlock().getType()).getInventoryItem(e.getBlock().getData());
-        drops.setAmount(1);
-        e.getBlock().setType(Material.AIR);
-        e.getBlock().getLocation().getWorld().dropItem(e.getBlock().getLocation(), drops);
+        if (CTE.INSTANCE.getShop().getShopItemByMaterial(e.getBlock().getType()) != null) {
+	        e.setCancelled(true);
+	        ItemStack drops = CTE.INSTANCE.getShop().getShopItemByMaterial(e.getBlock().getType()).getInventoryItem(e.getBlock().getData());
+	        drops.setAmount(1);
+	        e.getBlock().setType(Material.AIR);
+	        e.getBlock().getLocation().getWorld().dropItem(e.getBlock().getLocation(), drops);
+        }
     }
 
     @EventHandler

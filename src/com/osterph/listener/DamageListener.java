@@ -44,10 +44,9 @@ public class DamageListener implements Listener {
     @EventHandler
     public void onDamage(EntityDamageEvent e) {
         if (!sys.gamestate.equals(GAMESTATE.RUNNING)) {
-            //e.setCancelled(true); //TODO
+            e.setCancelled(true);
             return;
         }
-		System.out.println(e.getCause());
         
         Enum<EntityDamageEvent.DamageCause> cause = e.getCause();
 
@@ -81,6 +80,7 @@ public class DamageListener implements Listener {
 				}
     		} else if(e.getDamager() instanceof Projectile) {
     			Projectile pro = (Projectile) e.getDamager();
+    			e.setDamage(e.getDamage()/3);
     			if(pro.getShooter() instanceof Player)
     				damager = (Player)pro.getShooter();
     		} else if(e.getDamager() instanceof TNTPrimed) {
