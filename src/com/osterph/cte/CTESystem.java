@@ -43,7 +43,7 @@ public class CTESystem {
     
     public TEAM winnerTeam = TEAM.DEFAULT;
     
-    public int maxPlayers = 12;
+    public int maxPlayers = 200;
     public int minPlayers = 2;
     
     
