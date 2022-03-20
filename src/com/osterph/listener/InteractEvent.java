@@ -31,12 +31,13 @@ public class InteractEvent implements Listener {
         if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Player p = e.getPlayer();
             if (p.getItemInHand() == null) return;
-            if(p.getItemInHand().getType().equals(Material.FIREBALL) && !fireball.contains(p)) {
+            if(p.getItemInHand().getType().equals(Material.FIREBALL)) {
+                e.setCancelled(true);
+                if (fireball.contains(p)) return;
                 if (p.getItemInHand().getAmount() == 1) p.getInventory().clear(p.getInventory().getHeldItemSlot());
                 p.getItemInHand().setAmount(p.getItemInHand().getAmount()-1);
                 Fireball a = p.launchProjectile(Fireball.class);
-                a.setVelocity(a.getVelocity().multiply(1));
-                e.setCancelled(true);
+                a.setVelocity(a.getVelocity().multiply(1.5));
                 fireball.add(p);
                 Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, new Runnable() {
 				@Override
@@ -44,12 +45,10 @@ public class InteractEvent implements Listener {
 					fireball.remove(p);
 					}
 				},20);
-                return;
             } else if(p.getItemInHand().getType().equals(Material.BLAZE_ROD)) {
                 if (p.getItemInHand().getAmount() == 1) p.getInventory().clear(p.getInventory().getHeldItemSlot());
                 p.getItemInHand().setAmount(p.getItemInHand().getAmount()-1);
                 onSave(e.getPlayer());
-                return;
             }
         }
     }
@@ -111,7 +110,7 @@ public class InteractEvent implements Listener {
     @EventHandler
     public void onLand(ProjectileHitEvent e) {
         if(e.getEntity() instanceof Fireball) {
-            e.getEntity().getLocation().getWorld().createExplosion(e.getEntity().getLocation(), 1.45F);
+            e.getEntity().getLocation().getWorld().createExplosion(e.getEntity().getLocation(), 1.2F);
         }
         e.getEntity().remove();
     }

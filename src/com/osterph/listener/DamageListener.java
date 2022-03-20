@@ -1,15 +1,13 @@
 package com.osterph.listener;
 
 import java.util.HashMap;
+import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.TNTPrimed;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -47,13 +45,16 @@ public class DamageListener implements Listener {
             e.setCancelled(true);
             return;
         }
-        
+
         Enum<EntityDamageEvent.DamageCause> cause = e.getCause();
 
         if (cause.equals(EntityDamageEvent.DamageCause.CONTACT)) {
             e.setCancelled(true);
         } else if (cause.equals(EntityDamageEvent.DamageCause.DROWNING)) {
 			e.setCancelled(true);
+		} else if (cause.equals(EntityDamageEvent.DamageCause.ENTITY_EXPLOSION)) {
+			int r = new Random().nextInt(4)+1;
+			e.setDamage(r);
 		}
 
 		if(!(e.getEntity() instanceof Player)) return;
@@ -87,6 +88,11 @@ public class DamageListener implements Listener {
 				if(pro.getSource() instanceof Player)
 					damager = (Player)pro.getSource();
 			}
+
+			if (e.getDamager().getType().equals(EntityType.PRIMED_TNT)||e.getDamager().getType().equals(EntityType.FIREBALL)) {
+				int r = new Random().nextInt(4)+1;
+				e.setDamage(r);
+			}
     		
     		if(damager != null && (sys.teams.get(damager).equals(TEAM.DEFAULT) || sys.teams.get(damager).equals(TEAM.SPEC))) {
     			e.setCancelled(true);
@@ -108,7 +114,7 @@ public class DamageListener implements Listener {
 				}
 			},20*15);
 
-    		combat.put(t, new String[] {damager.getName(),"" + Scheduler});
+    		if (damager!=null)combat.put(t, new String[] {damager.getName(),"" + Scheduler});
 
     		if(e.getDamage() >= t.getHealth()) {
 				t.setHealth(20);
@@ -117,12 +123,11 @@ public class DamageListener implements Listener {
 			}
     	} else {
     		e.setCancelled(true);
-    		return;
     	}
     }
 
-    private HashMap<Player, Integer> deathScheduler = new HashMap<>();
-    private HashMap<Player, Integer> deathTimer = new HashMap<>();
+    private final HashMap<Player, Integer> deathScheduler = new HashMap<>();
+    private final HashMap<Player, Integer> deathTimer = new HashMap<>();
     
     int scheduler;
     
@@ -161,7 +166,7 @@ public class DamageListener implements Listener {
     	p.teleport(locs.specSPAWN());
 		p.playSound(p.getLocation(), Sound.CAT_PURREOW, 1, 0.5f);
 		sys.clear(p);
-		if((taa == TEAM.BLUE && sys.BLUE_EGG != sys.BLUE_EGG.GONE) || (taa == TEAM.RED && sys.RED_EGG != sys.RED_EGG.GONE)) {
+		if((taa == TEAM.BLUE && sys.BLUE_EGG != CTESystem.EGG_STATE.GONE) || (taa == TEAM.RED && sys.RED_EGG != CTESystem.EGG_STATE.GONE)) {
 			p.sendMessage(CTE.prefix + "Du wirst in §c5 Sekunden §ewiederbelebt.");
 	    	/*Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, new Runnable() {
 				@Override
@@ -223,7 +228,7 @@ public class DamageListener implements Listener {
     public void onEgg(Player p) {
     	TEAM t = sys.teams.get(p);
     	if(t == TEAM.BLUE) {
-    		if(p.getInventory().getHelmet() != null && p.getInventory().getHelmet().getItemMeta().getDisplayName().equals("§cRotes-Ei")) {
+    		if(p.getInventory().getHelmet() != null && p.getInventory().getHelmet().getItemMeta().getDisplayName() != null && p.getInventory().getHelmet().getItemMeta().getDisplayName().equals("§cRotes-Ei")) {
     			sys.RED_EGG = CTESystem.EGG_STATE.OKAY;
     			CTE.INSTANCE.getLocations().redEGG().getBlock().setType(Material.DRAGON_EGG);
     			sys.sendAllMessage(CTE.prefix + "Das §cRote-Ei §eist nun wieder sicher!");
@@ -232,7 +237,7 @@ public class DamageListener implements Listener {
     			}
     		}
     	} else if(t == TEAM.RED) {
-    		if(p.getInventory().getHelmet() != null && p.getInventory().getHelmet().getItemMeta().getDisplayName().equals("§9Blaues-Ei")) {
+    		if(p.getInventory().getHelmet() != null && p.getInventory().getHelmet().getItemMeta().getDisplayName() != null && p.getInventory().getHelmet().getItemMeta().getDisplayName().equals("§9Blaues-Ei")) {
     			sys.BLUE_EGG = CTESystem.EGG_STATE.OKAY;
     			CTE.INSTANCE.getLocations().blueEGG().getBlock().setType(Material.DRAGON_EGG);
     			sys.sendAllMessage(CTE.prefix + "Das §9Blaue-Ei §eist nun wieder sicher!");

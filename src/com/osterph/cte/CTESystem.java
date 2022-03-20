@@ -105,6 +105,7 @@ public class CTESystem {
     }
 
     public void forceStart() {
+        System.out.println("forceStart");
         if (gamestate.equals(GAMESTATE.RUNNING)) return;
         startLoop();
        // CTE.INSTANCE.getLootEgg().startQueue();
@@ -155,6 +156,7 @@ public class CTESystem {
 
 
 	public void endGame() {
+        System.out.println("endGame");
         stopLoop();
         Bukkit.getWorld("world").getWorldBorder().setCenter(0.5, 0.5);
         gamestate = GAMESTATE.ENDING;
@@ -189,6 +191,7 @@ public class CTESystem {
             @Override
             public void run() {
                 moveHub();
+                Bukkit.getServer().spigot().restart();
             }
         }, 20*15L);
 
@@ -238,6 +241,7 @@ public class CTESystem {
     private int countdown = 60;
     
     public void startTimer() {
+        System.out.println("StartTIMER");
     	gamestate = GAMESTATE.STARTING;
     	if(!Bukkit.getScheduler().isCurrentlyRunning(scheduler)) {
 	    	scheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {			

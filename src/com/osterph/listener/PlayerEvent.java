@@ -104,7 +104,6 @@ public class PlayerEvent implements Listener {
             if(Bukkit.getOnlinePlayers().size() >= sys.minPlayers) {
             	sys.startTimer();
             }
-            return;
         } else {
             e.setJoinMessage(null);
         }

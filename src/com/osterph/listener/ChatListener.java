@@ -189,7 +189,7 @@ public class ChatListener implements Listener {
         int r = new Random().nextInt(6)+1;
         switch (r) {
             case 1:
-                emotes.put("l", "Alle suchen nach Ostereiern... Ich suche nach dem Lebenswillen...");
+                emotes.put("l", "#ostern");
                 break;
             case 2:
                 emotes.put("l", "Alles Gute, nur das Beste, gerade jetzt zum Osterfeste!");
