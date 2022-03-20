@@ -39,6 +39,7 @@ public class CTESystem {
     public ArrayList<Player> blue = new ArrayList<>();
     public int startBLUE = 0;
     
+    public HashMap<Player, ItemStack> chestplates = new HashMap<>();
     
     public TEAM winnerTeam = TEAM.DEFAULT;
     
@@ -90,10 +91,15 @@ public class CTESystem {
         if (teams.get(p).equals(TEAM.BLUE)) m.setColor(Color.BLUE);
 
         p.getInventory().setHelmet(new ItemManager(Material.LEATHER_HELMET).withName("§7Lederhelm").unbreakable(true).withMeta(m).complete());
-        p.getInventory().setChestplate(new ItemManager(Material.LEATHER_CHESTPLATE).withName("§7Lederbrustpanzer").unbreakable(true).withMeta(m).complete());
         p.getInventory().setLeggings(new ItemManager(Material.LEATHER_LEGGINGS).withName("§7Lederhose").unbreakable(true).withMeta(m).complete());
         p.getInventory().setBoots(new ItemManager(Material.LEATHER_BOOTS).withName("§7Lederstiefel").unbreakable(true).withMeta(m).complete());
         p.getInventory().setItem(0, new ItemManager(Material.WOOD_SWORD).withName("§7Holzschwert").unbreakable(true).complete());
+        
+        if(!chestplates.containsKey(p))  {
+        	p.getInventory().setChestplate(new ItemManager(Material.LEATHER_CHESTPLATE).withName("§7Lederbrustpanzer").unbreakable(true).withMeta(m).complete());
+        } else {
+        	p.getInventory().setChestplate(chestplates.get(p));
+        }
     }
 
     public void setHelmet(Player p) {

@@ -18,6 +18,7 @@ public class Spawner {
 	int delay;
 	int amount;
 	int max;
+	boolean split;
 	
 	boolean activated;
 	
@@ -25,12 +26,13 @@ public class Spawner {
 	
 	private int scheduler;
 	
-	public Spawner(String name, ItemStack item, Location loc, int delay, int amount, int max) {
+	public Spawner(String name, ItemStack item, Location loc, int delay, int amount, int max, boolean split) {
 		this.loc = loc;
 		this.delay = delay;
 		this.max = max;
 		this.amount = amount;
 		this.name = name;
+		this.split = split;
 		activated = false;
 		
 		ItemMeta meta = item.getItemMeta();
@@ -131,6 +133,10 @@ public class Spawner {
 	
 	public boolean isActivated() {
 		return activated;
+	}
+	
+	public boolean isSplit() {
+		return split;
 	}
 	
 }

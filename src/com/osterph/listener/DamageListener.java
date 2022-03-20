@@ -27,7 +27,8 @@ public class DamageListener implements Listener {
     private final CTESystem sys = CTE.INSTANCE.getSystem();
 
     public HashMap<Player, String[]> combat = new HashMap<>(); //TARGET | DAMAGER
-
+    
+    
 	private int Scheduler;
 
     @EventHandler
@@ -128,6 +129,7 @@ public class DamageListener implements Listener {
 
     private final HashMap<Player, Integer> deathScheduler = new HashMap<>();
     private final HashMap<Player, Integer> deathTimer = new HashMap<>();
+    private final HashMap<Player, ItemStack> chestplate = new HashMap<>();
     
     int scheduler;
     

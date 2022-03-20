@@ -40,7 +40,14 @@ public class PlayerEvent implements Listener {
     		e.getItem().getItemStack().setItemMeta(m);
     		Spawner sp = CTE.INSTANCE.getSpawnermanager().getSpawnerByName(name.substring(name.indexOf("[")+1, name.indexOf("]")));
     		sp.setCurrentitems(0);
-    	}
+    		if(sp.isSplit()) {
+    			for(Player all : Bukkit.getOnlinePlayers()) {
+    				if(all != e.getPlayer() && all.getLocation().distance(e.getItem().getLocation()) <= 1 && !sys.teams.get(e.getPlayer()).equals(TEAM.DEFAULT)&& !sys.teams.get(e.getPlayer()).equals(TEAM.SPEC)) {
+    					all.getInventory().addItem(e.getItem().getItemStack());
+    				}
+    			}
+    		}
+     	}
     }
     
     @EventHandler

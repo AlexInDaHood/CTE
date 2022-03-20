@@ -101,6 +101,7 @@ public class ShopListener implements Listener {
                                         case IRON_CHESTPLATE:
                                         case DIAMOND_CHESTPLATE:
                                             p.getInventory().setChestplate(shop.getInventoryItem(0));
+                                            sys.chestplates.put(p, shop.getInventoryItem(0));
                                             return;
                                         case WOOL:
                                             if (sys.teams.get(p).equals(CTESystem.TEAM.RED)) {
@@ -127,6 +128,7 @@ public class ShopListener implements Listener {
                                     case IRON_CHESTPLATE:
                                     case DIAMOND_CHESTPLATE:
                                         p.getInventory().setChestplate(shop.getInventoryItem(0));
+                                        sys.chestplates.put(p, shop.getInventoryItem(0));
                                         return;
                                     case WOOL:
                                         if (sys.teams.get(p).equals(CTESystem.TEAM.RED)) {
