@@ -80,7 +80,6 @@ public class DamageListener implements Listener {
 				}
     		} else if(e.getDamager() instanceof Projectile) {
     			Projectile pro = (Projectile) e.getDamager();
-    			e.setDamage(e.getDamage()/3);
     			if(pro.getShooter() instanceof Player)
     				damager = (Player)pro.getShooter();
     		} else if(e.getDamager() instanceof TNTPrimed) {
