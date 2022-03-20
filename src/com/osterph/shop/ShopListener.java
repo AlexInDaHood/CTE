@@ -77,6 +77,7 @@ public class ShopListener implements Listener {
                                 	}
                                     ItemStack b = new DropManager(shop.getRessource()).getItem(1);
                                     p.sendMessage(CTE.prefix + "§eDu hast §6" + shop.getName() + " §efür " + shop.getCost() + " " + shop.ResourceToString() + " §egekauft!");
+                                    p.playSound(p.getLocation(), Sound.NOTE_PLING, 1.3F, 1);
                                     ItemStack[] list = p.getInventory().getContents();
                                     int cost = shop.getCost();
                                     for (ItemStack i : list) {
