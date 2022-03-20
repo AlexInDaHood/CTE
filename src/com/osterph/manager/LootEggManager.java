@@ -40,6 +40,7 @@ public class LootEggManager implements Listener {
 	public void onBreak(BlockBreakEvent e) {
 		if(!sys.gamestate.equals(GAMESTATE.RUNNING)) return;
 		Block b = e.getBlock();
+		if (!(b instanceof TileEntitySkull)) return;
 		TileEntitySkull skull = (TileEntitySkull)((CraftWorld)b.getWorld()).getHandle().getTileEntity(new BlockPosition(b.getX(), b.getY(), b.getZ()));
 		if(!skull.getGameProfile().getProperties().get("textures").iterator().next().getValue().equals(skullTextures)) return;
 		e.setCancelled(true);

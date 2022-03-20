@@ -57,7 +57,7 @@ public class StaffManager {
 
     public TextComponent devTag() {
         TextComponent t = new TextComponent("§8["+devString()+"§8] ");
-        HoverEvent e = new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText("§cEvent-Management"));
+        HoverEvent e = new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText("§cEvent Management"));
         t.setHoverEvent(e);
 
         return t;
@@ -65,7 +65,7 @@ public class StaffManager {
 
     public TextComponent helperTag() {
         TextComponent t = new TextComponent("§8["+helperString()+"§8] ");
-        HoverEvent e = new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText("§dEvent-Helfer"));
+        HoverEvent e = new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText("§dEvent Helfer"));
         t.setHoverEvent(e);
 
         return t;
@@ -73,7 +73,7 @@ public class StaffManager {
 
     public TextComponent staffTag() {
         TextComponent t = new TextComponent("§8["+staffString()+"§8] ");
-        HoverEvent e = new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText("§4Server-Leitung"));
+        HoverEvent e = new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText("§4Server Leitung"));
         t.setHoverEvent(e);
 
         return t;

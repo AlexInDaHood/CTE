@@ -12,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -108,7 +109,6 @@ public class CTESystem {
         System.out.println("forceStart");
         if (gamestate.equals(GAMESTATE.RUNNING)) return;
         startLoop();
-       // CTE.INSTANCE.getLootEgg().startQueue();
         for (Player all: Bukkit.getOnlinePlayers()) {
             all.closeInventory();
             if (!teams.get(all).equals(TEAM.DEFAULT)) continue;
@@ -153,12 +153,13 @@ public class CTESystem {
         CTE.INSTANCE.getSpawnermanager().aktivateSpawner();
     }
 
-
-
 	public void endGame() {
         System.out.println("endGame");
         stopLoop();
-        Bukkit.getWorld("world").getWorldBorder().setCenter(0.5, 0.5);
+        for (Entity all: Bukkit.getWorld("world").getEntities()) {
+            if (!all.getType().equals(EntityType.DROPPED_ITEM)) continue;
+            all.remove();
+        }
         gamestate = GAMESTATE.ENDING;
         switch (winnerTeam) {
         	case SPEC:
@@ -191,7 +192,7 @@ public class CTESystem {
             @Override
             public void run() {
                 moveHub();
-                Bukkit.getServer().spigot().restart();
+                Bukkit.getServer().shutdown();
             }
         }, 20*15L);
 
@@ -237,12 +238,16 @@ public class CTESystem {
     }
 
     
-    private int scheduler;
-    private int countdown = 60;
+    public int scheduler;
+    public int countdown = 61;
     
     public void startTimer() {
         System.out.println("StartTIMER");
     	gamestate = GAMESTATE.STARTING;
+        for (Entity all: Bukkit.getWorld("world").getEntities()) {
+            if (!all.getType().equals(EntityType.DROPPED_ITEM)) continue;
+            all.remove();
+        }
     	if(!Bukkit.getScheduler().isCurrentlyRunning(scheduler)) {
 	    	scheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {			
 				@Override
@@ -294,7 +299,7 @@ public class CTESystem {
     
     public void stopStartTimer() {
     	Bukkit.getScheduler().cancelTask(scheduler);
-    	countdown = 60;
+    	countdown = 61;
     	for(Player all : Bukkit.getOnlinePlayers()) {
     		all.setLevel(0);
     	}
@@ -322,7 +327,7 @@ public class CTESystem {
         loop = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {
             @Override
             public void run() {
-                if (gamestate.equals(GAMESTATE.RUNNING)) return;
+                if (!gamestate.equals(GAMESTATE.RUNNING)) return;
                 for(Player all : Bukkit.getOnlinePlayers()) {
                     if(all.getGameMode().equals(GameMode.CREATIVE) || all.getGameMode().equals(GameMode.SPECTATOR)) continue;;
                     if(teams.get(all).equals(TEAM.SPEC) || teams.get(all).equals(TEAM.DEFAULT)) continue;

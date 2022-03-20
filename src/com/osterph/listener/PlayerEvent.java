@@ -100,8 +100,8 @@ public class PlayerEvent implements Listener {
                 p.getInventory().setItem(8, new ItemManager(Material.REDSTONE_COMPARATOR).withName("§8» §bDev-Settings §8«").complete());
             }
             e.setJoinMessage("§8[§a+§8] §7" + p.getName());
-            
-            if(Bukkit.getOnlinePlayers().size() >= sys.minPlayers) {
+
+            if(Bukkit.getOnlinePlayers().size() >= sys.minPlayers && sys.countdown > 60) {
             	sys.startTimer();
             }
         } else {
@@ -139,10 +139,15 @@ public class PlayerEvent implements Listener {
 
         if(sys.gamestate.equals(GAMESTATE.STARTING)) {
             e.setQuitMessage("§8[§c-§8] §7" + p.getName());
-            if(Bukkit.getOnlinePlayers().size() < sys.minPlayers) {
-            	sys.stopStartTimer();
-            	sys.sendAllMessage(CTE.prefix + "Der Start wurde abgebrochen!");
-            }
+            Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, new Runnable() {
+                @Override
+                public void run() {
+                    if(Bukkit.getOnlinePlayers().size() < sys.minPlayers) {
+                        sys.stopStartTimer();
+                        sys.sendAllMessage(CTE.prefix + "Der Start wurde abgebrochen!");
+                    }
+                }
+            },5);
         } else if(sys.gamestate.equals(GAMESTATE.RUNNING)) {
             e.setQuitMessage("§8[§c-§8] §7" + p.getName());
             sys.teams.put(e.getPlayer(), TEAM.SPEC);

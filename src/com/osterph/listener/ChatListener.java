@@ -70,15 +70,6 @@ public class ChatListener implements Listener {
                         cooldown.add(p.getName());
                         break;
                     case SPEC:
-                        e.setCancelled(true);
-                        txt.setText("§8[§7SPEC§8] §7" + p.getName() + " §8» §f" + msg);
-                        if (staff.hasRoles()) b.addExtra(staff.activeTag());
-                        b.addExtra(txt);
-                        for (Player all : Bukkit.getOnlinePlayers()) {
-                            if (sys.teams.get(all) == CTESystem.TEAM.SPEC) {
-                                all.spigot().sendMessage(b);
-                            }
-                        }
                     case DEFAULT:
                         e.setCancelled(true);
                         txt.setText("§8[§7SPEC§8] §7" + p.getName() + " §8» §f" + msg);
@@ -89,7 +80,7 @@ public class ChatListener implements Listener {
                                 all.spigot().sendMessage(b);
                             }
                         }
-                        break;
+                        return;
                 }
                 b.addExtra(prefix);
                 if (staff.hasRoles()) b.addExtra(staff.activeTag());
