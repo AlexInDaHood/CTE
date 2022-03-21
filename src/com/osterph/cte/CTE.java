@@ -7,6 +7,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.osterph.dev.DevListener;
+import com.osterph.dev.animationCMD;
 import com.osterph.dev.countdownCMD;
 import com.osterph.dev.devCMD;
 import com.osterph.dev.eggCMD;
@@ -26,6 +27,7 @@ import com.osterph.listener.PlayerEvent;
 import com.osterph.listener.WorldEvent;
 import com.osterph.manager.LootEggManager;
 import com.osterph.manager.ScoreboardManager;
+import com.osterph.manager.StatsManager;
 import com.osterph.shop.Shop;
 import com.osterph.shop.ShopListener;
 import com.osterph.spawner.SpawnerManager;
@@ -42,7 +44,7 @@ public class CTE extends JavaPlugin{
 	private TeamSelector selector;
 	private Shop shop;
 	private LootEggManager lootEgg;
-	
+	private StatsManager statsManager;
 	
 	@Override
 	public void onEnable() {
@@ -53,6 +55,7 @@ public class CTE extends JavaPlugin{
 		selector = new TeamSelector();
 		shop = new Shop();
 		lootEgg = new LootEggManager();
+		statsManager = new StatsManager();
 		onSettings();
 		register();
 		
@@ -68,8 +71,6 @@ public class CTE extends JavaPlugin{
 
 		for (Player all: Bukkit.getOnlinePlayers()) {
 			ScoreboardManager.refreshBoard(all);
-			system.punkte.put(all, 0);
-			system.kills.put(all, 0);
 		}
 		NPCListener.spawnNPCs();
 	}
@@ -112,6 +113,7 @@ public class CTE extends JavaPlugin{
 		getCommand("setteam").setExecutor(new setteamCMD());
 		getCommand("emotes").setExecutor(new Emotes());
 		getCommand("egg").setExecutor(new eggCMD());
+		getCommand("animation").setExecutor(new animationCMD());
 
 	}
 	
@@ -136,6 +138,10 @@ public class CTE extends JavaPlugin{
 	
 	public LootEggManager getLootEgg() {
 		return lootEgg;
+	}
+	
+	public StatsManager getStatsManager() {
+		return statsManager;
 	}
 	
 }

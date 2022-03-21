@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-import com.osterph.listener.DamageListener;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.GameMode;
@@ -29,8 +28,6 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
 public class CTESystem {
 	
     public HashMap<Player, TEAM> teams = new HashMap<>();
-    public HashMap<Player, Integer> punkte = new HashMap<>();
-    public HashMap<Player, Integer> kills = new HashMap<>();
     public EGG_STATE BLUE_EGG = EGG_STATE.OKAY;
     public EGG_STATE RED_EGG = EGG_STATE.OKAY;
     
@@ -147,8 +144,6 @@ public class CTESystem {
         new LocationLIST().redEGG().getBlock().setType(Material.DRAGON_EGG);
 
         for(Player all : Bukkit.getOnlinePlayers()) {
-        	kills.put(all, 0);
-        	punkte.put(all, 0);
             ScoreboardManager.refreshBoard(all);
             NPCListener.show(all);
             startEquip(all);
@@ -208,12 +203,12 @@ public class CTESystem {
         //TODO PLAYHILLS API - LOBBY-1
     }
     
+    
     public void addPoints(Player p, int points) {
         String UUID = p.getUniqueId().toString();
         int punkte = (int) CTE.mysql.getDatabase("PLAYERPOINTS", "UUID" , UUID, "POINTS");
         punkte += points;
-        this.punkte.put(p, this.punkte.get(p)+points);
-
+        CTE.INSTANCE.getStatsManager().addPoints(p, points);
         ScoreboardManager.refreshBoard(p);
         CTE.mysql.setDatabase("PLAYERPOINTS", "UUID", UUID, "POINTS", punkte);
     }

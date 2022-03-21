@@ -21,6 +21,7 @@ import com.osterph.cte.CTESystem.TEAM;
 import com.osterph.lagerhalle.LocationLIST;
 import com.osterph.manager.ScoreboardManager;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 
 public class DamageListener implements Listener {
 
@@ -129,7 +130,6 @@ public class DamageListener implements Listener {
 
     private final HashMap<Player, Integer> deathScheduler = new HashMap<>();
     private final HashMap<Player, Integer> deathTimer = new HashMap<>();
-    private final HashMap<Player, ItemStack> chestplate = new HashMap<>();
     
     int scheduler;
     
@@ -146,7 +146,7 @@ public class DamageListener implements Listener {
 			String pl = sys.teams.get(p).equals(TEAM.RED) ? "§c" : sys.teams.get(p).equals(TEAM.BLUE) ? "§9" : "§7";
 			combat.remove(p);
 			if(target != null) {
-				sys.kills.put(target, sys.kills.get(target)+1);
+				CTE.INSTANCE.getStatsManager().addKill(target);
 				ScoreboardManager.refreshBoard(target);
 				String t = sys.teams.get(target).equals(TEAM.RED) ? "§c" : sys.teams.get(target).equals(TEAM.BLUE) ? "§9" : "§7";
 				target.playSound(target.getLocation(), Sound.BAT_DEATH, 1f, 1.6f);
@@ -162,6 +162,9 @@ public class DamageListener implements Listener {
 		sys.teams.put(p, TEAM.SPEC);
 		for(Player all : Bukkit.getOnlinePlayers()) {
 			ScoreboardManager.refreshBoard(all);
+		}
+		for(PotionEffect effect : p.getActivePotionEffects()) {
+			p.removePotionEffect(effect.getType());
 		}
 		p.setFlying(true);
 		p.setHealth(20);

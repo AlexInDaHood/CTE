@@ -115,9 +115,6 @@ public class PlayerEvent implements Listener {
             e.setJoinMessage(null);
         }
 
-        sys.punkte.put(p, 0);
-        sys.kills.put(p, 0);
-
         for (Player all: Bukkit.getOnlinePlayers()) {
             ScoreboardManager.refreshBoard(all);
             all.setLevel(sys.c);

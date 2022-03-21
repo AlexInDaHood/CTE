@@ -103,8 +103,8 @@ public class ScoreboardManager {
             o.getScore("§cROTES TEAM§8: " + EggStatus(TEAM.RED)).setScore(4);
             o.getScore("§2").setScore(3);
             if (sys.teams.get(p).equals(CTESystem.TEAM.BLUE)||sys.teams.get(p).equals(CTESystem.TEAM.RED)) {
-                o.getScore("§3PUNKTE§8: §7" + sys.punkte.get(p)).setScore(2);
-                o.getScore("§bKILLS§8: §7" + sys.kills.get(p)).setScore(1);
+                o.getScore("§3PUNKTE§8: §7" + CTE.INSTANCE.getStatsManager().getPoints(p)).setScore(2);
+                o.getScore("§bKILLS§8: §7" + CTE.INSTANCE.getStatsManager().getKills(p)).setScore(1);
             }
         } else {
             Objective o = board.getObjective(p.getName());

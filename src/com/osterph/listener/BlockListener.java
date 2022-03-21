@@ -152,7 +152,6 @@ public class BlockListener implements Listener {
 
     @EventHandler
     public void onDrop(EntitySpawnEvent e) {
-        if (e.getEntityType().equals(EntityType.CHICKEN)) e.setCancelled(true);
         if (!e.getEntityType().equals(EntityType.DROPPED_ITEM)) return;
         Item i = (Item) e.getEntity();
         if (!isDropped(i.getItemStack().getType())) i.remove();

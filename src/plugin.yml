@@ -10,6 +10,7 @@ commands:
   setteam:
   dev:
   egg:
+  animation:
   emotes:
     aliases:
       - emote
