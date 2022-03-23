@@ -1,6 +1,5 @@
 package com.osterph.shop;
 
-import java.time.format.ResolverStyle;
 
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -14,7 +13,6 @@ import org.bukkit.inventory.ItemStack;
 import com.osterph.cte.CTE;
 import com.osterph.cte.CTESystem;
 import com.osterph.manager.DropManager;
-import com.osterph.shop.Shop.Ressourcen;
 
 
 public class ShopListener implements Listener {

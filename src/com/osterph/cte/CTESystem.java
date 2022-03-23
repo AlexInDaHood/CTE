@@ -109,6 +109,7 @@ public class CTESystem {
     }
 
     public void forceStart() {
+    	//CTE.INSTANCE.getLootEgg().startQueue();
         System.out.println("forceStart");
         if (gamestate.equals(GAMESTATE.RUNNING)) return;
         startLoop();
@@ -214,6 +215,7 @@ public class CTESystem {
     }
 
     public void sendAllMessage(String msg) {
+    	System.out.println(msg);
         for(Player all : Bukkit.getOnlinePlayers()) {
             all.sendMessage(msg);
         }

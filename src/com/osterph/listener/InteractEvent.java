@@ -1,6 +1,7 @@
 package com.osterph.listener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.osterph.cte.CTESystem;
 import com.osterph.shop.Shop;
@@ -25,7 +26,9 @@ public class InteractEvent implements Listener {
     //FIREBALL + RETTUNGSPLATFORM
     //
 	
+	
 	ArrayList<Player> fireball = new ArrayList<>();
+	
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
         if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
@@ -52,7 +55,9 @@ public class InteractEvent implements Listener {
             }
         }
     }
-
+    
+    
+    
     @EventHandler
     public void onTP(PlayerTeleportEvent e) {
         Player p = e.getPlayer();

@@ -172,7 +172,8 @@ public class BlockListener implements Listener {
                 b.getType().equals(Material.SANDSTONE) ||
                 b.getType().equals(Material.OBSIDIAN) ||
                 b.getType().equals(Material.WEB) ||
-                b.getType().equals(Material.LADDER);
+                b.getType().equals(Material.LADDER) ||
+                b.getType().equals(Material.SKULL);
     }
 
     private boolean isDropped(Material m) {
