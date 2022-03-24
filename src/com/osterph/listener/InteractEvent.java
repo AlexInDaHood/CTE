@@ -53,7 +53,10 @@ public class InteractEvent implements Listener {
                 p.getItemInHand().setAmount(p.getItemInHand().getAmount()-1);
                 onSave(e.getPlayer());
             } else if(p.getItemInHand().getType().equals(Material.BRICK)) {
+            	e.setCancelled(true);
             	onBridge(p.getLocation().add(0, -1, 0), getDirection(p), 0);
+            	if (p.getItemInHand().getAmount() == 1) p.getInventory().clear(p.getInventory().getHeldItemSlot());
+                p.getItemInHand().setAmount(p.getItemInHand().getAmount()-1);
             }
         }
     }

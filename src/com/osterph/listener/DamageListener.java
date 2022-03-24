@@ -20,7 +20,6 @@ import com.osterph.cte.CTESystem.GAMESTATE;
 import com.osterph.cte.CTESystem.TEAM;
 import com.osterph.lagerhalle.LocationLIST;
 import com.osterph.manager.ScoreboardManager;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
@@ -60,7 +59,6 @@ public class DamageListener implements Listener {
 			int r = new Random().nextInt(4)+1;
 			e.setDamage(r);
 		}
-
 		if(!(e.getEntity() instanceof Player)) return;
 		if(cause.equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK) || cause.equals(EntityDamageEvent.DamageCause.PROJECTILE)) {return;}
 		if(e.getDamage() >= ((Player) e.getEntity()).getHealth()) {

@@ -49,7 +49,7 @@ public class BlockListener implements Listener {
             }
             e.getBlock().getLocation().getWorld().spawn(e.getBlock().getLocation(), TNTPrimed.class);
             return;
-        }
+        } 
         if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
             for (Spawner sp : CTE.INSTANCE.getSpawnermanager().spawners) {
                 if (e.getBlock().getLocation().distance(sp.getLocation()) < 3) {

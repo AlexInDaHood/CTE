@@ -66,9 +66,9 @@ public class Shop {
         items.add(new ShopItem(Material.GOLDEN_APPLE, "§7Goldapfel", "Heilt dich", 1, 3, Ressourcen.Melone, null, 20, SHOPTYPE.SONSTIGES));
         items.add(new ShopItem(Material.TNT, "§7TNT", "Halt ein Wassereimer?", 1, 6, Ressourcen.Melone, null, 22, SHOPTYPE.SONSTIGES));
         items.add(new ShopItem(Material.FIREBALL, "§7Feuerkugel", ":/", 1, 40, Ressourcen.Apfel, null, 24, SHOPTYPE.SONSTIGES));
-        items.add(new ShopItem(Material.ENDER_PEARL, "§7Enderperle", "UwU", 1, 4, Ressourcen.Karotte, null, 30, SHOPTYPE.SONSTIGES));
-        items.add(new ShopItem(Material.BLAZE_ROD, "§7Rettungsplattform", "Rettet dich beim runterfallen", 1, 3, Ressourcen.Karotte, null, 32, SHOPTYPE.SONSTIGES));
-        items.add(new ShopItem(Material.BRICK, "§7Brücke", "Baut eine Brücke", 1, 40, Ressourcen.Apfel, new HashMap<Enchantment, Integer>() {{put(Enchantment.DURABILITY, 1);}}, 34, SHOPTYPE.SONSTIGES));
+        items.add(new ShopItem(Material.ENDER_PEARL, "§7Enderperle", "UwU", 1, 4, Ressourcen.Karotte, null, 29, SHOPTYPE.SONSTIGES));
+        items.add(new ShopItem(Material.BLAZE_ROD, "§7Rettungsplattform", "Rettet dich beim runterfallen", 1, 3, Ressourcen.Karotte, null, 31, SHOPTYPE.SONSTIGES));
+        items.add(new ShopItem(Material.BRICK, "§7Brücke", "Baut eine Brücke", 1, 40, Ressourcen.Apfel, null, 33, SHOPTYPE.SONSTIGES));
         
         
     }
@@ -79,7 +79,7 @@ public class Shop {
             case CHOOSE:
                 shop = Bukkit.createInventory(null, 9*6, "§cShop");
                 shop.setContents(getStandardGUI(false));
-                shop.setItem(4, new ItemManager(Material.EMERALD).withName("§cShop").withEnchantment(Enchantment.DURABILITY, 1, true).complete());
+                shop.setItem(4, new ItemManager(Material.EMERALD).withName("§cShop").complete());
                 shop.setItem(20, new ItemManager(Material.STONE_SWORD).withName("§7Waffen").complete());
                 shop.setItem(22, new ItemManager(Material.IRON_CHESTPLATE).withName("§7Brustpanzer").complete());
                 shop.setItem(24, new ItemManager(Material.DIAMOND_PICKAXE).withName("§7Werkzeuge").complete());

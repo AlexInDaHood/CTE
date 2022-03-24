@@ -58,12 +58,12 @@ public class DevListener implements Listener {
 				if(item.getItemMeta().getDisplayName().contains("Zurück")) {
 					devCMD.openInventory(p);
 				} else if(item.getItemMeta().getDisplayName().contains("Shutdown")) {
-					CTE.INSTANCE.getSystem().sendAllMessage(CTE.prefix + "§cDas Spiel wurde druch einen Administrator beendet!");
+					CTE.INSTANCE.getSystem().sendAllMessage(CTE.prefix + "§cDas Spiel wurde durch einen Administrator beendet!");
 					CTE.INSTANCE.getSystem().moveHub();
 					Bukkit.shutdown();
 				} else if(item.getItemMeta().getDisplayName().contains("Stop Game")) {
 					if(!CTE.INSTANCE.getSystem().gamestate.equals(GAMESTATE.ENDING)) {
-						CTE.INSTANCE.getSystem().sendAllMessage(CTE.prefix + "§cDas Spiel wurde druch einen Administrator beendet!");
+						CTE.INSTANCE.getSystem().sendAllMessage(CTE.prefix + "§cDas Spiel wurde durch einen Administrator beendet!");
 						CTE.INSTANCE.getSystem().endGame();
 					} else {
 						p.sendMessage(CTE.prefix + "Das Spiel ist bereits dabei zu beenden!");

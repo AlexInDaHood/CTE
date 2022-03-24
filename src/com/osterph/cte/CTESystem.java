@@ -20,6 +20,7 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import com.osterph.lagerhalle.LocationLIST;
 import com.osterph.lagerhalle.NPCListener;
+import com.osterph.listener.DamageListener;
 import com.osterph.manager.ItemManager;
 import com.osterph.manager.ScoreboardManager;
 
@@ -344,7 +345,11 @@ public class CTESystem {
                     if(teams.get(all).equals(TEAM.SPEC) || teams.get(all).equals(TEAM.DEFAULT)) continue;
                     if(all.getLocation().getY() < 113 && all.getLocation().getX() < 1100 && all.getLocation().getX() > 900 && all.getLocation().getZ() > 945 && all.getLocation().getZ() < 1055) continue;
                     sendActionBar(all, "§cDu hast dich zu weit von der Map entfernt!");
-                    all.damage(1.5);
+                    if(all.getHealth() > 1.5) {
+                    	all.damage(1.5);
+                    } else {
+                    	new DamageListener().onDeath(all);
+                    }
                 }
             }
         }, 20, 20L);
