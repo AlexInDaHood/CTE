@@ -32,22 +32,25 @@ public class PlayerEvent implements Listener {
     @EventHandler
     public void onPickupItems(PlayerPickupItemEvent e) {
         if(sys.teams.get(e.getPlayer()).equals(TEAM.DEFAULT) || sys.teams.get(e.getPlayer()).equals(TEAM.SPEC)) {e.setCancelled(true);return;}
+        EggListener.checkHolzschwert(e.getPlayer());
         if (e.getItem().getItemStack().getItemMeta() == null || e.getItem().getItemStack().getItemMeta().getDisplayName() == null) return;
     	if (e.getItem().getItemStack().getItemMeta().getDisplayName().contains("[") && e.getItem().getItemStack().getItemMeta().getDisplayName().contains("]")) {
-    		String name = e.getItem().getItemStack().getItemMeta().getDisplayName();
-    		ItemMeta m = e.getItem().getItemStack().getItemMeta();
-    		m.setDisplayName(m.getDisplayName().substring(0, m.getDisplayName().indexOf("[")));
-    		e.getItem().getItemStack().setItemMeta(m);
-    		Spawner sp = CTE.INSTANCE.getSpawnermanager().getSpawnerByName(name.substring(name.indexOf("[")+1, name.indexOf("]")));
-    		sp.setCurrentitems(0);
-    		if(sp.isSplit()) {
-    			for(Player all : Bukkit.getOnlinePlayers()) {
-    				if(all != e.getPlayer() && all.getLocation().distance(e.getItem().getLocation()) <= 1 && !sys.teams.get(e.getPlayer()).equals(TEAM.DEFAULT)&& !sys.teams.get(e.getPlayer()).equals(TEAM.SPEC)) {
-    					all.getInventory().addItem(e.getItem().getItemStack());
-    				}
-    			}
-    		}
-     	}
+            String name = e.getItem().getItemStack().getItemMeta().getDisplayName();
+            ItemMeta m = e.getItem().getItemStack().getItemMeta();
+            m.setDisplayName(m.getDisplayName().substring(0, m.getDisplayName().indexOf("[")));
+            e.getItem().getItemStack().setItemMeta(m);
+            Spawner sp = CTE.INSTANCE.getSpawnermanager().getSpawnerByName(name.substring(name.indexOf("[") + 1, name.indexOf("]")));
+            sp.setCurrentitems(0);
+            if (!sp.isSplit()) return;
+            for (Player all : Bukkit.getOnlinePlayers()) {
+                if (sys.teams.get(e.getPlayer()).equals(TEAM.DEFAULT) || sys.teams.get(e.getPlayer()).equals(TEAM.DEFAULT))
+                    continue;
+                if (all == e.getPlayer()) continue;
+                if (all.getLocation().distance(e.getItem().getLocation()) > 1) continue;
+
+                all.getInventory().addItem(e.getItem().getItemStack());
+            }
+        }
     }
     
     @EventHandler

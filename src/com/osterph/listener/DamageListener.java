@@ -3,10 +3,7 @@ package com.osterph.listener;
 import java.util.HashMap;
 import java.util.Random;
 
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,6 +20,8 @@ import com.osterph.manager.ScoreboardManager;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
+
+import static org.bukkit.Material.AIR;
 
 public class DamageListener implements Listener {
 
@@ -44,10 +43,17 @@ public class DamageListener implements Listener {
     
     @EventHandler
     public void onDamage(EntityDamageEvent e) {
-        if (!sys.gamestate.equals(GAMESTATE.RUNNING)) {
+        if (!sys.gamestate.equals(GAMESTATE.RUNNING) && !sys.gamestate.equals(GAMESTATE.SUDDEN_DEATH)) {
             e.setCancelled(true);
             return;
         }
+
+		if (e.getEntityType().equals(EntityType.RABBIT)) {
+			for (int i = 150; i > 30; i--) {
+				Location l = new Location(Bukkit.getWorld("world"), e.getEntity().getLocation().getBlockX(), i, e.getEntity().getLocation().getBlockZ());
+				l.getBlock().setType(AIR);
+			}
+		}
 
         Enum<EntityDamageEvent.DamageCause> cause = e.getCause();
 
@@ -59,6 +65,7 @@ public class DamageListener implements Listener {
 			int r = new Random().nextInt(4)+1;
 			e.setDamage(r);
 		}
+
 		if(!(e.getEntity() instanceof Player)) return;
 		if(cause.equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK) || cause.equals(EntityDamageEvent.DamageCause.PROJECTILE)) {return;}
 		if(e.getDamage() >= ((Player) e.getEntity()).getHealth()) {
@@ -69,6 +76,7 @@ public class DamageListener implements Listener {
     
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent e) {
+		if (e.getEntityType().equals(EntityType.RABBIT)) e.setCancelled(true);
     	if(e.getEntity() instanceof Player && !sys.teams.get((Player)e.getEntity()).equals(TEAM.DEFAULT) && !sys.teams.get((Player)e.getEntity()).equals(TEAM.SPEC)) {
     		Player t = (Player) e.getEntity();
     		Player damager = null;

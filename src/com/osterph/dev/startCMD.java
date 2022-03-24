@@ -20,11 +20,14 @@ public class startCMD implements CommandExecutor {
             p.sendMessage(CTE.prefix + "§cUnzureichende Berechtigungen.");
             return false;
         }
-        
-        if(!CTE.INSTANCE.getSystem().gamestate.equals(GAMESTATE.STARTING)) {p.sendMessage(CTE.prefix + "Game already started or ended");;return false;}
+
+        if (!CTE.INSTANCE.getSystem().gamestate.equals(GAMESTATE.STARTING)) {
+            p.sendMessage(CTE.prefix + "Game already started or ended");
+            return false;
+        }
         p.sendMessage(CTE.prefix + "Game started.");
         CTE.INSTANCE.getSystem().forceStart();
-        
+
         return false;
     }
     

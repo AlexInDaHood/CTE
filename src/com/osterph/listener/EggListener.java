@@ -111,12 +111,19 @@ public class EggListener implements Listener {
             return;
         }
         Player p = e.getPlayer();
-        if (!sys.gamestate.equals(GAMESTATE.RUNNING)) {
+        if (!sys.gamestate.equals(GAMESTATE.RUNNING) && !sys.gamestate.equals(GAMESTATE.SUDDEN_DEATH)) {
             e.setCancelled(true);
             return;
         }
 
-        if (p.getInventory().contains(Material.DIAMOND_SWORD)||p.getInventory().contains(Material.IRON_SWORD)||p.getInventory().contains(Material.STONE_SWORD)||p.getInventory().contains(Material.WOOD_SWORD)) return;
+        checkHolzschwert(p);
+    }
+
+    public static void checkHolzschwert(Player p) {
+        if (p.getInventory().contains(Material.DIAMOND_SWORD)||p.getInventory().contains(Material.IRON_SWORD)||p.getInventory().contains(Material.STONE_SWORD)||p.getInventory().contains(Material.WOOD_SWORD)) {
+            if (p.getInventory().contains(Material.DIAMOND_SWORD)||p.getInventory().contains(Material.IRON_SWORD)||p.getInventory().contains(Material.STONE_SWORD)) p.getInventory().remove(Material.WOOD_SWORD);
+            return;
+        };
         p.getInventory().addItem(new ItemManager(Material.WOOD_SWORD).withName("§7Holzschwert").unbreakable(true).complete());
     }
 
@@ -129,19 +136,10 @@ public class EggListener implements Listener {
         if (notClickable().contains(e.getCurrentItem().getType())) e.setCancelled(true);
     }
 
-    private List<Material> blockedItems() {
+    public static List<Material> blockedItems() {
         List<Material> list = new ArrayList<>();
 
         list.add(Material.WOOD_SWORD);
-        list.add(Material.WOOD_PICKAXE);
-        list.add(Material.STONE_PICKAXE);
-        list.add(Material.IRON_PICKAXE);
-        list.add(Material.DIAMOND_PICKAXE);
-        list.add(Material.WOOD_AXE);
-        list.add(Material.STONE_AXE);
-        list.add(Material.IRON_AXE);
-        list.add(Material.DIAMOND_AXE);
-        list.add(Material.SHEARS);
         list.add(Material.LEATHER_HELMET);
         list.add(Material.LEATHER_CHESTPLATE);
         list.add(Material.LEATHER_LEGGINGS);

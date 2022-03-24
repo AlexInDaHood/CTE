@@ -11,10 +11,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
@@ -316,6 +313,30 @@ public class CTESystem {
     		all.setLevel(0);
     	}
     }
+    public void suddenDeath() {
+        for(Player all : Bukkit.getOnlinePlayers()) {
+            if(all.getEquipment().getHelmet().getType() != null && all.getEquipment().getHelmet().getType().equals(Material.SKULL_ITEM)) {
+                setHelmet(all);
+                Bukkit.getScheduler().cancelTask(EggListener.eggScheduler.get(all));
+                EggListener.eggScheduler.remove(all);
+            }
+        }
+        CTE.INSTANCE.getLocations().redEGG().getBlock().setType(Material.AIR);
+        CTE.INSTANCE.getLocations().blueEGG().getBlock().setType(Material.AIR);
+
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 80; i++) {
+                    int xr = new Random().nextInt(208)+900-4;
+                    int zr = new Random().nextInt(118)+945-4;
+
+                    Rabbit r = (Rabbit) Bukkit.getWorld("world").spawnEntity(new Location(Bukkit.getWorld("world"), xr+.5, 200, zr+.5), EntityType.RABBIT);
+                    r.setRabbitType(Rabbit.Type.BLACK_AND_WHITE);
+                }
+            }
+        },0,20L);
+    }
     
     public enum EGG_STATE {
         OKAY, STOLEN, GONE
@@ -326,7 +347,7 @@ public class CTESystem {
 	 }
 
 	 public enum GAMESTATE {
-    	STARTING, RUNNING, ENDING;
+    	STARTING, RUNNING, SUDDEN_DEATH, ENDING;
     }
 
     public void stopLoop() {

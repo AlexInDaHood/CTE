@@ -89,7 +89,7 @@ public class ScoreboardManager {
             if (new StaffManager(all).hasRoles()) all.setPlayerListName(all.getPlayerListName()+" §8["+new StaffManager(all).activeString()+"§8]");
         }
 
-        if (sys.gamestate.equals(GAMESTATE.RUNNING) || sys.gamestate.equals(GAMESTATE.ENDING)) {
+        if (sys.gamestate.equals(GAMESTATE.RUNNING) ||sys.gamestate.equals(GAMESTATE.SUDDEN_DEATH) || sys.gamestate.equals(GAMESTATE.ENDING)) {
             Objective o = board.getObjective(p.getName());
             try {
                 if (o == null) o = board.registerNewObjective(p.getName(), "");

@@ -44,7 +44,7 @@ public class ChatListener implements Listener {
         antiLSpam.remove(p);
         CTESystem.TEAM team = sys.teams.get(p);
         StaffManager staff = new StaffManager(p);
-        if (sys.gamestate.equals(GAMESTATE.RUNNING)) {
+        if (sys.gamestate.equals(GAMESTATE.RUNNING) || sys.gamestate.equals(GAMESTATE.SUDDEN_DEATH)) {
             if (msg.toLowerCase().startsWith("@a§f ") || msg.toLowerCase().startsWith("@all§f ") ) {
                 String[] gmsg = msg.split(" ");
                 msg = "";

@@ -166,7 +166,7 @@ public class InteractEvent implements Listener {
         Player p = e.getPlayer();
         CTESystem sys = CTE.INSTANCE.getSystem();
         if (!e.getCause().equals(PlayerTeleportEvent.TeleportCause.ENDER_PEARL)) return;
-        if (!sys.gamestate.equals(CTESystem.GAMESTATE.RUNNING)) {
+        if (!sys.gamestate.equals(CTESystem.GAMESTATE.RUNNING) && !sys.gamestate.equals(CTESystem.GAMESTATE.SUDDEN_DEATH)) {
             e.setCancelled(true);
             return;
         }
