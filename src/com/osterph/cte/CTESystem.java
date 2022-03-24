@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import com.osterph.listener.EggListener;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.GameMode;
@@ -107,10 +108,37 @@ public class CTESystem {
         p.getInventory().setHelmet(new ItemManager(Material.LEATHER_HELMET).withName("§7Lederhelm").unbreakable(true).withMeta(m).complete());
     }
 
+    private int suddenDeath;
+
+    private void startSuddenDeathCounter() {
+        suddenDeath = Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, new Runnable() {
+            @Override
+            public void run() {
+                suddenDeath();
+            }
+        }, 20*60*20);
+    }
+
+    private void startEndCounter() {
+        suddenDeath = Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, new Runnable() {
+            @Override
+            public void run() {
+                winnerTeam = TEAM.DEFAULT;
+                endGame();
+            }
+        }, 20*60*10);
+    }
+
+    private void stopSuddenDeathCounter() {
+        Bukkit.getScheduler().cancelTask(suddenDeath);
+    }
+
+
     public void forceStart() {
+        startSuddenDeathCounter();
     	CTE.INSTANCE.getLootEgg().startQueue();
         System.out.println("forceStart");
-        if (gamestate.equals(GAMESTATE.RUNNING)) return;
+        if (gamestate.equals(GAMESTATE.RUNNING) || gamestate.equals(GAMESTATE.SUDDEN_DEATH)) return;
         startLoop();
         for (Player all: Bukkit.getOnlinePlayers()) {
             all.closeInventory();
@@ -155,6 +183,7 @@ public class CTESystem {
     }
 
 	public void endGame() {
+        stopSuddenDeathCounter();
         System.out.println("endGame");
         stopLoop();
         for (Entity all: Bukkit.getWorld("world").getEntities()) {
@@ -360,7 +389,7 @@ public class CTESystem {
         loop = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {
             @Override
             public void run() {
-                if (!gamestate.equals(GAMESTATE.RUNNING)) return;
+                if (!gamestate.equals(GAMESTATE.RUNNING) && !gamestate.equals(GAMESTATE.SUDDEN_DEATH)) return;
                 for(Player all : Bukkit.getOnlinePlayers()) {
                     if(all.getGameMode().equals(GameMode.CREATIVE) || all.getGameMode().equals(GameMode.SPECTATOR)) continue;;
                     if(teams.get(all).equals(TEAM.SPEC) || teams.get(all).equals(TEAM.DEFAULT)) continue;

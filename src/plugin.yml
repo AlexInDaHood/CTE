@@ -9,6 +9,7 @@ commands:
   countdown:
   setteam:
   dev:
+  suddendeath:
   emotes:
     aliases:
       - emote

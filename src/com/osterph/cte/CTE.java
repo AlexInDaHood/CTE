@@ -1,16 +1,12 @@
 package com.osterph.cte;
 
+import com.osterph.dev.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.osterph.dev.DevListener;
-import com.osterph.dev.countdownCMD;
-import com.osterph.dev.devCMD;
-import com.osterph.dev.setteamCMD;
-import com.osterph.dev.startCMD;
 import com.osterph.lagerhalle.Emotes;
 import com.osterph.lagerhalle.LocationLIST;
 import com.osterph.lagerhalle.MySQL;
@@ -104,7 +100,7 @@ public class CTE extends JavaPlugin{
 		pm.registerEvents(new DevListener(), this);
 		pm.registerEvents(new LootEggManager(), this);
 		
-		
+		getCommand("suddendeath").setExecutor(new suddendeathCMD());
 		getCommand("dev").setExecutor(new devCMD());
 		getCommand("start").setExecutor(new startCMD());
 		getCommand("countdown").setExecutor(new countdownCMD());

@@ -71,7 +71,7 @@ public class NPCListener implements Listener {
 
         if (e.getRightClicked().getName() == null|| !e.getRightClicked().getName().equals("[SHOPKEEPER]")) return;
         if (sys.teams.get(e.getPlayer()).equals(TEAM.SPEC) || sys.teams.get(e.getPlayer()).equals(TEAM.DEFAULT)) return;
-        
+        if(sys.gamestate.equals(CTESystem.GAMESTATE.SUDDEN_DEATH)) {e.getPlayer().sendMessage(CTE.prefix + "Der Shopkeeper traded nicht während des Sudden-Deaths!"); return;}
         if(e.getPlayer().getInventory().getHelmet() == null || e.getPlayer().getInventory().getHelmet().getType().equals(Material.LEATHER_HELMET)) {
         	CTE.INSTANCE.getShop().openShop(e.getPlayer(), Shop.SHOPTYPE.CHOOSE);
         } else if (e.getPlayer().getInventory().getHelmet().getType().equals(Material.SKULL_ITEM)){

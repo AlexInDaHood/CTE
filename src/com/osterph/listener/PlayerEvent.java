@@ -89,7 +89,7 @@ public class PlayerEvent implements Listener {
         sys.clear(p);
         sys.teams.put(p, CTESystem.TEAM.DEFAULT);
 
-        if (sys.gamestate.equals(GAMESTATE.RUNNING)) {
+        if (sys.gamestate.equals(GAMESTATE.RUNNING) || sys.gamestate.equals(GAMESTATE.SUDDEN_DEATH)) {
             sys.teams.put(p, CTESystem.TEAM.SPEC);
             p.teleport(CTE.INSTANCE.getLocations().specSPAWN());
         } else {
@@ -124,7 +124,7 @@ public class PlayerEvent implements Listener {
         for (Player all: Bukkit.getOnlinePlayers()) {
             ScoreboardManager.refreshBoard(all);
             all.setLevel(sys.c);
-            if (sys.gamestate.equals(GAMESTATE.RUNNING)) all.hidePlayer(p);
+            if (sys.gamestate.equals(GAMESTATE.RUNNING) || sys.gamestate.equals(GAMESTATE.SUDDEN_DEATH)) all.hidePlayer(p);
         }
     }
 
@@ -158,7 +158,7 @@ public class PlayerEvent implements Listener {
                     }
                 }
             },5);
-        } else if(sys.gamestate.equals(GAMESTATE.RUNNING)) {
+        } else if(sys.gamestate.equals(GAMESTATE.RUNNING) || sys.gamestate.equals(GAMESTATE.SUDDEN_DEATH)) {
             e.setQuitMessage("§8[§c-§8] §7" + p.getName());
             sys.teams.put(e.getPlayer(), TEAM.SPEC);
             sys.checkTeamSizes();

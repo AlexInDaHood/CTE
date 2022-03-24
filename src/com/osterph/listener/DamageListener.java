@@ -35,7 +35,7 @@ public class DamageListener implements Listener {
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
     	if(!(e.getPlayer().getLocation().getY() < 30)) return;
-    	if(!sys.gamestate.equals(GAMESTATE.RUNNING)) return;
+    	if(!sys.gamestate.equals(GAMESTATE.RUNNING) && !sys.gamestate.equals(GAMESTATE.SUDDEN_DEATH)) return;
     	if(!e.getPlayer().getGameMode().equals(GameMode.SURVIVAL) && !e.getPlayer().getGameMode().equals(GameMode.ADVENTURE)) return;
     	Player p = e.getPlayer();
 		onDeath(p);

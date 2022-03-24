@@ -40,7 +40,7 @@ public class EggListener implements Listener {
             e.setCancelled(true);
             return;
         }
-        if (!sys.gamestate.equals(GAMESTATE.RUNNING)) {
+        if (!sys.gamestate.equals(GAMESTATE.RUNNING) && !sys.gamestate.equals(GAMESTATE.SUDDEN_DEATH)) {
             e.setCancelled(true);
             return;
         }

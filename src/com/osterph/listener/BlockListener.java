@@ -21,6 +21,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 
@@ -36,6 +37,7 @@ public class BlockListener implements Listener {
 	
 	@EventHandler
 	public void onPlace(BlockPlaceEvent e) {
+        if(CTE.INSTANCE.getSystem().gamestate.equals(CTESystem.GAMESTATE.SUDDEN_DEATH)) {e.getPlayer().sendMessage(CTE.prefix + "Du kannst keine Blöcke während des Suddendeaths platzieren!");e.setCancelled(true);return;}
         if(e.getBlock().getType().equals(Material.TNT)) {
             e.setCancelled(true);
             if(e.getPlayer().getItemInHand().getAmount() > 1) {
@@ -95,30 +97,38 @@ public class BlockListener implements Listener {
         }
     }
 
+    //
+    //NO EXPLOSION SAVE
+    //
+
     @EventHandler
     public void onTNT(BlockExplodeEvent e) {
-        List<Block> d = new ArrayList<>();
-        for (Block b: e.blockList()) {
-            if (!isBreakable(b)) continue;
-            d.add(b);
+        if(!CTE.INSTANCE.getSystem().gamestate.equals(CTESystem.GAMESTATE.SUDDEN_DEATH)) {
+            List<Block> d = new ArrayList<>();
+            for (Block b : e.blockList()) {
+                if (!isBreakable(b)) continue;
+                d.add(b);
+            }
+            e.blockList().clear();
+            e.blockList().addAll(d);
         }
-        e.blockList().clear();
-        e.blockList().addAll(d);
     }
 
     @EventHandler
     public void onTNT(EntityExplodeEvent e) {
-        List<Block> d = new ArrayList<>();
-        for (Block b: e.blockList()) {
-            if (!isBreakable(b)) continue;
-            d.add(b);
+        if(!CTE.INSTANCE.getSystem().gamestate.equals(CTESystem.GAMESTATE.SUDDEN_DEATH)) {
+            List<Block> d = new ArrayList<>();
+            for (Block b : e.blockList()) {
+                if (!isBreakable(b)) continue;
+                d.add(b);
+            }
+            if (e.getEntity() instanceof TNTPrimed) {
+                e.setCancelled(true);
+                e.getEntity().getLocation().getWorld().createExplosion(e.getEntity().getLocation(), 3);
+            }
+            e.blockList().clear();
+            e.blockList().addAll(d);
         }
-        if (e.getEntity() instanceof TNTPrimed) {
-            e.setCancelled(true);
-            e.getEntity().getLocation().getWorld().createExplosion(e.getEntity().getLocation(), 3);
-        }
-        e.blockList().clear();
-        e.blockList().addAll(d);
     }
 
   /*  @EventHandler
@@ -216,7 +226,17 @@ public class BlockListener implements Listener {
 			}
 		}
 	}
-	
+
+    @EventHandler
+    public void onClick(InventoryClickEvent e) {
+        if(e.getView().getTopInventory().getType().equals(InventoryType.CHEST) || e.getView().getTopInventory().getType().equals(InventoryType.ENDER_CHEST)) {
+            if (e.getCurrentItem() == null || e.getCurrentItem().getType() == null) return;
+            EggListener.checkHolzschwert((Player) e.getWhoClicked());
+            if(EggListener.blockedItems().contains(e.getCurrentItem().getType())) {
+                e.setCancelled(true);
+            }
+        }
+    }
 	
     private boolean isDropped(Material m) {
         return m.equals(Material.ENDER_STONE) ||
