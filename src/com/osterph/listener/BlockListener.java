@@ -1,10 +1,13 @@
 package com.osterph.listener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.osterph.shop.Shop;
 import com.osterph.shop.ShopItem;
+
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -12,6 +15,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,10 +25,15 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryType;
 
 import com.osterph.cte.CTE;
+import com.osterph.cte.CTESystem;
+import com.osterph.cte.CTESystem.TEAM;
 import com.osterph.spawner.Spawner;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class BlockListener implements Listener {
@@ -175,7 +184,44 @@ public class BlockListener implements Listener {
                 b.getType().equals(Material.LADDER) ||
                 b.getType().equals(Material.SKULL);
     }
-
+    
+    
+    
+    //
+    //CHEST-System
+    //
+    private HashMap<Player, Inventory> inventorys = new HashMap<>();
+	
+	@EventHandler
+	public void openInv(InventoryOpenEvent e) {		
+		if(e.getInventory().getType() != InventoryType.CHEST && e.getInventory().getType() != InventoryType.ENDER_CHEST) return;
+			Player p = (Player)e.getPlayer();
+			CTESystem sys = CTE.INSTANCE.getSystem();
+		if(e.getInventory().getType().equals(InventoryType.CHEST)) {
+			if(e.getInventory().getTitle().contains("Blue Chest")) {
+				if(!sys.teams.get(p).equals(TEAM.BLUE) && !p.getGameMode().equals(GameMode.CREATIVE)) {
+					p.sendMessage(CTE.prefix+ "Du kannst die §9Blaue-Kiste §enicht öffnen!");
+					e.setCancelled(true);
+				}
+			} else if(e.getInventory().getTitle().contains("Red Chest")) {
+				if(!sys.teams.get(p).equals(TEAM.RED) && !p.getGameMode().equals(GameMode.CREATIVE)) {
+					p.sendMessage(CTE.prefix + "Du kannst die §cRote-Kiste §enicht öffnen!");
+					e.setCancelled(true);
+				}
+			}
+		} else if(e.getInventory().getType().equals(InventoryType.ENDER_CHEST)) {
+			e.setCancelled(true);
+			if(inventorys.containsKey(p)) {
+				p.openInventory(inventorys.get(p));
+			} else {
+				Inventory inv = Bukkit.createInventory(null, 9*3, "Enderchest");
+				p.openInventory(inv);
+				inventorys.put(p, inv);
+			}
+		}
+	}
+	
+	
     private boolean isDropped(Material m) {
         return m.equals(Material.ENDER_STONE) ||
                 m.equals(Material.WOOD) ||
@@ -197,6 +243,7 @@ public class BlockListener implements Listener {
                 m.equals(Material.ENDER_PEARL) ||
                 m.equals(Material.BLAZE_ROD) ||
                 m.equals(Material.FIREBALL) ||
-                m.equals(Material.WOOL);
+                m.equals(Material.WOOL) ||
+                m.equals(Material.BRICK);
     }
 }

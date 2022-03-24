@@ -72,7 +72,7 @@ public class PlayerEvent implements Listener {
 
     @EventHandler
     public void onFood(FoodLevelChangeEvent e) {
-        e.setCancelled(true);
+    	e.setCancelled(true);
     }
 
     @EventHandler
@@ -97,7 +97,10 @@ public class PlayerEvent implements Listener {
             BookMeta meta = (BookMeta)tutorial.getItemMeta();
             meta.setDisplayName("§8» §3Spielanleitung §8«");
             meta.setAuthor("Osterhase");					//TODO
-            meta.addPage(":D");
+            meta.addPage("§8[§6§lCTE§8] \n§6CTE §7ist ein Teambasierter Spielmodus, indem es die Aufgabe deines Teams ist, das gegnerische Ei zu stehlen und zurück zu deiner Basis zu bringen. In deiner Basis angekommen übergibst du das Ei dann dem Shopkeeper.");
+            meta.addPage("§7Nach der Abgabe des gegnerischen Ei`s ist es dem gegnerische Team nicht länger möglich zu respawnen. Das Team, welches als letztes am Leben ist, entscheidet die Runde damit für sich.");
+            meta.addPage("§8[§6§lRessourcen§8]\n§7Während des gesamten Spiels werdet ihr zusätzlich mit Ressourcen wie §cÄpfel§7, §aMelonen§7 und §6Karotten §7ausgestattet, womit ihr euch zusätzliche Ausstattung kaufen könnt.");
+            meta.addPage("§8[§6§lLooteggs§8]\n§7Zusätzlich spawnen im Abstand von 2-5 Minuten §6Looteggs§7, die ihr dann in der Mitte aufsuchen könnt. Findet und öffnet ihr eins, versorgt euch das §6Lootegg §7mit zusätzlichen Ressourcen oder Items.");
             tutorial.setItemMeta(meta);
             p.getInventory().setItem(4, tutorial);
         }

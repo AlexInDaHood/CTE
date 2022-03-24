@@ -22,6 +22,8 @@ import com.osterph.lagerhalle.LocationLIST;
 import com.osterph.manager.ScoreboardManager;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Vector;
 
 public class DamageListener implements Listener {
 
@@ -135,6 +137,7 @@ public class DamageListener implements Listener {
     
     public void onDeath(Player p) {
 		p.closeInventory();
+		CTE.INSTANCE.getStatsManager().addDeath(p);
 		LocationLIST locs = CTE.INSTANCE.getLocations();
 		if (sys.teams.get(p).equals(TEAM.SPEC) || sys.teams.get(p).equals(TEAM.DEFAULT)) {
 			p.teleport(locs.specSPAWN());
@@ -162,9 +165,6 @@ public class DamageListener implements Listener {
 		sys.teams.put(p, TEAM.SPEC);
 		for(Player all : Bukkit.getOnlinePlayers()) {
 			ScoreboardManager.refreshBoard(all);
-		}
-		for(PotionEffect effect : p.getActivePotionEffects()) {
-			p.removePotionEffect(effect.getType());
 		}
 		p.setFlying(true);
 		p.setHealth(20);
@@ -194,7 +194,7 @@ public class DamageListener implements Listener {
 				}
 			},20*5L);*/
 			deathTimer.put(p, 0);
-			scheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {
+			/*scheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {
 				@Override
 				public void run() {
 					if(deathTimer.get(p) == 5) {
@@ -222,7 +222,58 @@ public class DamageListener implements Listener {
 					
 					deathTimer.put(p, deathTimer.get(p)+1);
 				}
-			}, 0, 20);
+			}, 0, 20); */
+			Chicken ch = (Chicken) p.getWorld().spawnEntity(p.getLocation(), EntityType.CHICKEN);
+			Vector vec;
+			if(taa.equals(TEAM.BLUE)) {
+				vec = new Vector(0.7, -0.8, 0); 
+			} else if(taa.equals(TEAM.RED)) {
+				vec = new Vector(-0.7, -0.8, 0); 
+			} else {
+				vec = new Vector(0.7, -0.8, 0); 
+			}
+			ch.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999, 999, true));
+			p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999, 999, true));
+			scheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {
+				@Override
+				public void run() {
+					//CHICKEN
+					if(deathTimer.get(p)%2 == 0) {
+						ch.setVelocity(vec);
+					}
+					ch.setPassenger(p);
+					//RESPAWN
+					if(deathTimer.get(p) == 5*10) {
+						ch.remove();
+						sys.teams.put(p, taa);
+						if(sys.teams.get(p).equals(TEAM.BLUE)) {
+							p.teleport(locs.blueSPAWN());
+						} else if(sys.teams.get(p).equals(TEAM.RED)){
+							p.teleport(locs.redSPAWN());
+						}
+						p.setGameMode(GameMode.SURVIVAL);
+						p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1, 1);
+						sys.startEquip(p);
+						p.setFlying(false);
+						p.setHealth(20);
+						p.sendMessage(CTE.prefix + "Du wurdest wiederbelebt.");
+						for(Player all : Bukkit.getOnlinePlayers()) {
+							ScoreboardManager.refreshBoard(all);
+						}
+						for(PotionEffect effect : p.getActivePotionEffects()) {
+							p.removePotionEffect(effect.getType());
+						}
+						Bukkit.getScheduler().cancelTask(deathScheduler.get(p));
+						deathScheduler.remove(p);
+						deathTimer.remove(p);
+						return;
+					}
+					sys.sendActionBar(p, "§7Respawn in §e" + (5-(deathTimer.get(p)/10)));
+					
+					deathTimer.put(p, deathTimer.get(p)+1);
+				}
+			}, 0, 2);
+			
 			deathScheduler.put(p, scheduler);
 		} else {
 			p.sendMessage(CTE.prefix + "Du bist nun eliminiert!");
@@ -237,6 +288,8 @@ public class DamageListener implements Listener {
     			sys.RED_EGG = CTESystem.EGG_STATE.OKAY;
     			CTE.INSTANCE.getLocations().redEGG().getBlock().setType(Material.DRAGON_EGG);
     			sys.sendAllMessage(CTE.prefix + "Das §cRote-Ei §eist nun wieder sicher!");
+    			Bukkit.getScheduler().cancelTask(EggListener.eggScheduler.get(p));
+    			EggListener.eggScheduler.remove(p);
     			for(Player all : Bukkit.getOnlinePlayers()) {
     				ScoreboardManager.refreshBoard(all);
     			}
@@ -246,6 +299,8 @@ public class DamageListener implements Listener {
     			sys.BLUE_EGG = CTESystem.EGG_STATE.OKAY;
     			CTE.INSTANCE.getLocations().blueEGG().getBlock().setType(Material.DRAGON_EGG);
     			sys.sendAllMessage(CTE.prefix + "Das §9Blaue-Ei §eist nun wieder sicher!");
+    			Bukkit.getScheduler().cancelTask(EggListener.eggScheduler.get(p));
+    			EggListener.eggScheduler.remove(p);
     			for(Player all : Bukkit.getOnlinePlayers()) {
     				ScoreboardManager.refreshBoard(all);
     			}

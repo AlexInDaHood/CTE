@@ -36,8 +36,6 @@ public class DevListener implements Listener {
 			if(e.getInventory().getTitle().equals("§8» §bDev")) {
 				if(item.getItemMeta().getDisplayName().contains("Spawner Einstellungen")) {
 					openInventory(p, settingstype.SPAWNER);
-				} else if(item.getItemMeta().getDisplayName().contains("Spieler Einstellungen")) {
-					openInventory(p, settingstype.PLAYER);
 				} else if(item.getItemMeta().getDisplayName().contains("Spiel Einstellungen")) {
 					openInventory(p, settingstype.GAME);
 				}
@@ -56,19 +54,6 @@ public class DevListener implements Listener {
 				} else if(item.getItemMeta().getDisplayName().contains("Karotten")) {
 					openInventory(p, settingstype.CARROT);
 				}
-				//
-				//
-				// PLAYER SETTINGS
-				//
-				//
-			} else if(e.getInventory().getTitle().contains("Spieler Einstellungen")) { 
-				if(item.getItemMeta().getDisplayName().contains("Zurück")) {
-					devCMD.openInventory(p);
-				}
-				if(item.getType().equals(Material.SKULL_ITEM) && item.getDurability() == 3) {
-					System.out.println(item.getItemMeta().getDisplayName().split("]")[1].split(" ")[1].substring(2));
-				}
-				
 			} else if(e.getInventory().getTitle().contains("Spiel Einstellungen")) {
 				if(item.getItemMeta().getDisplayName().contains("Zurück")) {
 					devCMD.openInventory(p);
@@ -220,25 +205,10 @@ public class DevListener implements Listener {
 				inv.setItem(20, new ItemManager(Material.INK_SACK).withName("§cStop Game").withLores("§cBeendet die Runde mit §7§lUNENTSCHIEDEN§c.").withData(14).complete());
 				inv.setItem(24, new ItemManager(Material.INK_SACK).withName("§cShutdown").withLores("§cStoppt die Runde!").withData(1).complete());
 			} else {
-				inv.setItem(20, new ItemManager(Material.DIAMOND).withName("§cMaximale Spieler §8[§a" +CTE.INSTANCE.getSystem().maxPlayers + "§8]").withLores("§7Ändert die Anzahl der maximalen Anzahl der Spieler").complete());
-				inv.setItem(22, new ItemManager(Material.EMERALD).withName("§cMinimale Spieler §8[§a" +CTE.INSTANCE.getSystem().minPlayers + "§8]").withLores("§7Ändert die Anzahl der minmalen Anzahl der Spieler").complete());
-				inv.setItem(24, new ItemManager(Material.BARRIER).withName("§cPrivate-Round").withLores("§7Ändert die Runde zu einem Privat-Game").complete());
+				inv.setItem(19, new ItemManager(Material.DIAMOND).withName("§cMaximale Spieler §8[§a" +CTE.INSTANCE.getSystem().maxPlayers + "§8]").withLores("§7Ändert die Anzahl der maximalen Anzahl der Spieler").complete());
+				inv.setItem(21, new ItemManager(Material.EMERALD).withName("§cMinimale Spieler §8[§a" +CTE.INSTANCE.getSystem().minPlayers + "§8]").withLores("§7Ändert die Anzahl der minmalen Anzahl der Spieler").complete());
 			}
 			
-			break;
-		case PLAYER:
-			inv = Bukkit.createInventory(null, 9*5, "§8» §bDev §8§l> §cSpieler Einstellungen");
-			inv.setContents(CTE.INSTANCE.getShop().getStandardGUI45(true));
-			inv.setItem(4, new ItemManager(Material.SKULL_ITEM).withName("§3§lSpawner Einstellungen").complete());
-			for(int i=0;i<7;i++) {
-				inv.setItem(i+10, new ItemStack(Material.AIR));
-				inv.setItem(i+19, new ItemStack(Material.AIR));
-				inv.setItem(i+28, new ItemStack(Material.AIR));
-			}
-			CTESystem sys = CTE.INSTANCE.getSystem();
-			for(Player all : Bukkit.getOnlinePlayers()) {
-				inv.addItem(ItemManager.newHead("§8» " + all.getPlayerListName() +" §8«", Stream.of("§7Team§8: §e" + sys.teams.get(all), "§7HP§8: §e" + all.getHealth()).toArray(String[]::new), all.getName()));
-			}
 			break;
 		case SPAWNER:
 			inv = Bukkit.createInventory(null, 9*5, "§8» §bDev §8§l> §cSpawner Einstellungen");
@@ -295,18 +265,9 @@ public class DevListener implements Listener {
 		p.openInventory(inv);
 	}
 	
-	private void openPlayerSettingsInventory(Player p, String t) {
-		Inventory inv = Bukkit.createInventory(null, 9*5, "§8» §bDev §8§l> §6" + t);
-		inv.setContents(CTE.INSTANCE.getShop().getStandardGUI(true));
-		Player target = Bukkit.getPlayer(t);
-		inv.setItem(4, ItemManager.newHead("§8» " + target.getPlayerListName() +" §8«", null, target.getName()));
-		
-		
-		p.openInventory(inv);
-	}
 	
 	private enum settingstype {
-		SPAWNER, PLAYER, GAME, APPLE, MELON, CARROT;
+		SPAWNER, GAME, APPLE, MELON, CARROT;
 	}
 	
 }

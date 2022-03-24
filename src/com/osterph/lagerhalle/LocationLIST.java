@@ -23,7 +23,8 @@ public class LocationLIST {
     public Location blueNPC() {return new Location(w, 1061.5, 100, 1006.5, -180, 0);}
     public Location redNPC() {return new Location(w, 939.5, 100, 994.5, 0, 0);} //
 
-    public Location specSPAWN() {return new Location(w, 1000, 104, 1000, 180, 10);}
+    public Location specSPAWN() {return new Location(w, 1000, 150, 1000, -90, 10);}
+    
     
     
     public void shopkeeperStand() {

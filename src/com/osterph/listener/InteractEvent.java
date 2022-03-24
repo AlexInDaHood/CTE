@@ -52,11 +52,111 @@ public class InteractEvent implements Listener {
                 if (p.getItemInHand().getAmount() == 1) p.getInventory().clear(p.getInventory().getHeldItemSlot());
                 p.getItemInHand().setAmount(p.getItemInHand().getAmount()-1);
                 onSave(e.getPlayer());
+            } else if(p.getItemInHand().getType().equals(Material.BRICK)) {
+            	onBridge(p.getLocation().add(0, -1, 0), getDirection(p), 0);
             }
         }
     }
     
     
+    private void onBridge(Location loc, direction dir, int timer) {
+    	if(timer >= 30) return;
+    	Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, new Runnable() {
+			@Override
+			public void run() {
+				switch(dir) {
+	    		case N:
+	    			loc.add(0, 0, -1);
+	    			if(loc.getBlock().getType().equals(Material.AIR)) {
+	    				loc.getBlock().setType(Material.BRICK);
+	    				onBridge(loc, dir, timer+1);
+	    			}
+	    			break;
+	    		case E:
+	    			loc.add(1, 0, 0);
+	    			if(loc.getBlock().getType().equals(Material.AIR)) {
+	    				loc.getBlock().setType(Material.BRICK);
+	    				onBridge(loc, dir, timer+1);
+	    			}
+	    			break;
+	    		case S:
+	    			loc.add(0, 0, 1);
+	    			if(loc.getBlock().getType().equals(Material.AIR)) {
+	    				loc.getBlock().setType(Material.BRICK);
+	    				onBridge(loc, dir, timer+1);
+	    			}
+	    			break;
+	    		case W:
+	    			loc.add(-1, 0, 0);
+	    			if(loc.getBlock().getType().equals(Material.AIR)) {
+	    				loc.getBlock().setType(Material.BRICK);
+	    				onBridge(loc, dir, timer+1);
+	    			}
+	    			break;
+	    		case NW:
+	    			loc.add(-1, 0, -1);
+	    			if(loc.getBlock().getType().equals(Material.AIR)) {
+	    				loc.getBlock().setType(Material.BRICK);
+	    				onBridge(loc, dir, timer+1);
+	    			}
+	    			break;
+	    		case NE:
+	    			loc.add(1, 0, -1);
+	    			if(loc.getBlock().getType().equals(Material.AIR)) {
+	    				loc.getBlock().setType(Material.BRICK);
+	    				onBridge(loc, dir, timer+1);
+	    			}
+	    			break;
+	    		case SE:
+	    			loc.add(1, 0, 1);
+	    			if(loc.getBlock().getType().equals(Material.AIR)) {
+	    				loc.getBlock().setType(Material.BRICK);
+	    				onBridge(loc, dir, timer+1);
+	    			}
+	    			break;
+	    		case SW:
+	    			loc.add(-1, 0, 1);
+	    			if(loc.getBlock().getType().equals(Material.AIR)) {
+	    				loc.getBlock().setType(Material.BRICK);
+	    				onBridge(loc, dir, timer+1);
+	    			}
+	    			break;
+	    	}
+			}
+		}, 5);
+    }
+    
+    private enum direction {
+    	N, NE, E, SE, S, SW, W, NW;
+    }
+    
+    public static direction getDirection(Player player) {
+        double rotation = (player.getLocation().getYaw() - 180) % 360;
+        if (rotation < 0) {
+            rotation += 360.0;
+        }
+        if (0 <= rotation && rotation < 22.5) {
+            return direction.N;
+        } else if (22.5 <= rotation && rotation < 67.5) {
+            return direction.NE;
+        } else if (67.5 <= rotation && rotation < 112.5) {
+            return direction.E;
+        } else if (112.5 <= rotation && rotation < 157.5) {
+            return direction.SE;
+        } else if (157.5 <= rotation && rotation < 202.5) {
+            return direction.S;
+        } else if (202.5 <= rotation && rotation < 247.5) {
+            return direction.SW;
+        } else if (247.5 <= rotation && rotation < 292.5) {
+            return direction.W;
+        } else if (292.5 <= rotation && rotation < 337.5) {
+            return direction.NW;
+        } else if (337.5 <= rotation && rotation < 360.0) {
+            return direction.N;
+        } else {
+            return null;
+        }
+    }
     
     @EventHandler
     public void onTP(PlayerTeleportEvent e) {

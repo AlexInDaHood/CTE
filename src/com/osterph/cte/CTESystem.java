@@ -7,6 +7,7 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
@@ -22,8 +23,10 @@ import com.osterph.lagerhalle.NPCListener;
 import com.osterph.manager.ItemManager;
 import com.osterph.manager.ScoreboardManager;
 
+import net.minecraft.server.v1_8_R3.EnumParticle;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent;
 import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
+import net.minecraft.server.v1_8_R3.PacketPlayOutWorldParticles;
 
 public class CTESystem {
 	
@@ -31,7 +34,7 @@ public class CTESystem {
     public EGG_STATE BLUE_EGG = EGG_STATE.OKAY;
     public EGG_STATE RED_EGG = EGG_STATE.OKAY;
     
-    public ArrayList<Player> red = new ArrayList<>();
+   public ArrayList<Player> red = new ArrayList<>();
     public int startRED = 0;
     public ArrayList<Player> blue = new ArrayList<>();
     public int startBLUE = 0;
@@ -60,7 +63,6 @@ public class CTESystem {
     public void checkTeamSizes() {
     	int blue = 0;
     	int red = 0;
-    	
     	for(Player p : teams.keySet()) {
     		if(teams.get(p).equals(TEAM.BLUE)) {
     			blue++;
@@ -74,7 +76,6 @@ public class CTESystem {
     	} else if(red == 0) {
     		winnerTeam = TEAM.BLUE;
     		endGame();
-    		
     	}
     }
     
@@ -109,7 +110,7 @@ public class CTESystem {
     }
 
     public void forceStart() {
-    	//CTE.INSTANCE.getLootEgg().startQueue();
+    	CTE.INSTANCE.getLootEgg().startQueue();
         System.out.println("forceStart");
         if (gamestate.equals(GAMESTATE.RUNNING)) return;
         startLoop();
@@ -134,7 +135,7 @@ public class CTESystem {
             }
         }
 
-    	gamestate =GAMESTATE.RUNNING;
+    	gamestate = GAMESTATE.RUNNING;
         stopStartTimer();
         RED_EGG = EGG_STATE.OKAY;
         BLUE_EGG = EGG_STATE.OKAY;
@@ -233,6 +234,13 @@ public class CTESystem {
             all.playSound(all.getLocation(), sound, vol ,pitch);
         }
     }
+    
+    public void sendParticle(Location loc, EnumParticle particle, float xz, float yz, float zz, float speed, int amount, int data) {
+		PacketPlayOutWorldParticles pa = new PacketPlayOutWorldParticles(particle, false,(float) loc.getX(),(float) loc.getY() -1,(float) loc.getZ(), xz,yz , zz, speed, amount, data);
+		for(Player p : Bukkit.getOnlinePlayers()) {
+			((CraftPlayer)p).getHandle().playerConnection.sendPacket(pa);
+		}
+	}
 
     public void sendActionBar(Player p, String msg) {
         IChatBaseComponent bar = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + msg + "\"}");

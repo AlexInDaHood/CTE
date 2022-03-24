@@ -32,6 +32,7 @@ import com.mojang.authlib.properties.Property;
 import com.osterph.cte.CTE;
 import com.osterph.cte.CTESystem;
 import com.osterph.cte.CTESystem.TEAM;
+import com.osterph.listener.EggListener;
 import com.osterph.manager.ScoreboardManager;
 import com.osterph.shop.Shop;
 
@@ -79,6 +80,8 @@ public class NPCListener implements Listener {
         	TEAM t = system.teams.get(p);
         	
         	if(t.equals(TEAM.RED) && p.getLocation().distance(CTE.INSTANCE.getLocations().redNPC()) <= 5) {
+        		Bukkit.getScheduler().cancelTask(EggListener.eggScheduler.get(p));
+    			EggListener.eggScheduler.remove(p);
         		system.BLUE_EGG = system.BLUE_EGG.GONE;
         		system.sendAllMessage(CTE.prefix + "Das §9Blaue-Ei §ewurde erobert! Das §9Blaue-Team §ekann nicht länger respawnen!");
         		system.sendAllSound(Sound.ENDERDRAGON_GROWL, 1, 1);
@@ -87,6 +90,8 @@ public class NPCListener implements Listener {
         			ScoreboardManager.refreshBoard(all);
         		}
         	} else if(t.equals(TEAM.BLUE) && p.getLocation().distance(CTE.INSTANCE.getLocations().blueNPC()) <= 5) {
+        		Bukkit.getScheduler().cancelTask(EggListener.eggScheduler.get(p));
+    			EggListener.eggScheduler.remove(p);
         		system.RED_EGG = system.RED_EGG.GONE;
         		system.sendAllMessage(CTE.prefix + "Das §cRote-Ei §ewurde erobert! Das §cRote-Team §ekann nicht länger respawnen!");
         		system.sendAllSound(Sound.ENDERDRAGON_GROWL, 1, 1);

@@ -1,6 +1,7 @@
 package com.osterph.listener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -20,14 +21,17 @@ import org.bukkit.inventory.ItemStack;
 import com.osterph.cte.CTE;
 import com.osterph.cte.CTESystem;
 import com.osterph.cte.CTESystem.GAMESTATE;
-import com.osterph.lagerhalle.LocationLIST;
 import com.osterph.manager.ItemManager;
 import com.osterph.manager.ScoreboardManager;
+
+import net.minecraft.server.v1_8_R3.EnumParticle;
 
 public class EggListener implements Listener {
 
     private CTESystem sys = CTE.INSTANCE.getSystem();
-
+    
+    public static HashMap<Player, Integer> eggScheduler = new HashMap<>();
+    
     @EventHandler
     private void onInteract(PlayerInteractEvent e) {
         Player p = e.getPlayer();
@@ -58,6 +62,7 @@ public class EggListener implements Listener {
             sys.sendAllSound(Sound.WITHER_DEATH, 1, 1);
             sys.BLUE_EGG = CTESystem.EGG_STATE.STOLEN;
             stolenegg = "blue";
+            onScheduler(p);
         } else if (e.getClickedBlock().getLocation().equals(CTE.INSTANCE.getLocations().redEGG())) {
             if (sys.teams.get(p).equals(CTESystem.TEAM.RED)) {
                 p.sendMessage(CTE.prefix + "Das ist das falsche Ei...");
@@ -67,6 +72,7 @@ public class EggListener implements Listener {
             sys.sendAllSound(Sound.WITHER_DEATH, 1, 1);
             sys.RED_EGG = CTESystem.EGG_STATE.STOLEN;
             stolenegg = "red";
+            onScheduler(p);
         } else {
             p.sendMessage(CTE.prefix + "Ich denke nicht dass die einfach so rumliegen sollten...");
             return;
@@ -84,7 +90,19 @@ public class EggListener implements Listener {
             ScoreboardManager.refreshBoard(all);
         }
     }
-
+    
+    int scheduler;
+    
+    private void onScheduler(Player p) {
+    	scheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {
+			@Override
+			public void run() {
+				sys.sendParticle(p.getLocation().add(0, 1, 0), EnumParticle.SPELL_WITCH,(float) 0.4, (float) 0.7, (float) 0.4, 0, 30, 0);
+			}
+		}, 0, 10);
+    	eggScheduler.put(p, scheduler);
+    }
+    
     @EventHandler
     private void onDrop(PlayerDropItemEvent e) {
         ItemStack item = e.getItemDrop().getItemStack();
@@ -135,7 +153,7 @@ public class EggListener implements Listener {
 
         return list;
     }
-
+    
     private List<Material> notClickable() {
         List<Material> list = new ArrayList<>();
 

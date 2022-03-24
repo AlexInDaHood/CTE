@@ -18,6 +18,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
@@ -53,7 +54,7 @@ public class LootEggManager implements Listener {
 	public void onBreak(BlockBreakEvent e) {
 		if(!sys.gamestate.equals(GAMESTATE.RUNNING)) return;
 		Block b = e.getBlock();
-		if ((((CraftWorld)b.getWorld()).getHandle().getTileEntity(new BlockPosition(b.getX(), b.getY(), b.getZ())) == null)) return;
+		if ((((CraftWorld)b.getWorld()).getHandle().getTileEntity(new BlockPosition(b.getX(), b.getY(), b.getZ())) == null) || !(((CraftWorld)b.getWorld()).getHandle().getTileEntity(new BlockPosition(b.getX(), b.getY(), b.getZ())) instanceof TileEntitySkull)) return;
 		TileEntitySkull skull = (TileEntitySkull)((CraftWorld)b.getWorld()).getHandle().getTileEntity(new BlockPosition(b.getX(), b.getY(), b.getZ()));
 		if(!skull.getGameProfile().getProperties().get("textures").iterator().next().getValue().equals(skullTextures)) return;
 		Bukkit.getScheduler().cancelTask(scheduler);
@@ -62,13 +63,14 @@ public class LootEggManager implements Listener {
 		CTE.INSTANCE.getLootEgg().openEgg(e.getBlock().getLocation());
 	}
 	
+	
 	int spawnEgg;
 	int timer;
 	int scheduler;
 	
 	public void startQueue() {
 		timer = 0;
-		spawnEgg = (new Random().nextInt(3)+2)*10; //2-5 Minuten
+		spawnEgg = (new Random().nextInt(3)+2)*60; //2-5 Minuten
 		scheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {			
 			@Override
 			public void run() {
@@ -125,7 +127,7 @@ public class LootEggManager implements Listener {
 				int z = new Random().nextInt(6)-3;
 				Location item = new Location(loc1.getWorld(), loc1.getX()+x, loc1.getY(), loc1.getZ()+z);
 				drawLine(item, loc2, 0.5);
-				sendParticle(item.add(0, 1, 0), EnumParticle.REDSTONE, (float)0.1, 0, (float)0.1, (float)2, 50, 5);
+				sys.sendParticle(item.add(0, 1, 0), EnumParticle.REDSTONE, (float)0.1, 0, (float)0.1, (float)2, 50, 5);
 				item.getWorld().dropItem(item, itemList.get(new Random().nextInt(itemList.size())));
 				if(timer == items) {
 					Bukkit.getScheduler().cancelTask(scheduler);
@@ -136,12 +138,12 @@ public class LootEggManager implements Listener {
 	}
 	
 	private void despawnAnimation(Location loc) {
-		sendParticle(loc.add(0, 1.3, 0), EnumParticle.ENCHANTMENT_TABLE, (float) 0.1, (float)0.1, (float) 0.1, 3, 1000, 5);
+		sys.sendParticle(loc.add(0, 1.3, 0), EnumParticle.ENCHANTMENT_TABLE, (float) 0.1, (float)0.1, (float) 0.1, 3, 1000, 5);
 		scheduler = Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, new Runnable() {
 			@Override
 			public void run() {
 				stand.remove();
-				sendParticle(loc, EnumParticle.EXPLOSION_NORMAL, (float)0.1, (float)0.1, (float)0.1, 0, 50, 0);
+				sys.sendParticle(loc, EnumParticle.EXPLOSION_NORMAL, (float)0.1, (float)0.1, (float)0.1, 0, 50, 0);
 				startQueue();
 			}
 		}, 38);
@@ -156,7 +158,7 @@ public class LootEggManager implements Listener {
         for (double i = 1; i <= Loc1.distance(Loc2); i += 0.5) {
             vector.multiply(i);
             Loc1.add(vector);
-            sendParticle(Loc1.add(0, 1, 0), EnumParticle.FLAME, 0, 0, 0, 0, 1, 0);
+            sys.sendParticle(Loc1.add(0, 1, 0), EnumParticle.FLAME, 0, 0, 0, 0, 1, 0);
             Loc1.add(0, -1, 0);
             Loc1.subtract(vector);
             vector.normalize();
@@ -189,13 +191,6 @@ public class LootEggManager implements Listener {
         Vector to = End.toVector();
         return to.subtract(from);
     }
-	
-	private void sendParticle(Location loc, EnumParticle particle, float xz, float yz, float zz, float speed, int amount, int data) {
-		PacketPlayOutWorldParticles pa = new PacketPlayOutWorldParticles(particle, false,(float) loc.getX(),(float) loc.getY() -1,(float) loc.getZ(), xz,yz , zz, speed, amount, data);
-		for(Player p : Bukkit.getOnlinePlayers()) {
-			((CraftPlayer)p).getHandle().playerConnection.sendPacket(pa);
-		}
-	}
 	
 	private void addLocations() {
 		World w = Bukkit.getWorld("world");
