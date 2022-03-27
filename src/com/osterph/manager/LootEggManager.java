@@ -71,6 +71,7 @@ public class LootEggManager implements Listener {
 		scheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {			
 			@Override
 			public void run() {
+				if (!sys.gamestate.equals(GAMESTATE.RUNNING)) return;
 				timer++;
 				if(timer == spawnEgg) {
 					Bukkit.getScheduler().cancelTask(scheduler);

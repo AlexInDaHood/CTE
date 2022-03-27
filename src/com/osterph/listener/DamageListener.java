@@ -22,6 +22,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import static org.bukkit.Material.AIR;
+import static org.bukkit.Material.SPRUCE_FENCE;
 
 public class DamageListener implements Listener {
 
@@ -49,9 +50,11 @@ public class DamageListener implements Listener {
         }
 
 		if (e.getEntityType().equals(EntityType.RABBIT)) {
-			for (int i = 150; i > 30; i--) {
-				Location l = new Location(Bukkit.getWorld("world"), e.getEntity().getLocation().getBlockX(), i, e.getEntity().getLocation().getBlockZ());
-				l.getBlock().setType(AIR);
+			Location loc = e.getEntity().getLocation();
+			loc.add(0,0.05,0).getBlock().setType(AIR);
+			loc.subtract(0,0.3,0).getBlock().setType(AIR);
+			if (loc.subtract(0,0.6,0).getBlock().getType().equals(SPRUCE_FENCE)) {
+				loc.subtract(0,0.6,0).getBlock().setType(AIR);
 			}
 		}
 

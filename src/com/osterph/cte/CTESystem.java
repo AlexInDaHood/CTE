@@ -27,6 +27,8 @@ import net.minecraft.server.v1_8_R3.IChatBaseComponent;
 import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
 import net.minecraft.server.v1_8_R3.PacketPlayOutWorldParticles;
 
+import static org.bukkit.Material.AIR;
+
 public class CTESystem {
 	
     public HashMap<Player, TEAM> teams = new HashMap<>();
@@ -137,7 +139,6 @@ public class CTESystem {
     public void forceStart() {
         startSuddenDeathCounter();
     	CTE.INSTANCE.getLootEgg().startQueue();
-        System.out.println("forceStart");
         if (gamestate.equals(GAMESTATE.RUNNING) || gamestate.equals(GAMESTATE.SUDDEN_DEATH)) return;
         startLoop();
         for (Player all: Bukkit.getOnlinePlayers()) {
@@ -184,7 +185,6 @@ public class CTESystem {
 
 	public void endGame() {
         stopSuddenDeathCounter();
-        System.out.println("endGame");
         stopLoop();
         for (Entity all: Bukkit.getWorld("world").getEntities()) {
             if (!all.getType().equals(EntityType.DROPPED_ITEM)) continue;
@@ -210,7 +210,7 @@ public class CTESystem {
         	clear(all);
             all.teleport(CTE.INSTANCE.getLocations().lobbySPAWN());
             all.playSound(all.getLocation(), Sound.WITHER_DEATH, 1, 1);
-            all.sendMessage(CTE.prefix + "Der Server startet in 15 Sekunden neu.");
+            all.sendMessage(CTE.prefix + "§cDer Server startet in 15 Sekunden neu.");
         }
         for(Entity t : Bukkit.getWorld("world").getEntities()) {
         	if(t instanceof Item) {
@@ -243,7 +243,6 @@ public class CTESystem {
     }
 
     public void sendAllMessage(String msg) {
-    	System.out.println(msg);
         for(Player all : Bukkit.getOnlinePlayers()) {
             all.sendMessage(msg);
         }
@@ -343,7 +342,12 @@ public class CTESystem {
     	}
     }
     public void suddenDeath() {
+        this.gamestate = GAMESTATE.SUDDEN_DEATH;
         for(Player all : Bukkit.getOnlinePlayers()) {
+            all.playSound(all.getLocation(), Sound.WITHER_DEATH, 1, 1);
+            all.sendTitle("§c§lSUDDEN DEATH","");
+            all.sendMessage(CTE.prefix + "§c§lSUDDEN DEATH");
+            all.sendMessage("§eAlle Eier wurden erobert! Du kannst nicht länger respawnen!");
             if(all.getEquipment().getHelmet().getType() != null && all.getEquipment().getHelmet().getType().equals(Material.SKULL_ITEM)) {
                 setHelmet(all);
                 Bukkit.getScheduler().cancelTask(EggListener.eggScheduler.get(all));
@@ -352,19 +356,71 @@ public class CTESystem {
         }
         CTE.INSTANCE.getLocations().redEGG().getBlock().setType(Material.AIR);
         CTE.INSTANCE.getLocations().blueEGG().getBlock().setType(Material.AIR);
+        RED_EGG = EGG_STATE.GONE;
+        BLUE_EGG = EGG_STATE.GONE;
 
         Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {
             @Override
             public void run() {
-                for (int i = 0; i < 80; i++) {
-                    int xr = new Random().nextInt(208)+900-4;
-                    int zr = new Random().nextInt(118)+945-4;
+                if (!gamestate.equals(GAMESTATE.SUDDEN_DEATH)) return;
+                for (int i = 0; i < 50; i++) {
+                    Location loc = new Location(Bukkit.getWorld("world"), 800.5, 200, 800.5);
+                    while (!isSpawnable(loc)) {
+                        int xr = new Random().nextInt(208) + 900 - 4;
+                        int zr = new Random().nextInt(118) + 945 - 4;
 
-                    Rabbit r = (Rabbit) Bukkit.getWorld("world").spawnEntity(new Location(Bukkit.getWorld("world"), xr+.5, 200, zr+.5), EntityType.RABBIT);
+                        loc.setX(xr+.5);
+                        loc.setZ(zr+.5);
+                    }
+
+                    loc.setY(180);
+
+                    Rabbit r = (Rabbit) Bukkit.getWorld("world").spawnEntity(loc, EntityType.RABBIT);
                     r.setRabbitType(Rabbit.Type.BLACK_AND_WHITE);
                 }
             }
         },0,20L);
+
+        countdown = 390;
+        scheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {
+            @Override
+            public void run() {
+                switch (countdown) {
+                    case 300:
+                        sendAllMessage(CTE.prefix + "Das Spiel endet in §c5 Minuten§e.");
+                    case 180:
+                        sendAllMessage(CTE.prefix + "Das Spiel endet in §c3 Minuten§e.");
+                    case 60:
+                    case 30:
+                    case 10:
+                    case 9:
+                    case 8:
+                    case 7:
+                    case 6:
+                    case 5:
+                    case 4:
+                    case 3:
+                    case 2:
+                        sendAllMessage(CTE.prefix + "Das Spiel endet in §c"+countdown+" Sekunden§e.");
+                        break;
+                    case 1:
+                        sendAllMessage(CTE.prefix + "Das Spiel endet in §c"+countdown+" Sekunde§e.");
+                        break;
+                    case 0:
+                        endGame();
+                        return;
+                }
+                countdown--;
+            }
+        },0,20L);
+    }
+
+    private boolean isSpawnable(Location loc) {
+        for (int i = 150; i > 30; i--) {
+            loc.setY(i);
+            if (!loc.getBlock().getType().equals(AIR)) return true;
+        }
+        return false;
     }
     
     public enum EGG_STATE {
