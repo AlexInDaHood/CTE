@@ -28,7 +28,7 @@ import net.minecraft.server.v1_8_R3.EnumParticle;
 
 public class EggListener implements Listener {
 
-    private CTESystem sys = CTE.INSTANCE.getSystem();
+    private static final CTESystem sys = CTE.INSTANCE.getSystem();
     
     public static HashMap<Player, Integer> eggScheduler = new HashMap<>();
     
@@ -52,7 +52,7 @@ public class EggListener implements Listener {
         if (!e.getAction().equals(Action.LEFT_CLICK_BLOCK)) return;
 
         e.setCancelled(true);
-        String stolenegg = "";
+        String stolenegg;
         if (e.getClickedBlock().getLocation().equals(CTE.INSTANCE.getLocations().blueEGG())) {
             if (sys.teams.get(p).equals(CTESystem.TEAM.BLUE)) {
                 p.sendMessage(CTE.prefix + "Das ist das falsche Ei...");
@@ -77,7 +77,7 @@ public class EggListener implements Listener {
             p.sendMessage(CTE.prefix + "Ich denke nicht dass die einfach so rumliegen sollten...");
             return;
         }
-        ItemStack headEgg = null;
+        ItemStack headEgg;
         if(stolenegg.equals("red")) {
             headEgg = ItemManager.customHead("§cRotes-Ei", "", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTZiYTk5ODdmNzM4ZTZkNzVkM2IwMmMzMGQxNDgwYTM2MDU5M2RkYjQ2NGJkMWM4MWFiYjlkNzFkOWU2NTZjMCJ9fX0=");
         } else {
@@ -94,12 +94,7 @@ public class EggListener implements Listener {
     int scheduler;
     
     private void onScheduler(Player p) {
-    	scheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {
-			@Override
-			public void run() {
-				sys.sendParticle(p.getLocation().add(0, 1, 0), EnumParticle.SPELL_WITCH,(float) 0.4, (float) 0.7, (float) 0.4, 0, 30, 0);
-			}
-		}, 0, 10);
+    	scheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, () -> sys.sendParticle(p.getLocation().add(0, 1, 0), EnumParticle.SPELL_WITCH,(float) 0.4, (float) 0.7, (float) 0.4, 0, 30, 0), 0, 10);
     	eggScheduler.put(p, scheduler);
     }
     
@@ -120,10 +115,11 @@ public class EggListener implements Listener {
     }
 
     public static void checkHolzschwert(Player p) {
+        if (!sys.gamestate.equals(GAMESTATE.RUNNING) && !sys.gamestate.equals(GAMESTATE.SUDDEN_DEATH)) return;
         if (p.getInventory().contains(Material.DIAMOND_SWORD)||p.getInventory().contains(Material.IRON_SWORD)||p.getInventory().contains(Material.STONE_SWORD)||p.getInventory().contains(Material.WOOD_SWORD)) {
             if (p.getInventory().contains(Material.DIAMOND_SWORD)||p.getInventory().contains(Material.IRON_SWORD)||p.getInventory().contains(Material.STONE_SWORD)) p.getInventory().remove(Material.WOOD_SWORD);
             return;
-        };
+        }
         p.getInventory().addItem(new ItemManager(Material.WOOD_SWORD).withName("§7Holzschwert").unbreakable(true).complete());
     }
 

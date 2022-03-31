@@ -30,8 +30,8 @@ public class SpawnerManager {
 		
 		//RED																											
 		spawners.add(new Spawner("RED-APPLE", apple.getItem(1), new Location(Bukkit.getWorld("world"), 940.5, 100, 1007.5), 30, 1, 30, true));
-		spawners.add(new Spawner("RED-MELON-1", melon.getItem(1), new Location(Bukkit.getWorld("world"), 963.4, 104, 982.5), 20*6, 1, 10, false));
-		spawners.add(new Spawner("RED-MELON-2", melon.getItem(1), new Location(Bukkit.getWorld("world"), 963.4, 104, 1018.5), 20*6, 1, 10, false));
+		spawners.add(new Spawner("RED-MELON-1", melon.getItem(1), new Location(Bukkit.getWorld("world"), 963.5, 104, 982.5), 20*6, 1, 10, false));
+		spawners.add(new Spawner("RED-MELON-2", melon.getItem(1), new Location(Bukkit.getWorld("world"), 963.5, 104, 1018.5), 20*6, 1, 10, false));
 		
 	}
 	

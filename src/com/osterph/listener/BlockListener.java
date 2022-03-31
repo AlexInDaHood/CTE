@@ -1,12 +1,9 @@
 package com.osterph.listener;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import com.osterph.shop.Shop;
-import com.osterph.shop.ShopItem;
-
+import com.osterph.cte.CTE;
+import com.osterph.cte.CTESystem;
+import com.osterph.cte.CTESystem.TEAM;
+import com.osterph.spawner.Spawner;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -24,20 +21,18 @@ import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
-
-import com.osterph.cte.CTE;
-import com.osterph.cte.CTESystem;
-import com.osterph.cte.CTESystem.TEAM;
-import com.osterph.spawner.Spawner;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class BlockListener implements Listener {
 	
 	@EventHandler
 	public void onPlace(BlockPlaceEvent e) {
-        if(CTE.INSTANCE.getSystem().gamestate.equals(CTESystem.GAMESTATE.SUDDEN_DEATH)) {e.getPlayer().sendMessage(CTE.prefix + "Du kannst keine Blöcke während des Suddendeaths platzieren!");e.setCancelled(true);return;}
+        if(CTE.INSTANCE.getSystem().gamestate.equals(CTESystem.GAMESTATE.SUDDEN_DEATH)) {e.getPlayer().sendMessage(CTE.prefix + "Du kannst während dem Deathmatch keine Blöcke platzieren!");e.setCancelled(true);return;}
         if(e.getBlock().getType().equals(Material.TNT)) {
             e.setCancelled(true);
             if(e.getPlayer().getItemInHand().getAmount() > 1) {
@@ -50,14 +45,14 @@ public class BlockListener implements Listener {
         } 
         if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
             for (Spawner sp : CTE.INSTANCE.getSpawnermanager().spawners) {
-                if (e.getBlock().getLocation().distance(sp.getLocation()) < 3) {
+                if (e.getBlock().getLocation().add(0.5,0,0.5).distance(sp.getLocation()) < 2.5) {
                     e.setCancelled(true);
                     e.getPlayer().sendMessage(CTE.prefix + "§cDu kannst hier keine Blöcke platzieren! [Spawner-Schutz]");
                     e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.VILLAGER_NO, 1, 1);
                     return;
                 }
             }
-            if ((e.getBlock().getLocation().distance(CTE.INSTANCE.getLocations().redSPAWN()) < 2) || (e.getBlock().getLocation().distance(CTE.INSTANCE.getLocations().blueSPAWN()) < 2)) {
+            if ((e.getBlock().getLocation().add(0.5,0,0.5).distance(CTE.INSTANCE.getLocations().redSPAWN()) < 2) || (e.getBlock().getLocation().add(0.5,0,0.5).distance(CTE.INSTANCE.getLocations().blueSPAWN()) < 2)) {
                 e.setCancelled(true);
                 e.getPlayer().sendMessage(CTE.prefix + "§cDu kannst hier keine Blöcke platzieren! [Spawn-Schutz]");
                 e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.VILLAGER_NO, 1, 1);
@@ -73,7 +68,6 @@ public class BlockListener implements Listener {
             if(e.getBlock().getLocation().getX() > 1100 || e.getBlock().getLocation().getX() < 900 || e.getBlock().getLocation().getZ() < 945 || e.getBlock().getLocation().getZ() > 1055) {
                 e.setCancelled(true);
                 e.getPlayer().sendMessage(CTE.prefix + "§cDu kannst dich nicht weiter von der Map entfernen!");
-                return;
             }
 
         }
@@ -83,7 +77,7 @@ public class BlockListener implements Listener {
     public void onBreak(BlockBreakEvent e) {
         if (e.getPlayer().getGameMode().equals(GameMode.CREATIVE)) return;
         if(e.getBlock().getType().equals(Material.WEB)) return;
-        if (!isBreakable(e.getBlock())) {
+        if (isBreakable(e.getBlock())) {
             e.setCancelled(true);
             return;
         }
@@ -106,7 +100,7 @@ public class BlockListener implements Listener {
         if(!CTE.INSTANCE.getSystem().gamestate.equals(CTESystem.GAMESTATE.SUDDEN_DEATH)) {
             List<Block> d = new ArrayList<>();
             for (Block b : e.blockList()) {
-                if (!isBreakable(b)) continue;
+                if (isBreakable(b)) continue;
                 d.add(b);
             }
             e.blockList().clear();
@@ -119,7 +113,7 @@ public class BlockListener implements Listener {
         if(!CTE.INSTANCE.getSystem().gamestate.equals(CTESystem.GAMESTATE.SUDDEN_DEATH)) {
             List<Block> d = new ArrayList<>();
             for (Block b : e.blockList()) {
-                if (!isBreakable(b)) continue;
+                if (isBreakable(b)) continue;
                 d.add(b);
             }
             if (e.getEntity() instanceof TNTPrimed) {
@@ -130,33 +124,6 @@ public class BlockListener implements Listener {
             e.blockList().addAll(d);
         }
     }
-
-  /*  @EventHandler
-    public void onPickup(PlayerPickupItemEvent e) {
-        Material m = e.getItem().getItemStack().getType();
-        ItemStack i = e.getItem().getItemStack();
-        switch (m) {
-            case WOOL:
-                i = new ShopItem(Material.WOOL, "§7Wolle", "Zum bauen", 16, 4, Shop.Ressourcen.Apfel, null, 20, Shop.SHOPTYPE.BLOCKS).getInventoryItem(i.getDurability());
-                break;
-            case WOOD:
-                i = new ShopItem(Material.WOOD, "§7Holz", "Zum bauen", 16, 4, Shop.Ressourcen.Melone, null, 21, Shop.SHOPTYPE.BLOCKS).getInventoryItem(0);
-                break;
-            case SANDSTONE:
-                i = new ShopItem(Material.SANDSTONE, "§7Sandstein", "Zum bauen", 16, 12, Shop.Ressourcen.Apfel, null, 23, Shop.SHOPTYPE.BLOCKS).getInventoryItem(2);
-                break;
-            case ENDER_STONE:
-                i = new ShopItem(Material.ENDER_STONE, "§7Endstein", "Zum bauen", 8, 24, Shop.Ressourcen.Apfel, null, 24, Shop.SHOPTYPE.BLOCKS).getInventoryItem(0);
-                break;
-            case OBSIDIAN:
-                i = new ShopItem(Material.OBSIDIAN, "§7Obsidian", "Zum bauen", 2, 4, Shop.Ressourcen.Karotte, null, 30, Shop.SHOPTYPE.BLOCKS).getInventoryItem(0);
-                break;
-            case LADDER:
-                i = new ShopItem(Material.LADDER, "§7Leiter", "Zum bauen", 16, 4, Shop.Ressourcen.Apfel, null, 32, Shop.SHOPTYPE.BLOCKS).getInventoryItem(0);
-                break;
-        }
-        e.getItem().setItemStack(i);
-   }*/
 
     @EventHandler
     public void onExplode(ExplosionPrimeEvent e) {
@@ -175,20 +142,23 @@ public class BlockListener implements Listener {
     @SuppressWarnings("deprecation")
 	public boolean isBreakable(Block b) {
         if (b.getType().equals(Material.WOOL)) {
-            return b.getData() == 11 || b.getData() == 14;
+            return b.getData() != 11 && b.getData() != 14 && b.getData() != 8;
+        }
+        if (b.getType().equals(Material.STAINED_GLASS)) {
+            return b.getData() != 11 && b.getData() != 14 && b.getData() != 8;
         }
         if (b.getType().equals(Material.LONG_GRASS)) {
-            return b.getData() == 1 || b.getData() == 2;
+            return b.getData() != 1 && b.getData() != 2;
         }
-        if (b.getType().equals(Material.WOOD)) return b.getData() == 0;
+        if (b.getType().equals(Material.WOOD)) return b.getData() != 0;
 
-        return b.getType().equals(Material.ENDER_STONE) ||
-                b.getType().equals(Material.RED_ROSE) ||
-                b.getType().equals(Material.SANDSTONE) ||
-                b.getType().equals(Material.OBSIDIAN) ||
-                b.getType().equals(Material.WEB) ||
-                b.getType().equals(Material.LADDER) ||
-                b.getType().equals(Material.SKULL);
+        return !b.getType().equals(Material.ENDER_STONE) &&
+                !b.getType().equals(Material.RED_ROSE) &&
+                !b.getType().equals(Material.SANDSTONE) &&
+                !b.getType().equals(Material.OBSIDIAN) &&
+                !b.getType().equals(Material.WEB) &&
+                !b.getType().equals(Material.LADDER) &&
+                !b.getType().equals(Material.SKULL);
     }
     
     
@@ -196,7 +166,7 @@ public class BlockListener implements Listener {
     //
     //CHEST-System
     //
-    private HashMap<Player, Inventory> inventorys = new HashMap<>();
+    private final HashMap<Player, Inventory> inventorys = new HashMap<>();
 	
 	@EventHandler
 	public void openInv(InventoryOpenEvent e) {		

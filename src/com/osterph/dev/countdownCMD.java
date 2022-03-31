@@ -22,7 +22,8 @@ public class countdownCMD implements CommandExecutor {
             return false;
         }
         
-        if(Bukkit.getScheduler().isCurrentlyRunning(CTE.INSTANCE.getSystem().scheduler)) {p.sendMessage(CTE.prefix + "Countdown already started!");;return false;};
+        if(Bukkit.getScheduler().isCurrentlyRunning(CTE.INSTANCE.getSystem().scheduler)) {p.sendMessage(CTE.prefix + "Countdown already started!");
+            return false;}
         p.sendMessage(CTE.prefix + "Countdown started.");
         CTE.INSTANCE.getSystem().startTimer();
 

@@ -7,8 +7,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 public class StaffManager {
 
-    private Player p;
-    private String UUID;
+    private final Player p;
+    private final String UUID;
 
     public StaffManager(Player p) {
         this.p = p;

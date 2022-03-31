@@ -17,7 +17,7 @@ import com.osterph.manager.DropManager;
 
 public class ShopListener implements Listener {
 
-    private CTESystem sys = CTE.INSTANCE.getSystem();
+    private final CTESystem sys = CTE.INSTANCE.getSystem();
 
     @EventHandler
     public void onClick(InventoryClickEvent e) {
@@ -103,11 +103,7 @@ public class ShopListener implements Listener {
                                             sys.chestplates.put(p, shop.getInventoryItem(0));
                                             return;
                                         case WOOL:
-                                            if (sys.teams.get(p).equals(CTESystem.TEAM.RED)) {
-                                                p.getInventory().addItem(shop.getInventoryItem(14));
-                                            } else if (sys.teams.get(p).equals(CTESystem.TEAM.BLUE)) {
-                                                p.getInventory().addItem(shop.getInventoryItem(11));
-                                            }
+                                            p.getInventory().addItem(shop.getInventoryItem(sys.teamData(p)));
                                             return;
                                         case SANDSTONE:
                                             p.getInventory().addItem(shop.getInventoryItem(2));
@@ -130,11 +126,7 @@ public class ShopListener implements Listener {
                                         sys.chestplates.put(p, shop.getInventoryItem(0));
                                         return;
                                     case WOOL:
-                                        if (sys.teams.get(p).equals(CTESystem.TEAM.RED)) {
-                                            p.getInventory().setChestplate(shop.getInventoryItem(14));
-                                        } else if (sys.teams.get(p).equals(CTESystem.TEAM.BLUE)) {
-                                            p.getInventory().setChestplate(shop.getInventoryItem(11));
-                                        }
+                                        p.getInventory().addItem(shop.getInventoryItem(sys.teamData(p)));
                                         return;
                                 }
                                 p.getInventory().addItem(shop.getInventoryItem(0));
@@ -143,8 +135,6 @@ public class ShopListener implements Listener {
                             p.playSound(p.getLocation(), Sound.VILLAGER_NO, 1, 1);
                             p.sendMessage(CTE.prefix + "§cDieses Item kannst du nicht bezahlen!");
                         }
-                    } else {
-                    	System.out.println("NULL");
                     }
                 }
             }
@@ -157,12 +147,12 @@ public class ShopListener implements Listener {
     	if(p.getInventory().getChestplate().getType().equals(Material.LEATHER_CHESTPLATE)) return true;
     	if(p.getInventory().getChestplate().getType().equals(Material.CHAINMAIL_CHESTPLATE) && !item.equals(Material.CHAINMAIL_CHESTPLATE)) return true;
     	if(p.getInventory().getChestplate().getType().equals(Material.IRON_CHESTPLATE) && (!item.equals(Material.CHAINMAIL_CHESTPLATE) && !item.equals(Material.IRON_CHESTPLATE))) return true;
-    	if(p.getInventory().getChestplate().getType().equals(Material.DIAMOND_CHESTPLATE)) return false;
-    	return false;
+        p.getInventory().getChestplate().getType();
+        return false;
     }
     
     private boolean checkItem(Shop.Ressourcen re, int amount, Player p) {
-        ItemStack m = new ItemStack(Material.BARRIER);
+        ItemStack m;
         m = new DropManager(re).getItem(1);
         return p.getInventory().containsAtLeast(m, amount);
     }

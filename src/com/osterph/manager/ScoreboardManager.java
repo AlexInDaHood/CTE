@@ -103,7 +103,7 @@ public class ScoreboardManager {
             o.getScore("§cROTES TEAM§8: " + EggStatus(TEAM.RED)).setScore(4);
             o.getScore("§2").setScore(3);
             if (sys.teams.get(p).equals(CTESystem.TEAM.BLUE)||sys.teams.get(p).equals(CTESystem.TEAM.RED)) {
-                o.getScore("§3PUNKTE§8: §7" + CTE.INSTANCE.getStatsManager().getPoints(p)).setScore(2);
+                //o.getScore("§3PUNKTE§8: §7" + CTE.INSTANCE.getStatsManager().getPoints(p)).setScore(2);
                 o.getScore("§bKILLS§8: §7" + CTE.INSTANCE.getStatsManager().getKills(p)).setScore(1);
             }
         } else {
@@ -125,7 +125,7 @@ public class ScoreboardManager {
             o.getScore("§9BLAUES TEAM§8: §e" + sys.blue.size()+"§7/§e"+sys.maxPlayers/2).setScore(5);
             o.getScore("§cROTES TEAM§8: §e" + sys.red.size()+"§7/§e"+sys.maxPlayers/2).setScore(4);
             o.getScore("§3").setScore(3);
-            o.getScore("§3GES. PUNKTE").setScore(2);
+            //o.getScore("§3GES. PUNKTE").setScore(2);
             //o.getScore("§8➥ §7"+CTE.mysql.getDatabase("PLAYERPOINTS", "UUID", p.getUniqueId().toString(), "POINTS")).setScore(1);
         }
 

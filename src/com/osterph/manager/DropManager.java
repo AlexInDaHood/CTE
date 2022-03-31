@@ -14,7 +14,7 @@ import com.osterph.shop.Shop.Ressourcen;
 
 public class DropManager {
 
-    private Ressourcen d;
+    private final Ressourcen d;
 
     public DropManager(Ressourcen d) {
         this.d = d;

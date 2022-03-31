@@ -10,11 +10,10 @@ import com.osterph.cte.CTE;
 
 public class MySQL {
 
-    private String host;
-    private String database;
-    private final int port = 3306;
-    private String username;
-    private String password;
+    private final String host;
+    private final String database;
+    private final String username;
+    private final String password;
     private Connection con;
 
     public MySQL(String host, String database, String username, String password) {
@@ -26,6 +25,7 @@ public class MySQL {
 
     private void connect() {
         try {
+            int port = 3306;
             con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database +"?user="+username+"&password="+password + "&characterEncoding=latin1");
             System.out.println("[MySQL] Connected");
         } catch (SQLException e) {
@@ -51,22 +51,21 @@ public class MySQL {
             PreparedStatement ps = con.prepareStatement(query);
             ps.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         disconnect();
     }
 
     public ResultSet query(String query) {
         connect();
-        ResultSet rs = null;
         try {
             PreparedStatement ps = con.prepareStatement(query);
             return ps.executeQuery();
         } catch (SQLException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         disconnect();
-        return rs;
+        return null;
     }
     
     public void setDatabase(String Tabelle, String SpalteKategorie, String SpalteInhalt, String WertKategorie, Object WertInhalt) {

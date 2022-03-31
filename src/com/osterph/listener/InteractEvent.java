@@ -1,8 +1,6 @@
 package com.osterph.listener;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
+import com.osterph.cte.CTE;
 import com.osterph.cte.CTESystem;
 import com.osterph.shop.Shop;
 import com.osterph.shop.ShopItem;
@@ -16,9 +14,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-
-import com.osterph.cte.CTE;
 import org.bukkit.event.player.PlayerTeleportEvent;
+
+import java.util.ArrayList;
 
 public class InteractEvent implements Listener {
 
@@ -42,19 +40,14 @@ public class InteractEvent implements Listener {
                 Fireball a = p.launchProjectile(Fireball.class);
                 a.setVelocity(a.getVelocity().multiply(1.5));
                 fireball.add(p);
-                Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, new Runnable() {
-				@Override
-				public void run() {
-					fireball.remove(p);
-					}
-				},20);
+                Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, () -> fireball.remove(p),20);
             } else if(p.getItemInHand().getType().equals(Material.BLAZE_ROD)) {
                 if (p.getItemInHand().getAmount() == 1) p.getInventory().clear(p.getInventory().getHeldItemSlot());
                 p.getItemInHand().setAmount(p.getItemInHand().getAmount()-1);
                 onSave(e.getPlayer());
             } else if(p.getItemInHand().getType().equals(Material.BRICK)) {
             	e.setCancelled(true);
-            	onBridge(p.getLocation().add(0, -1, 0), getDirection(p), 0);
+            	onBridge(p.getLocation().add(0, -1, 0), getDirection(p), 0, p);
             	if (p.getItemInHand().getAmount() == 1) p.getInventory().clear(p.getInventory().getHeldItemSlot());
                 p.getItemInHand().setAmount(p.getItemInHand().getAmount()-1);
             }
@@ -62,75 +55,78 @@ public class InteractEvent implements Listener {
     }
     
     
-    private void onBridge(Location loc, direction dir, int timer) {
+    private void onBridge(Location loc, direction dir, int timer, Player p) {
     	if(timer >= 30) return;
-    	Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, new Runnable() {
-			@Override
-			public void run() {
-				switch(dir) {
-	    		case N:
-	    			loc.add(0, 0, -1);
-	    			if(loc.getBlock().getType().equals(Material.AIR)) {
-	    				loc.getBlock().setType(Material.BRICK);
-	    				onBridge(loc, dir, timer+1);
-	    			}
-	    			break;
-	    		case E:
-	    			loc.add(1, 0, 0);
-	    			if(loc.getBlock().getType().equals(Material.AIR)) {
-	    				loc.getBlock().setType(Material.BRICK);
-	    				onBridge(loc, dir, timer+1);
-	    			}
-	    			break;
-	    		case S:
-	    			loc.add(0, 0, 1);
-	    			if(loc.getBlock().getType().equals(Material.AIR)) {
-	    				loc.getBlock().setType(Material.BRICK);
-	    				onBridge(loc, dir, timer+1);
-	    			}
-	    			break;
-	    		case W:
-	    			loc.add(-1, 0, 0);
-	    			if(loc.getBlock().getType().equals(Material.AIR)) {
-	    				loc.getBlock().setType(Material.BRICK);
-	    				onBridge(loc, dir, timer+1);
-	    			}
-	    			break;
-	    		case NW:
-	    			loc.add(-1, 0, -1);
-	    			if(loc.getBlock().getType().equals(Material.AIR)) {
-	    				loc.getBlock().setType(Material.BRICK);
-	    				onBridge(loc, dir, timer+1);
-	    			}
-	    			break;
-	    		case NE:
-	    			loc.add(1, 0, -1);
-	    			if(loc.getBlock().getType().equals(Material.AIR)) {
-	    				loc.getBlock().setType(Material.BRICK);
-	    				onBridge(loc, dir, timer+1);
-	    			}
-	    			break;
-	    		case SE:
-	    			loc.add(1, 0, 1);
-	    			if(loc.getBlock().getType().equals(Material.AIR)) {
-	    				loc.getBlock().setType(Material.BRICK);
-	    				onBridge(loc, dir, timer+1);
-	    			}
-	    			break;
-	    		case SW:
-	    			loc.add(-1, 0, 1);
-	    			if(loc.getBlock().getType().equals(Material.AIR)) {
-	    				loc.getBlock().setType(Material.BRICK);
-	    				onBridge(loc, dir, timer+1);
-	    			}
-	    			break;
-	    	}
-			}
-		}, 5);
+    	Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, () -> {
+            switch(dir) {
+            case N:
+                loc.add(0, 0, -1);
+                if(loc.getBlock().getType().equals(Material.AIR)) {
+bridgeBlock(loc, p);
+                    onBridge(loc, dir, timer+1, p);
+                }
+                break;
+            case E:
+                loc.add(1, 0, 0);
+                if(loc.getBlock().getType().equals(Material.AIR)) {
+bridgeBlock(loc, p);
+                    onBridge(loc, dir, timer+1, p);
+                }
+                break;
+            case S:
+                loc.add(0, 0, 1);
+                if(loc.getBlock().getType().equals(Material.AIR)) {
+bridgeBlock(loc, p);
+                    onBridge(loc, dir, timer+1, p);
+                }
+                break;
+            case W:
+                loc.add(-1, 0, 0);
+                if(loc.getBlock().getType().equals(Material.AIR)) {
+bridgeBlock(loc, p);
+                    onBridge(loc, dir, timer+1, p);
+                }
+                break;
+            case NW:
+                loc.add(-1, 0, -1);
+                if(loc.getBlock().getType().equals(Material.AIR)) {
+bridgeBlock(loc, p);
+                    onBridge(loc, dir, timer+1, p);
+                }
+                break;
+            case NE:
+                loc.add(1, 0, -1);
+                if(loc.getBlock().getType().equals(Material.AIR)) {
+bridgeBlock(loc, p);
+                    onBridge(loc, dir, timer+1, p);
+                }
+                break;
+            case SE:
+                loc.add(1, 0, 1);
+                if(loc.getBlock().getType().equals(Material.AIR)) {
+bridgeBlock(loc, p);
+                    onBridge(loc, dir, timer+1, p);
+                }
+                break;
+            case SW:
+                loc.add(-1, 0, 1);
+                if(loc.getBlock().getType().equals(Material.AIR)) {
+                    bridgeBlock(loc, p);
+                    onBridge(loc, dir, timer+1, p);
+                }
+                break;
+        }
+        }, 5);
+    }
+
+    private void bridgeBlock(Location loc, Player p) {
+        loc.getBlock().setType(Material.STAINED_GLASS);
+        CTESystem sys = CTE.INSTANCE.getSystem();
+        loc.getBlock().setData((byte) sys.teamData(p));
     }
     
     private enum direction {
-    	N, NE, E, SE, S, SW, W, NW;
+    	N, NE, E, SE, S, SW, W, NW
     }
     
     public static direction getDirection(Player player) {
@@ -198,18 +194,14 @@ public class InteractEvent implements Listener {
         for(Location loc : locs) {
             if(loc.getBlock().getType().equals(Material.AIR)) {
                 loc.getBlock().setType(Material.STAINED_GLASS);
-                if (sys.teams.get(p).equals(CTESystem.TEAM.RED)) loc.getBlock().setData((byte) 14);
-                if (sys.teams.get(p).equals(CTESystem.TEAM.BLUE)) loc.getBlock().setData((byte) 11);
+                loc.getBlock().setData((byte)sys.teamData(p));
             }
         }
 
-        Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, new Runnable() {
-            @Override
-            public void run() {
-                for(Location loc : locs) {
-                    if(loc.getBlock().getType().equals(Material.STAINED_GLASS)) {
-                        loc.getBlock().setType(Material.AIR);
-                    }
+        Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, () -> {
+            for(Location loc : locs) {
+                if(loc.getBlock().getType().equals(Material.STAINED_GLASS)) {
+                    loc.getBlock().setType(Material.AIR);
                 }
             }
         }, 20*10);

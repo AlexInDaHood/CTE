@@ -35,7 +35,7 @@ public class CTESystem {
     public EGG_STATE BLUE_EGG = EGG_STATE.OKAY;
     public EGG_STATE RED_EGG = EGG_STATE.OKAY;
     
-   public ArrayList<Player> red = new ArrayList<>();
+    public ArrayList<Player> red = new ArrayList<>();
     public int startRED = 0;
     public ArrayList<Player> blue = new ArrayList<>();
     public int startBLUE = 0;
@@ -44,8 +44,8 @@ public class CTESystem {
     
     public TEAM winnerTeam = TEAM.DEFAULT;
     
-    public int maxPlayers = 200;
-    public int minPlayers = 2;
+    public int maxPlayers = 12;
+    public int minPlayers = 4;
     
     
     public int c;
@@ -78,6 +78,13 @@ public class CTESystem {
     		winnerTeam = TEAM.BLUE;
     		endGame();
     	}
+    }
+
+    public int teamData(Player p) {
+        if (red.contains(p)) return 14;
+        if (blue.contains(p)) return 11;
+
+        return 8;
     }
     
     public void startEquip(Player p) {
@@ -113,32 +120,33 @@ public class CTESystem {
     private int suddenDeath;
 
     private void startSuddenDeathCounter() {
-        suddenDeath = Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, new Runnable() {
-            @Override
-            public void run() {
-                suddenDeath();
-            }
-        }, 20*60*20);
-    }
-
-    private void startEndCounter() {
-        suddenDeath = Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, new Runnable() {
-            @Override
-            public void run() {
-                winnerTeam = TEAM.DEFAULT;
-                endGame();
-            }
-        }, 20*60*10);
+        suddenDeath = Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, this::suddenDeath, 20*60*20);
     }
 
     private void stopSuddenDeathCounter() {
         Bukkit.getScheduler().cancelTask(suddenDeath);
     }
 
+    private boolean checkAllTeams() {
+        if (red.size()+1 < blue.size()) {
+            Player p = blue.get(new Random().nextInt(blue.size()));
+            teams.put(p, TEAM.RED);
+            red.add(p);
+            blue.remove(p);
+            return false;
+        } else if (blue.size()+1 < red.size()) {
+            Player p = red.get(new Random().nextInt(red.size()));
+            teams.put(p, TEAM.BLUE);
+            blue.add(p);
+            red.remove(p);
+            return false;
+        } else {
+            return true;
+        }
+    }
 
     public void forceStart() {
         startSuddenDeathCounter();
-    	CTE.INSTANCE.getLootEgg().startQueue();
         if (gamestate.equals(GAMESTATE.RUNNING) || gamestate.equals(GAMESTATE.SUDDEN_DEATH)) return;
         startLoop();
         for (Player all: Bukkit.getOnlinePlayers()) {
@@ -161,6 +169,9 @@ public class CTESystem {
                 }
             }
         }
+        while (!checkAllTeams()) {
+            checkAllTeams();
+        }
 
     	gamestate = GAMESTATE.RUNNING;
         stopStartTimer();
@@ -181,6 +192,37 @@ public class CTESystem {
         }
         new LocationLIST().shopkeeperStand();
         CTE.INSTANCE.getSpawnermanager().aktivateSpawner();
+
+        countdown = 900;
+        scheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, () -> {
+            switch (countdown) {
+                case 300:
+                    sendAllMessage(CTE.prefix + "Das Deathmatch startet in §c5 Minuten§e.");
+                    break;
+                case 180:
+                    sendAllMessage(CTE.prefix + "Das Deathmatch startet in §c3 Minuten§e.");
+                    break;
+                case 60:
+                case 30:
+                case 10:
+                case 9:
+                case 8:
+                case 7:
+                case 6:
+                case 5:
+                case 4:
+                case 3:
+                case 2:
+                    sendAllMessage(CTE.prefix + "Das Deathmatch startet in §c"+countdown+" Sekunden§e.");
+                    break;
+                case 1:
+                    sendAllMessage(CTE.prefix + "Das Deathmatch startet in §c"+countdown+" Sekunde§e.");
+                    break;
+                case 0:
+                    suddenDeath();
+            }
+            countdown--;
+        },0,20L);
     }
 
 	public void endGame() {
@@ -194,11 +236,11 @@ public class CTESystem {
         switch (winnerTeam) {
         	case SPEC:
             case DEFAULT: 
-                sendAllMessage(CTE.prefix + "Die Runde §6§lCAPTURE THE EGG §eendete mit einem §7§lUnentschieden§e!");
+                sendAllMessage(CTE.prefix + "Die Runde §6§lCAPTURE THE EGG§e endete mit einem §7§lUnentschieden§e!");
                 sendAllTitle("§7UNENTSCHIEDEN", "§eDas Spiel endete mit einem Unentschieden!");
                 break;
             case RED: 
-                sendAllMessage(CTE.prefix + "Das §c§lROTE Team §ehat die Runde §6§lCAPTURE THE EGG §egewonnen!");
+                sendAllMessage(CTE.prefix + "Das §c§lROTE Team§e hat die Runde §6§lCAPTURE THE EGG §egewonnen!");
                 sendAllTitle("§4§k0§r §cROT §4§k0","§ehat das Spiel gewonnen!");
                 break;
             case BLUE: 
@@ -213,17 +255,13 @@ public class CTESystem {
             all.sendMessage(CTE.prefix + "§cDer Server startet in 15 Sekunden neu.");
         }
         for(Entity t : Bukkit.getWorld("world").getEntities()) {
-        	if(t instanceof Item) {
-        		t.remove();
-        	}
+        	if(!(t instanceof Item)) continue;
+            t.remove();
         }
 
-        Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, new Runnable() {
-            @Override
-            public void run() {
-                moveHub();
-                Bukkit.getServer().shutdown();
-            }
+        Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, () -> {
+            moveHub();
+            Bukkit.getServer().shutdown();
         }, 20*15L);
 
     }
@@ -279,57 +317,53 @@ public class CTESystem {
     public int countdown = 61;
     
     public void startTimer() {
-        System.out.println("StartTIMER");
     	gamestate = GAMESTATE.STARTING;
         for (Entity all: Bukkit.getWorld("world").getEntities()) {
             if (!all.getType().equals(EntityType.DROPPED_ITEM)) continue;
             all.remove();
         }
     	if(!Bukkit.getScheduler().isCurrentlyRunning(scheduler)) {
-	    	scheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {			
-				@Override
-				public void run() {
+	    	scheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, () -> {
 
-                    if (!gamestate.equals(GAMESTATE.STARTING)) {
-                        Bukkit.getScheduler().cancelTask(scheduler);
-                        countdown = 0;
-                        return;
-                    }
-					for(Player all : Bukkit.getOnlinePlayers()) {
-						all.setLevel(countdown);
-					}
-					
-					switch(countdown) {
-						case 60:
-							sendAllMessage(CTE.prefix + "Das Spiel beginnt in §c60 Sekunden§e.");
-							break;
-						case 45:
-							sendAllMessage(CTE.prefix + "Das Spiel beginnt in §c45 Sekunden§e.");
-							break;
-						case 30:
-							sendAllMessage(CTE.prefix + "Das Spiel beginnt in §c30 Sekunden§e.");
-							break;
-						case 20:
-							sendAllMessage(CTE.prefix + "Das Spiel beginnt in §c20 Sekunden§e.");
-							break;
-						case 10:
-							sendAllMessage(CTE.prefix + "Das Spiel beginnt in §c10 Sekunden§e.");
-							break;
-						case 3:
-							sendAllMessage(CTE.prefix + "Das Spiel beginnt in §c3 Sekunden§e.");
-							break;
-						case 2:
-							sendAllMessage(CTE.prefix + "Das Spiel beginnt in §c2 Sekunden§e.");
-							break;
-						case 1:
-							sendAllMessage(CTE.prefix + "Das Spiel beginnt in §c1 Sekunde§e.");
-							break;
-						case 0: forceStart();
-					}
-					
-					countdown--;
-				}
-			}, 0, 20L);
+if (!gamestate.equals(GAMESTATE.STARTING)) {
+Bukkit.getScheduler().cancelTask(scheduler);
+countdown = 0;
+return;
+}
+                for(Player all : Bukkit.getOnlinePlayers()) {
+                    all.setLevel(countdown);
+                }
+
+                switch(countdown) {
+                    case 60:
+                        sendAllMessage(CTE.prefix + "Das Spiel beginnt in §c60 Sekunden§e.");
+                        break;
+                    case 45:
+                        sendAllMessage(CTE.prefix + "Das Spiel beginnt in §c45 Sekunden§e.");
+                        break;
+                    case 30:
+                        sendAllMessage(CTE.prefix + "Das Spiel beginnt in §c30 Sekunden§e.");
+                        break;
+                    case 20:
+                        sendAllMessage(CTE.prefix + "Das Spiel beginnt in §c20 Sekunden§e.");
+                        break;
+                    case 10:
+                        sendAllMessage(CTE.prefix + "Das Spiel beginnt in §c10 Sekunden§e.");
+                        break;
+                    case 3:
+                        sendAllMessage(CTE.prefix + "Das Spiel beginnt in §c3 Sekunden§e.");
+                        break;
+                    case 2:
+                        sendAllMessage(CTE.prefix + "Das Spiel beginnt in §c2 Sekunden§e.");
+                        break;
+                    case 1:
+                        sendAllMessage(CTE.prefix + "Das Spiel beginnt in §c1 Sekunde§e.");
+                        break;
+                    case 0: forceStart();
+                }
+
+                countdown--;
+            }, 0, 20L);
     	}
     	
     }
@@ -358,60 +392,56 @@ public class CTESystem {
         CTE.INSTANCE.getLocations().blueEGG().getBlock().setType(Material.AIR);
         RED_EGG = EGG_STATE.GONE;
         BLUE_EGG = EGG_STATE.GONE;
+        ScoreboardManager.refreshBoard();
 
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {
-            @Override
-            public void run() {
-                if (!gamestate.equals(GAMESTATE.SUDDEN_DEATH)) return;
-                for (int i = 0; i < 50; i++) {
-                    Location loc = new Location(Bukkit.getWorld("world"), 800.5, 200, 800.5);
-                    while (!isSpawnable(loc)) {
-                        int xr = new Random().nextInt(208) + 900 - 4;
-                        int zr = new Random().nextInt(118) + 945 - 4;
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, () -> {
+            if (!gamestate.equals(GAMESTATE.SUDDEN_DEATH)) return;
+            for (int i = 0; i < 50; i++) {
+                Location loc = new Location(Bukkit.getWorld("world"), 800.5, 200, 800.5);
+                while (!isSpawnable(loc)) {
+                    int xr = new Random().nextInt(208) + 900 - 4;
+                    int zr = new Random().nextInt(118) + 945 - 4;
 
-                        loc.setX(xr+.5);
-                        loc.setZ(zr+.5);
-                    }
-
-                    loc.setY(180);
-
-                    Rabbit r = (Rabbit) Bukkit.getWorld("world").spawnEntity(loc, EntityType.RABBIT);
-                    r.setRabbitType(Rabbit.Type.BLACK_AND_WHITE);
+                    loc.setX(xr+.5);
+                    loc.setZ(zr+.5);
                 }
+
+                loc.setY(180);
+
+                Rabbit r = (Rabbit) Bukkit.getWorld("world").spawnEntity(loc, EntityType.RABBIT);
+                r.setRabbitType(Rabbit.Type.BLACK_AND_WHITE);
             }
         },0,20L);
 
         countdown = 390;
-        scheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {
-            @Override
-            public void run() {
-                switch (countdown) {
-                    case 300:
-                        sendAllMessage(CTE.prefix + "Das Spiel endet in §c5 Minuten§e.");
-                    case 180:
-                        sendAllMessage(CTE.prefix + "Das Spiel endet in §c3 Minuten§e.");
-                    case 60:
-                    case 30:
-                    case 10:
-                    case 9:
-                    case 8:
-                    case 7:
-                    case 6:
-                    case 5:
-                    case 4:
-                    case 3:
-                    case 2:
-                        sendAllMessage(CTE.prefix + "Das Spiel endet in §c"+countdown+" Sekunden§e.");
-                        break;
-                    case 1:
-                        sendAllMessage(CTE.prefix + "Das Spiel endet in §c"+countdown+" Sekunde§e.");
-                        break;
-                    case 0:
-                        endGame();
-                        return;
-                }
-                countdown--;
+        scheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, () -> {
+            switch (countdown) {
+                case 300:
+                    sendAllMessage(CTE.prefix + "Das Spiel endet in §c5 Minuten§e.");
+                    break;
+                case 180:
+                    sendAllMessage(CTE.prefix + "Das Spiel endet in §c3 Minuten§e.");
+                    break;
+                case 60:
+                case 30:
+                case 10:
+                case 9:
+                case 8:
+                case 7:
+                case 6:
+                case 5:
+                case 4:
+                case 3:
+                case 2:
+                    sendAllMessage(CTE.prefix + "Das Spiel endet in §c"+countdown+" Sekunden§e.");
+                    break;
+                case 1:
+                    sendAllMessage(CTE.prefix + "Das Spiel endet in §c"+countdown+" Sekunde§e.");
+                    break;
+                case 0:
+                    endGame();
             }
+            countdown--;
         },0,20L);
     }
 
@@ -432,8 +462,8 @@ public class CTESystem {
 	 }
 
 	 public enum GAMESTATE {
-    	STARTING, RUNNING, SUDDEN_DEATH, ENDING;
-    }
+    	STARTING, RUNNING, SUDDEN_DEATH, ENDING
+     }
 
     public void stopLoop() {
         Bukkit.getScheduler().cancelTask(loop);
@@ -441,21 +471,28 @@ public class CTESystem {
 
     int loop;
 
+    private final HashMap<Player, Double> dmg = new HashMap<>();
+
     public void startLoop() {
-        loop = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {
-            @Override
-            public void run() {
-                if (!gamestate.equals(GAMESTATE.RUNNING) && !gamestate.equals(GAMESTATE.SUDDEN_DEATH)) return;
-                for(Player all : Bukkit.getOnlinePlayers()) {
-                    if(all.getGameMode().equals(GameMode.CREATIVE) || all.getGameMode().equals(GameMode.SPECTATOR)) continue;;
-                    if(teams.get(all).equals(TEAM.SPEC) || teams.get(all).equals(TEAM.DEFAULT)) continue;
-                    if(all.getLocation().getY() < 113 && all.getLocation().getX() < 1100 && all.getLocation().getX() > 900 && all.getLocation().getZ() > 945 && all.getLocation().getZ() < 1055) continue;
-                    sendActionBar(all, "§cDu hast dich zu weit von der Map entfernt!");
-                    if(all.getHealth() > 1.5) {
-                    	all.damage(1.5);
-                    } else {
-                    	new DamageListener().onDeath(all);
-                    }
+        loop = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, () -> {
+            if (!gamestate.equals(GAMESTATE.RUNNING) && !gamestate.equals(GAMESTATE.SUDDEN_DEATH)) return;
+            for(Player all : Bukkit.getOnlinePlayers()) {
+                if(all.getGameMode().equals(GameMode.CREATIVE) || all.getGameMode().equals(GameMode.SPECTATOR)) continue;
+                if(teams.get(all).equals(TEAM.SPEC) || teams.get(all).equals(TEAM.DEFAULT)) continue;
+                if(all.getLocation().getY() < 113 && all.getLocation().getX() < 1100 && all.getLocation().getX() > 900 && all.getLocation().getZ() > 945 && all.getLocation().getZ() < 1055) {
+                    dmg.remove(all);
+                    continue;
+                }
+                sendActionBar(all, "§cDu hast dich zu weit von der Map entfernt!");
+                if (!dmg.containsKey(all)) {
+                    dmg.put(all, 0.3);
+                } else {
+                    dmg.put(all, dmg.get(all)+0.3);
+                }
+                if(all.getHealth() > dmg.get(all)) {
+                    all.damage(dmg.get(all));
+                } else {
+                    new DamageListener().onDeath(all);
                 }
             }
         }, 20, 20L);

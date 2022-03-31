@@ -29,7 +29,6 @@ public class devCMD implements CommandExecutor{
 	}
 	
 	public static void openInventory(Player p) {
-		System.out.println(CTE.INSTANCE.getSystem().gamestate.toString());
 		Inventory inv = Bukkit.createInventory(null, 9*5, "§8» §bDev");
 		inv.setContents(CTE.INSTANCE.getShop().getStandardGUI45(false));
 		inv.setItem(20, new ItemManager(Material.DRAGON_EGG).withName("§3§lSpiel Einstellungen").complete());

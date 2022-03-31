@@ -1,7 +1,10 @@
 package com.osterph.dev;
 
-import java.util.stream.Stream;
-
+import com.osterph.cte.CTE;
+import com.osterph.cte.CTESystem.GAMESTATE;
+import com.osterph.manager.ItemManager;
+import com.osterph.manager.ScoreboardManager;
+import com.osterph.spawner.Spawner;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -11,13 +14,6 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import com.osterph.cte.CTE;
-import com.osterph.cte.CTESystem;
-import com.osterph.cte.CTESystem.GAMESTATE;
-import com.osterph.manager.ItemManager;
-import com.osterph.shop.Shop;
-import com.osterph.spawner.Spawner;
 
 
 public class DevListener implements Listener {
@@ -81,8 +77,9 @@ public class DevListener implements Listener {
 						current++;
 					}
 					CTE.INSTANCE.getSystem().maxPlayers = current;
-					e.getInventory().setItem(20, new ItemManager(Material.DIAMOND).withName("§cMaximale Spieler §8[§a" +CTE.INSTANCE.getSystem().maxPlayers + "§8]").withLores("§7Ändert die Anzahl der maximalen Anzahl der Spieler").complete());
+					e.getInventory().setItem(23, new ItemManager(Material.DIAMOND).withName("§cMaximale Spieler §8[§a" +CTE.INSTANCE.getSystem().maxPlayers + "§8]").withLores("§7Ändert die Anzahl der maximalen Anzahl der Spieler").complete());
 					p.sendMessage(CTE.prefix + "Du hast die maximale Anzahl an Spielern auf §a" + current + " §egesetzt!");
+					ScoreboardManager.refreshBoard();
 				} else if(item.getItemMeta().getDisplayName().contains("Minimale Spieler")) {
 					int current = CTE.INSTANCE.getSystem().minPlayers;
 					if(e.getAction().equals(InventoryAction.PICKUP_ALL)) {
@@ -101,8 +98,9 @@ public class DevListener implements Listener {
 						}
 					}
 					CTE.INSTANCE.getSystem().minPlayers = current;
-					e.getInventory().setItem(22, new ItemManager(Material.EMERALD).withName("§cMinimale Spieler §8[§a" +CTE.INSTANCE.getSystem().minPlayers + "§8]").withLores("§7Ändert die Anzahl der minmalen Anzahl der Spieler").complete());
+					e.getInventory().setItem(21, new ItemManager(Material.EMERALD).withName("§cMinimale Spieler §8[§a" +CTE.INSTANCE.getSystem().minPlayers + "§8]").withLores("§7Ändert die Anzahl der minmalen Anzahl der Spieler").complete());
 					p.sendMessage(CTE.prefix + "Du hast die minmale Anzahl an Spielern auf §a" + current + " §egesetzt!");
+					ScoreboardManager.refreshBoard();
 				}
 				
 				
@@ -130,7 +128,6 @@ public class DevListener implements Listener {
 						e.getInventory().setItem(19, new ItemManager(Material.INK_SACK).withName("§aAktivieren").withLores("§8§oAktiviert alle Äpfel Spawner").withData(10).complete());
 						p.sendMessage(CTE.prefix + "Du hast alle " + spawner + "§e-Spawner §cDeaktiviert!");
 					}
-					return;
 				} else if(item.getItemMeta().getDisplayName().contains("Anzahl")) {
 					int current = Integer.parseInt(item.getItemMeta().getDisplayName().replace("§7Anzahl §8[§a", "").replace("§8]", ""));
 					if(e.getAction().equals(InventoryAction.PICKUP_ALL)) {
@@ -205,7 +202,7 @@ public class DevListener implements Listener {
 				inv.setItem(20, new ItemManager(Material.INK_SACK).withName("§cStop Game").withLores("§cBeendet die Runde mit §7§lUNENTSCHIEDEN§c.").withData(14).complete());
 				inv.setItem(24, new ItemManager(Material.INK_SACK).withName("§cShutdown").withLores("§cStoppt die Runde!").withData(1).complete());
 			} else {
-				inv.setItem(19, new ItemManager(Material.DIAMOND).withName("§cMaximale Spieler §8[§a" +CTE.INSTANCE.getSystem().maxPlayers + "§8]").withLores("§7Ändert die Anzahl der maximalen Anzahl der Spieler").complete());
+				inv.setItem(23, new ItemManager(Material.DIAMOND).withName("§cMaximale Spieler §8[§a" +CTE.INSTANCE.getSystem().maxPlayers + "§8]").withLores("§7Ändert die Anzahl der maximalen Anzahl der Spieler").complete());
 				inv.setItem(21, new ItemManager(Material.EMERALD).withName("§cMinimale Spieler §8[§a" +CTE.INSTANCE.getSystem().minPlayers + "§8]").withLores("§7Ändert die Anzahl der minmalen Anzahl der Spieler").complete());
 			}
 			
@@ -267,7 +264,7 @@ public class DevListener implements Listener {
 	
 	
 	private enum settingstype {
-		SPAWNER, GAME, APPLE, MELON, CARROT;
+		SPAWNER, GAME, APPLE, MELON, CARROT
 	}
 	
 }

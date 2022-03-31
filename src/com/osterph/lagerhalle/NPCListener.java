@@ -55,7 +55,7 @@ import net.minecraft.server.v1_8_R3.WorldSettings;
 
 public class NPCListener implements Listener {
 
-    private CTESystem sys = CTE.INSTANCE.getSystem();
+    private final CTESystem sys = CTE.INSTANCE.getSystem();
 
     @EventHandler
     public void onWorld(PlayerChangedWorldEvent e) {NPC.show(e.getPlayer());}
@@ -82,7 +82,7 @@ public class NPCListener implements Listener {
         	if(t.equals(TEAM.RED) && p.getLocation().distance(CTE.INSTANCE.getLocations().redNPC()) <= 5) {
         		Bukkit.getScheduler().cancelTask(EggListener.eggScheduler.get(p));
     			EggListener.eggScheduler.remove(p);
-        		system.BLUE_EGG = system.BLUE_EGG.GONE;
+        		system.BLUE_EGG = CTESystem.EGG_STATE.GONE;
         		system.sendAllMessage(CTE.prefix + "Das §9Blaue-Ei §ewurde erobert! Das §9Blaue-Team §ekann nicht länger respawnen!");
         		system.sendAllSound(Sound.ENDERDRAGON_GROWL, 1, 1);
         		system.setHelmet(p);
@@ -92,7 +92,7 @@ public class NPCListener implements Listener {
         	} else if(t.equals(TEAM.BLUE) && p.getLocation().distance(CTE.INSTANCE.getLocations().blueNPC()) <= 5) {
         		Bukkit.getScheduler().cancelTask(EggListener.eggScheduler.get(p));
     			EggListener.eggScheduler.remove(p);
-        		system.RED_EGG = system.RED_EGG.GONE;
+        		system.RED_EGG = CTESystem.EGG_STATE.GONE;
         		system.sendAllMessage(CTE.prefix + "Das §cRote-Ei §ewurde erobert! Das §cRote-Team §ekann nicht länger respawnen!");
         		system.sendAllSound(Sound.ENDERDRAGON_GROWL, 1, 1);
         		system.setHelmet(p);
@@ -115,14 +115,13 @@ public class NPCListener implements Listener {
     }
 }
 
-@SuppressWarnings("serial")
 class NPC implements Serializable {
 
-    private int entityID;
+    private final int entityID;
     private Location location;
-    private GameProfile gameprofile;
+    private final GameProfile gameprofile;
     private Float health = 20F;
-    private static HashMap<NPC, String> npcHashMap = new HashMap<>();
+    private static final HashMap<NPC, String> npcHashMap = new HashMap<>();
 
     public static void spawnNPC(String Name, String value, String signature, Location loc) {
         NPC npc = new NPC(Name, loc);

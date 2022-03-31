@@ -8,9 +8,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
-
-import java.util.Random;
 
 public class Emotes implements CommandExecutor {
     @Override
@@ -29,7 +26,6 @@ public class Emotes implements CommandExecutor {
         listEmote(p, "OwO", "§4OwO");
         listEmote(p, ":)", "§6:)");
         listEmote(p, ":(", "§1:(");
-        listEmote(p, "#ukraine", "§9#ukr§eaine");
         if (!new StaffManager(p).isHelper()) return false;
         new MessageManager("§8["+new StaffManager(p).activeString()+"§8] §eEmote-Liste:").hidePrefix().complete(p);
 

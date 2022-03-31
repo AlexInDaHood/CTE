@@ -27,7 +27,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class PlayerEvent implements Listener {
 
-    private CTESystem sys = CTE.INSTANCE.getSystem();
+    private final CTESystem sys = CTE.INSTANCE.getSystem();
     
     @EventHandler
     public void onPickupItems(PlayerPickupItemEvent e) {
@@ -68,7 +68,6 @@ public class PlayerEvent implements Listener {
 
         if (Bukkit.getOnlinePlayers().size() < sys.minPlayers) {
             if (Bukkit.getOnlinePlayers().size() == sys.maxPlayers && sys.c > 11) sys.c = 10;
-            return;
         }
 
     }
@@ -81,7 +80,7 @@ public class PlayerEvent implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
-        sendPlayingGamemode(p);
+        sendPlayingGamemode();
         sendServerBanner(p);
         TablistManager.displayTablist(p);
         p.setHealth(20);
@@ -103,7 +102,7 @@ public class PlayerEvent implements Listener {
             meta.addPage("§8[§6§lCTE§8] \n§6CTE §7ist ein Teambasierter Spielmodus, indem es die Aufgabe deines Teams ist, das gegnerische Ei zu stehlen und zurück zu deiner Basis zu bringen. In deiner Basis angekommen übergibst du das Ei dann dem Shopkeeper.");
             meta.addPage("§7Nach der Abgabe des gegnerischen Ei`s ist es dem gegnerische Team nicht länger möglich zu respawnen. Das Team, welches als letztes am Leben ist, entscheidet die Runde damit für sich.");
             meta.addPage("§8[§6§lRessourcen§8]\n§7Während des gesamten Spiels werdet ihr zusätzlich mit Ressourcen wie §cÄpfel§7, §aMelonen§7 und §6Karotten §7ausgestattet, womit ihr euch zusätzliche Ausstattung kaufen könnt.");
-            meta.addPage("§8[§6§lLooteggs§8]\n§7Zusätzlich spawnen im Abstand von 2-5 Minuten §6Looteggs§7, die ihr dann in der Mitte aufsuchen könnt. Findet und öffnet ihr eins, versorgt euch das §6Lootegg §7mit zusätzlichen Ressourcen oder Items.");
+            //meta.addPage("§8[§6§lLooteggs§8]\n§7Zusätzlich spawnen im Abstand von 2-5 Minuten §6Looteggs§7, die ihr dann in der Mitte aufsuchen könnt. Findet und öffnet ihr eins, versorgt euch das §6Lootegg §7mit zusätzlichen Ressourcen oder Items.");
             tutorial.setItemMeta(meta);
             p.getInventory().setItem(4, tutorial);
         }
@@ -138,24 +137,18 @@ public class PlayerEvent implements Listener {
         sys.teams.remove(p);
         sys.blue.remove(p);
         sys.red.remove(p);
-        Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, new Runnable() {
-            @Override
-            public void run() {
-                for (Player all: Bukkit.getOnlinePlayers()) {
-                    ScoreboardManager.refreshBoard(all);
-                }
+        Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, () -> {
+            for (Player all: Bukkit.getOnlinePlayers()) {
+                ScoreboardManager.refreshBoard(all);
             }
         },5);
 
         if(sys.gamestate.equals(GAMESTATE.STARTING)) {
             e.setQuitMessage("§8[§c-§8] §7" + p.getName());
-            Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, new Runnable() {
-                @Override
-                public void run() {
-                    if(Bukkit.getOnlinePlayers().size() < sys.minPlayers) {
-                        sys.stopStartTimer();
-                        sys.sendAllMessage(CTE.prefix + "Der Start wurde abgebrochen!");
-                    }
+            Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, () -> {
+                if(Bukkit.getOnlinePlayers().size() < sys.minPlayers) {
+                    sys.stopStartTimer();
+                    sys.sendAllMessage(CTE.prefix + "Der Start wurde abgebrochen!");
                 }
             },5);
         } else if(sys.gamestate.equals(GAMESTATE.RUNNING) || sys.gamestate.equals(GAMESTATE.SUDDEN_DEATH)) {
@@ -167,7 +160,7 @@ public class PlayerEvent implements Listener {
         }
     }
     
-    private void sendPlayingGamemode(Player p) {
+    private void sendPlayingGamemode() {
     	JsonObject obj = new JsonObject();
     	obj.addProperty("show_gamemode", true);
     	obj.addProperty("gamemode_name", "§ePlayHills.eu §8» §6§lCapture the Egg");
@@ -179,5 +172,4 @@ public class PlayerEvent implements Listener {
         object.addProperty("url", "https://cdn.discordapp.com/attachments/846451756816138250/952402124065607710/PBanner.png"); 
         LabyModProtocol.sendClientMessage(player, "server_banner", object);
     }
-    
 }

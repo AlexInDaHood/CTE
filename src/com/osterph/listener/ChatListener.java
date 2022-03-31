@@ -18,10 +18,10 @@ import java.util.Random;
 
 public class ChatListener implements Listener {
 
-    private CTESystem sys = CTE.INSTANCE.getSystem();
-    private ArrayList<String> cooldown = new ArrayList<>();
+    private final CTESystem sys = CTE.INSTANCE.getSystem();
+    private final ArrayList<String> cooldown = new ArrayList<>();
 
-    private ArrayList<Player> antiLSpam = new ArrayList<>();
+    private final ArrayList<Player> antiLSpam = new ArrayList<>();
     
     
     @SuppressWarnings("incomplete-switch")
@@ -89,12 +89,7 @@ public class ChatListener implements Listener {
                     all.spigot().sendMessage(b);
                 }
                 if (staff.hasRoles()) return;
-                Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, new Runnable() {
-                    @Override
-                    public void run() {
-                        cooldown.remove(p.getName());
-                    }
-                }, 20 * 30L);
+                Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, () -> cooldown.remove(p.getName()), 20 * 30L);
             } else {
                 e.setCancelled(true);
                 BaseComponent b = new TextComponent("");
@@ -199,7 +194,6 @@ public class ChatListener implements Listener {
                 break;
         }
 
-        emotes.put("#ukraine", "§9#ukr§eaine");
         emotes.put(":d", "§5:D");
         emotes.put("d:", "§9D:");
         emotes.put(";d", "§5;D");

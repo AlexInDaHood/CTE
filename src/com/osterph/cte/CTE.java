@@ -19,7 +19,6 @@ import com.osterph.listener.EggListener;
 import com.osterph.listener.InteractEvent;
 import com.osterph.listener.PlayerEvent;
 import com.osterph.listener.WorldEvent;
-import com.osterph.manager.LootEggManager;
 import com.osterph.manager.ScoreboardManager;
 import com.osterph.manager.StatsManager;
 import com.osterph.shop.Shop;
@@ -37,7 +36,6 @@ public class CTE extends JavaPlugin{
 	private LocationLIST locations;
 	private TeamSelector selector;
 	private Shop shop;
-	private LootEggManager lootEgg;
 	private StatsManager statsManager;
 	
 	@Override
@@ -48,16 +46,16 @@ public class CTE extends JavaPlugin{
 		locations = new LocationLIST();
 		selector = new TeamSelector();
 		shop = new Shop();
-		lootEgg = new LootEggManager();
 		statsManager = new StatsManager();
 		onSettings();
 		register();
-		
 
+		/*
 		String host = "45.85.219.177";
 		String pw = "aFUWBuNMzUDygbhZ";
 		String db = "Ostern";
 		String user = "PlayHills";
+		 */
 
 		//TODO DATENBANK REPARIEREN
 		//mysql = new MySQL(host, db, user, pw);
@@ -98,8 +96,7 @@ public class CTE extends JavaPlugin{
 		pm.registerEvents(new TeamSelector(), this);
 		pm.registerEvents(new WorldEvent(), this);
 		pm.registerEvents(new DevListener(), this);
-		pm.registerEvents(new LootEggManager(), this);
-		
+
 		getCommand("suddendeath").setExecutor(new suddendeathCMD());
 		getCommand("dev").setExecutor(new devCMD());
 		getCommand("start").setExecutor(new startCMD());
@@ -127,11 +124,7 @@ public class CTE extends JavaPlugin{
 	public Shop getShop() {
 		return shop;
 	}
-	
-	public LootEggManager getLootEgg() {
-		return lootEgg;
-	}
-	
+
 	public StatsManager getStatsManager() {
 		return statsManager;
 	}

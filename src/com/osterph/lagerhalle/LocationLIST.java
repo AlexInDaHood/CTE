@@ -9,7 +9,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 public class LocationLIST {
-    private World w = Bukkit.getWorld("world");
+    private final World w = Bukkit.getWorld("world");
     
     public Location lobbySPAWN() {return new Location(w, 0, 30, 0, 90, 10);}
 

@@ -3,15 +3,12 @@ package com.osterph.lagerhalle;
 import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import io.netty.handler.codec.DecoderException;
-import io.netty.handler.codec.EncoderException;
 import net.minecraft.server.v1_8_R3.PacketDataSerializer;
 import net.minecraft.server.v1_8_R3.PacketPlayOutCustomPayload;
-
-import java.nio.charset.Charset;
-
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+
+import java.nio.charset.StandardCharsets;
 
 public class LabyModProtocol {
 
@@ -33,7 +30,7 @@ public class LabyModProtocol {
     }
     
     private static void write(ByteBuf buf, String string) {
-        byte[] bytes = string.getBytes( Charset.forName( "UTF-8" ) );        
+        byte[] bytes = string.getBytes(StandardCharsets.UTF_8);
         buf.writeByte(bytes.length);
         buf.writeBytes(bytes);
     }

@@ -1,9 +1,10 @@
 package com.osterph.lagerhalle;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.osterph.cte.CTE;
+import com.osterph.cte.CTESystem;
 import com.osterph.dev.devCMD;
+import com.osterph.manager.ItemManager;
+import com.osterph.manager.ScoreboardManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -20,17 +21,13 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.osterph.cte.CTE;
-import com.osterph.cte.CTESystem;
-import com.osterph.cte.CTESystem.GAMESTATE;
-import com.osterph.manager.ItemManager;
-import com.osterph.manager.ScoreboardManager;
-import com.osterph.shop.Shop;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TeamSelector implements Listener {
 
     public ItemStack team = new ItemManager(Material.BED).withName("§eTeam-Auswahl").complete();
-    private CTESystem sys = CTE.INSTANCE.getSystem();
+    private final CTESystem sys = CTE.INSTANCE.getSystem();
 
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
