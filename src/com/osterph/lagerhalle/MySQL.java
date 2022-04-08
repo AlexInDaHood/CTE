@@ -27,10 +27,8 @@ public class MySQL {
         try {
             int port = 3306;
             con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database +"?user="+username+"&password="+password + "&characterEncoding=latin1");
-            System.out.println("[MySQL] Connected");
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("[MySQL] disconnected");
         }
     }
 
@@ -38,7 +36,6 @@ public class MySQL {
         try {
             if (this.con != null) {
                 this.con.close();
-                System.out.println("[MySQL] disconnected");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -77,9 +74,10 @@ public class MySQL {
     }
     
     public Object getDatabase(String Tabelle, String SpalteKategorie, String SpalteInhalt, String WertKategorie) {
-        ResultSet rs = CTE.mysql.query("SELECT " + WertKategorie + " FROM " + Tabelle + " WHERE " + SpalteKategorie + "='" + SpalteInhalt + "'");
         Object out = null;
         try{
+            // '15' ' = WERT ||`15` = RESULT
+            ResultSet rs = CTE.mysql.query("SELECT `" + WertKategorie + "` FROM " + Tabelle + " WHERE " + SpalteKategorie + "='" + SpalteInhalt + "'");
             while (rs.next()){
                 out = rs.getString(1);
             }
@@ -87,6 +85,6 @@ public class MySQL {
             exception.printStackTrace();
         }
 
-        return (out != null) ? out : 0;
+        return (out != null) ? out : -999;
     }
 }

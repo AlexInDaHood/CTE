@@ -2,11 +2,13 @@ package com.osterph.listener;
 
 import com.osterph.cte.CTE;
 import com.osterph.cte.CTESystem;
+import com.osterph.lagerhalle.LocationLIST;
 import com.osterph.shop.Shop;
 import com.osterph.shop.ShopItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,11 +21,6 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import java.util.ArrayList;
 
 public class InteractEvent implements Listener {
-
-    //
-    //FIREBALL + RETTUNGSPLATFORM
-    //
-	
 	
 	ArrayList<Player> fireball = new ArrayList<>();
 	
@@ -42,80 +39,171 @@ public class InteractEvent implements Listener {
                 fireball.add(p);
                 Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, () -> fireball.remove(p),20);
             } else if(p.getItemInHand().getType().equals(Material.BLAZE_ROD)) {
+                if(!p.getLocation().add(0,-1,0).getBlock().getType().equals(Material.AIR)) {p.sendMessage(CTE.prefix + "§cDieses Item kannst du gerade nicht benutzen!");return;}
                 if (p.getItemInHand().getAmount() == 1) p.getInventory().clear(p.getInventory().getHeldItemSlot());
                 p.getItemInHand().setAmount(p.getItemInHand().getAmount()-1);
                 onSave(e.getPlayer());
             } else if(p.getItemInHand().getType().equals(Material.BRICK)) {
+                if(!canBridge(p.getLocation(), getDirection(p))) {p.sendMessage(CTE.prefix + "§cDieses Item kannst du gerade nicht benutzen!");return;}
             	e.setCancelled(true);
             	onBridge(p.getLocation().add(0, -1, 0), getDirection(p), 0, p);
             	if (p.getItemInHand().getAmount() == 1) p.getInventory().clear(p.getInventory().getHeldItemSlot());
                 p.getItemInHand().setAmount(p.getItemInHand().getAmount()-1);
+            } else if(p.getItemInHand().getType().equals(Material.ENDER_PEARL)) {
+                if (e.getPlayer().getInventory().getHelmet() != null && e.getPlayer().getInventory().getHelmet().getType().equals(Material.SKULL_ITEM)) {
+                    p.sendMessage(CTE.prefix + "§cDu kannst dich mit dem Ei nicht teleportieren.");
+                    p.playSound(p.getLocation(), Sound.VILLAGER_NO, 1, 1);
+                    return;
+                }
+                e.setCancelled(true);
+                if (p.getItemInHand().getAmount() == 1) p.getInventory().clear(p.getInventory().getHeldItemSlot());
+                p.getItemInHand().setAmount(p.getItemInHand().getAmount()-1);
+            } else if(p.getItemInHand().getType().equals(Material.ENDER_PORTAL_FRAME)) {
+                e.setCancelled(true);
+                CTESystem sys = CTE.INSTANCE.getSystem();
+
+                if (e.getPlayer().getInventory().getHelmet() != null && e.getPlayer().getInventory().getHelmet().getType().equals(Material.SKULL_ITEM)) {
+                    p.sendMessage(CTE.prefix + "§cDu kannst dich mit dem Ei nicht teleportieren.");
+                    p.playSound(p.getLocation(), Sound.VILLAGER_NO, 1, 1);
+                    return;
+                }
+                if (p.getItemInHand().getAmount() == 1) p.getInventory().clear(p.getInventory().getHeldItemSlot());
+                p.getItemInHand().setAmount(p.getItemInHand().getAmount()-1);
+
+                LocationLIST l = CTE.INSTANCE.getLocations();
+                Location loc = l.specSPAWN();
+
+                switch (sys.teams.get(p)) {
+                    case RED:
+                        loc = l.redSPAWN();
+                        break;
+                    case BLUE:
+                        loc = l.blueSPAWN();
+                        break;
+                }
+
+                p.teleport(loc);
+                p.playSound(p.getLocation(), Sound.PORTAL_TRAVEL, 1, 1);
+                p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1, 2);
             }
         }
     }
     
-    
-    private void onBridge(Location loc, direction dir, int timer, Player p) {
-    	if(timer >= 30) return;
-    	Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, () -> {
-            switch(dir) {
+    private boolean canBridge(Location loc, direction dir) {
+        switch (dir) {
             case N:
                 loc.add(0, 0, -1);
-                if(loc.getBlock().getType().equals(Material.AIR)) {
-bridgeBlock(loc, p);
-                    onBridge(loc, dir, timer+1, p);
+                if (!loc.getBlock().getType().equals(Material.AIR)) {
+                    return false;
                 }
                 break;
             case E:
                 loc.add(1, 0, 0);
-                if(loc.getBlock().getType().equals(Material.AIR)) {
-bridgeBlock(loc, p);
-                    onBridge(loc, dir, timer+1, p);
+                if (!loc.getBlock().getType().equals(Material.AIR)) {
+                    return false;
                 }
                 break;
             case S:
                 loc.add(0, 0, 1);
-                if(loc.getBlock().getType().equals(Material.AIR)) {
-bridgeBlock(loc, p);
-                    onBridge(loc, dir, timer+1, p);
+                if (!loc.getBlock().getType().equals(Material.AIR)) {
+                    return false;
                 }
                 break;
             case W:
                 loc.add(-1, 0, 0);
-                if(loc.getBlock().getType().equals(Material.AIR)) {
-bridgeBlock(loc, p);
-                    onBridge(loc, dir, timer+1, p);
+                if (!loc.getBlock().getType().equals(Material.AIR)) {
+                    return false;
                 }
                 break;
             case NW:
                 loc.add(-1, 0, -1);
-                if(loc.getBlock().getType().equals(Material.AIR)) {
-bridgeBlock(loc, p);
-                    onBridge(loc, dir, timer+1, p);
+                if (!loc.getBlock().getType().equals(Material.AIR)) {
+                    return false;
                 }
                 break;
             case NE:
                 loc.add(1, 0, -1);
-                if(loc.getBlock().getType().equals(Material.AIR)) {
-bridgeBlock(loc, p);
-                    onBridge(loc, dir, timer+1, p);
+                if (!loc.getBlock().getType().equals(Material.AIR)) {
+                    return false;
                 }
                 break;
             case SE:
                 loc.add(1, 0, 1);
-                if(loc.getBlock().getType().equals(Material.AIR)) {
-bridgeBlock(loc, p);
-                    onBridge(loc, dir, timer+1, p);
+                if (!loc.getBlock().getType().equals(Material.AIR)) {
+                    return false;
                 }
                 break;
             case SW:
                 loc.add(-1, 0, 1);
-                if(loc.getBlock().getType().equals(Material.AIR)) {
-                    bridgeBlock(loc, p);
-                    onBridge(loc, dir, timer+1, p);
+                if (!loc.getBlock().getType().equals(Material.AIR)) {
+                    return false;
                 }
                 break;
         }
+        return true;
+    }
+
+    private void onBridge(Location loc, direction dir, int timer, Player p) {
+        if (timer >= 30) return;
+        Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, () -> {
+            switch (dir) {
+                case N:
+                    loc.add(0, 0, -1);
+                    if (loc.getBlock().getType().equals(Material.AIR)) {
+                        bridgeBlock(loc, p);
+                        onBridge(loc, dir, timer + 1, p);
+                    }
+                    break;
+                case E:
+                    loc.add(1, 0, 0);
+                    if (loc.getBlock().getType().equals(Material.AIR)) {
+                        bridgeBlock(loc, p);
+                        onBridge(loc, dir, timer + 1, p);
+                    }
+                    break;
+                case S:
+                    loc.add(0, 0, 1);
+                    if (loc.getBlock().getType().equals(Material.AIR)) {
+                        bridgeBlock(loc, p);
+                        onBridge(loc, dir, timer + 1, p);
+                    }
+                    break;
+                case W:
+                    loc.add(-1, 0, 0);
+                    if (loc.getBlock().getType().equals(Material.AIR)) {
+                        bridgeBlock(loc, p);
+                        onBridge(loc, dir, timer + 1, p);
+                    }
+                    break;
+                case NW:
+                    loc.add(-1, 0, -1);
+                    if (loc.getBlock().getType().equals(Material.AIR)) {
+                        bridgeBlock(loc, p);
+                        onBridge(loc, dir, timer + 1, p);
+                    }
+                    break;
+                case NE:
+                    loc.add(1, 0, -1);
+                    if (loc.getBlock().getType().equals(Material.AIR)) {
+                        bridgeBlock(loc, p);
+                        onBridge(loc, dir, timer + 1, p);
+                    }
+                    break;
+                case SE:
+                    loc.add(1, 0, 1);
+                    if (loc.getBlock().getType().equals(Material.AIR)) {
+                        bridgeBlock(loc, p);
+                        onBridge(loc, dir, timer + 1, p);
+                    }
+                    break;
+                case SW:
+                    loc.add(-1, 0, 1);
+                    if (loc.getBlock().getType().equals(Material.AIR)) {
+                        bridgeBlock(loc, p);
+                        onBridge(loc, dir, timer + 1, p);
+                    }
+                    break;
+            }
         }, 5);
     }
 
@@ -153,7 +241,7 @@ bridgeBlock(loc, p);
         } else if (337.5 <= rotation && rotation < 360.0) {
             return direction.N;
         } else {
-            return null;
+            return direction.N;
         }
     }
     
@@ -169,6 +257,7 @@ bridgeBlock(loc, p);
         if (e.getPlayer().getInventory().getHelmet() != null && e.getPlayer().getInventory().getHelmet().getType().equals(Material.SKULL_ITEM)) {
             e.setCancelled(true);
             p.sendMessage(CTE.prefix + "§cDu kannst dich mit dem Ei nicht teleportieren.");
+            p.playSound(p.getLocation(), Sound.VILLAGER_NO, 1, 1);
             p.getInventory().addItem(new ShopItem(Material.ENDER_PEARL, "§fEnderperle", "UwU", 1, 4, Shop.Ressourcen.Karotte, null, 30, Shop.SHOPTYPE.SONSTIGES).getInventoryItem(0));
         }
     }

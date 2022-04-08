@@ -61,10 +61,19 @@ public class ShopItem {
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(name);
         ArrayList<String> lore = new ArrayList<>();
-        lore.add(" ");
-        lore.add("§7" + description);
+        if (description.contains("\n")) {
+            String[] l = description.split("\n");
+            for (String s : l) {
+                lore.add("§7"+s);
+            }
+        } else {
+            lore.add("§7" + description);
+        }
+        lore.add("§7");
         lore.add("§7Kosten§8: " + ResourceToColor() + cost + " " + ResourceToString());
         meta.setLore(lore);
+
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         item.setItemMeta(meta);

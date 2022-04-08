@@ -20,12 +20,10 @@ public class Emotes implements CommandExecutor {
 
 
         new MessageManager("§eEmote-Liste:").complete(p);
-        listEmote(p, ":D", "§5:D");
-        listEmote(p, "D:", "§9D:");
         listEmote(p, "UwU", "§dUwU");
         listEmote(p, "OwO", "§4OwO");
         listEmote(p, ":)", "§6:)");
-        listEmote(p, ":(", "§1:(");
+        listEmote(p, ":(", "§9:(");
         if (!new StaffManager(p).isHelper()) return false;
         new MessageManager("§8["+new StaffManager(p).activeString()+"§8] §eEmote-Liste:").hidePrefix().complete(p);
 

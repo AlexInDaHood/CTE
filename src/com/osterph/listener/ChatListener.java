@@ -194,16 +194,12 @@ public class ChatListener implements Listener {
                 break;
         }
 
-        emotes.put(":d", "§5:D");
-        emotes.put("d:", "§9D:");
-        emotes.put(";d", "§5;D");
-        emotes.put("d;", "§9D;");
         emotes.put("uwu", "§dUwU");
         emotes.put("owo", "§4OwO");
         emotes.put(":)", "§6:)");
         emotes.put(";)", "§6;)");
-        emotes.put(":(", "§1:(");
-        emotes.put(";(", "§1;(");
+        emotes.put(":(", "§9:(");
+        emotes.put(";(", "§9;(");
         if (new StaffManager(p).isHelper()) {
             emotes.put("gg", "§6§kO§r §e§lGG§r §6§kO");
             emotes.put("xd", "§3xD");

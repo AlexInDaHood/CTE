@@ -17,6 +17,7 @@ import com.osterph.cte.CTESystem.GAMESTATE;
 import com.osterph.cte.CTESystem.TEAM;
 import com.osterph.lagerhalle.LocationLIST;
 import com.osterph.manager.ScoreboardManager;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
@@ -136,9 +137,20 @@ public class DamageListener implements Listener {
     private final HashMap<Player, Integer> deathTimer = new HashMap<>();
     
     int scheduler;
-    
+
+	private void dropRessource(Player p) {
+		for(int i=0;i<p.getInventory().getSize();i++) {
+			if (p.getInventory().getItem(i) == null||p.getInventory().getItem(i).getType() == null) continue;
+			ItemStack item = p.getInventory().getItem(i);
+			if(item.getType().equals(Material.CARROT) || item.getType().equals(Material.MELON) || item.getType().equals(Material.APPLE)) {
+				p.getLocation().getWorld().dropItem(p.getLocation(), p.getInventory().getItem(i));
+			}
+		}
+	}
+
     public void onDeath(Player p) {
 		p.closeInventory();
+		dropRessource(p);
 		CTE.INSTANCE.getStatsManager().addDeath(p);
 		LocationLIST locs = CTE.INSTANCE.getLocations();
 		if (sys.teams.get(p).equals(TEAM.SPEC) || sys.teams.get(p).equals(TEAM.DEFAULT)) {
@@ -146,23 +158,6 @@ public class DamageListener implements Listener {
 			return;
 		}
     	onEgg(p);
-		if(combat.containsKey(p)) {
-			Player target = Bukkit.getPlayer(combat.get(p)[0]);
-			String pl = sys.teams.get(p).equals(TEAM.RED) ? "§c" : sys.teams.get(p).equals(TEAM.BLUE) ? "§9" : "§7";
-			combat.remove(p);
-			if(target != null) {
-				CTE.INSTANCE.getStatsManager().addKill(target);
-				ScoreboardManager.refreshBoard(target);
-				String t = sys.teams.get(target).equals(TEAM.RED) ? "§c" : sys.teams.get(target).equals(TEAM.BLUE) ? "§9" : "§7";
-				target.playSound(target.getLocation(), Sound.BAT_DEATH, 1f, 1.6f);
-				sys.sendAllMessage(CTE.prefix + pl + p.getName() + "§e wurde von §c" + t + target.getName() + "§e getötet!");
-			} else {
-				sys.sendAllMessage(CTE.prefix + pl + p.getName() + "§e ist gestorben!");
-			}
-		} else {
-			String pl = sys.teams.get(p).equals(TEAM.RED) ? "§c" : sys.teams.get(p).equals(TEAM.BLUE) ? "§9" : "§7";
-			sys.sendAllMessage(CTE.prefix + pl + p.getName() + "§e ist gestorben!");
-		}
 		TEAM taa = sys.teams.get(p);
 		sys.teams.put(p, TEAM.SPEC);
 		for(Player all : Bukkit.getOnlinePlayers()) {
@@ -175,56 +170,7 @@ public class DamageListener implements Listener {
 		sys.clear(p);
 		if((taa == TEAM.BLUE && sys.BLUE_EGG != CTESystem.EGG_STATE.GONE) || (taa == TEAM.RED && sys.RED_EGG != CTESystem.EGG_STATE.GONE)) {
 			p.sendMessage(CTE.prefix + "Du wirst in §c5 Sekunden §ewiederbelebt.");
-	    	/*Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, new Runnable() {
-				@Override
-				public void run() {
-					sys.teams.put(p, taa);
-					if(sys.teams.get(p).equals(TEAM.BLUE)) {
-						p.teleport(locs.blueSPAWN());
-					} else if(sys.teams.get(p).equals(TEAM.RED)){
-						p.teleport(locs.redSPAWN());
-					}
-					p.setGameMode(GameMode.SURVIVAL);
-					p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1, 1);
-					sys.startEquip(p);
-					p.setFlying(false);
-					p.setHealth(20);
-					p.sendMessage(CTE.prefix + "Du wurdest wiederbelebt.");
-					for(Player all : Bukkit.getOnlinePlayers()) {
-						ScoreboardManager.refreshBoard(all);
-					}
-				}
-			},20*5L);*/
 			deathTimer.put(p, 0);
-			/*scheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, new Runnable() {
-				@Override
-				public void run() {
-					if(deathTimer.get(p) == 5) {
-						sys.teams.put(p, taa);
-						if(sys.teams.get(p).equals(TEAM.BLUE)) {
-							p.teleport(locs.blueSPAWN());
-						} else if(sys.teams.get(p).equals(TEAM.RED)){
-							p.teleport(locs.redSPAWN());
-						}
-						p.setGameMode(GameMode.SURVIVAL);
-						p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1, 1);
-						sys.startEquip(p);
-						p.setFlying(false);
-						p.setHealth(20);
-						p.sendMessage(CTE.prefix + "Du wurdest wiederbelebt.");
-						for(Player all : Bukkit.getOnlinePlayers()) {
-							ScoreboardManager.refreshBoard(all);
-						}
-						Bukkit.getScheduler().cancelTask(deathScheduler.get(p));
-						deathScheduler.remove(p);
-						deathTimer.remove(p);
-						return;
-					}
-					sys.sendActionBar(p, "§7Respawn in §e" + (5-deathTimer.get(p)));
-					
-					deathTimer.put(p, deathTimer.get(p)+1);
-				}
-			}, 0, 20); */
 			Chicken ch = (Chicken) p.getWorld().spawnEntity(p.getLocation(), EntityType.CHICKEN);
 			Vector vec;
 			if(taa.equals(TEAM.BLUE)) {
@@ -272,8 +218,46 @@ public class DamageListener implements Listener {
 			}, 0, 2);
 			
 			deathScheduler.put(p, scheduler);
+
+			if(combat.containsKey(p)) {
+				Player target = Bukkit.getPlayer(combat.get(p)[0]);
+				String pl = sys.teams.get(p).equals(TEAM.RED) ? "§c" : sys.teams.get(p).equals(TEAM.BLUE) ? "§9" : "§7";
+				combat.remove(p);
+				if(target != null) {
+					CTE.INSTANCE.getStatsManager().addKill(target);
+					ScoreboardManager.refreshBoard(target);
+					String t = sys.teams.get(target).equals(TEAM.RED) ? "§c" : sys.teams.get(target).equals(TEAM.BLUE) ? "§9" : "§7";
+					target.playSound(target.getLocation(), Sound.BAT_DEATH, 1f, 1.6f);
+					sys.sendAllMessage(CTE.prefix + pl + p.getName() + "§e wurde von §c" + t + target.getName() + "§e getötet!");
+				} else {
+					sys.sendAllMessage(CTE.prefix + pl + p.getName() + "§e ist gestorben!");
+				}
+			} else {
+				String pl = sys.teams.get(p).equals(TEAM.RED) ? "§c" : sys.teams.get(p).equals(TEAM.BLUE) ? "§9" : "§7";
+				sys.sendAllMessage(CTE.prefix + pl + p.getName() + "§e ist gestorben!");
+			}
 		} else {
-			p.sendMessage(CTE.prefix + "Du bist nun eliminiert!");
+
+			if(combat.containsKey(p)) {
+				Player target = Bukkit.getPlayer(combat.get(p)[0]);
+				String pl = sys.teams.get(p).equals(TEAM.RED) ? "§c" : sys.teams.get(p).equals(TEAM.BLUE) ? "§9" : "§7";
+				combat.remove(p);
+				if(target != null) {
+					CTE.INSTANCE.getStatsManager().addKill(target);
+					ScoreboardManager.refreshBoard(target);
+					String t = sys.teams.get(target).equals(TEAM.RED) ? "§c" : sys.teams.get(target).equals(TEAM.BLUE) ? "§9" : "§7";
+					target.playSound(target.getLocation(), Sound.BAT_DEATH, 1f, 1.6f);
+					sys.sendAllMessage(CTE.prefix + pl + p.getName() + "§e wurde von §c" + t + target.getName() + "§4 eliminiert§e!");
+					sys.addPoints(target, 5, "ELIMINIERUNG");
+				} else {
+					sys.sendAllMessage(CTE.prefix + pl + p.getName() + "§e wurde §4eliminiert§e!");
+				}
+			} else {
+				String pl = sys.teams.get(p).equals(TEAM.RED) ? "§c" : sys.teams.get(p).equals(TEAM.BLUE) ? "§9" : "§7";
+				sys.sendAllMessage(CTE.prefix + pl + p.getName() + "§e ist §4eliminiert§e!");
+			}
+			p.sendMessage(CTE.prefix + "§cDu wurdest eliminiert!");
+
 			sys.checkTeamSizes();
 		}
     }

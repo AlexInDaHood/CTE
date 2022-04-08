@@ -92,6 +92,9 @@ public class ScoreboardManager {
         if (sys.gamestate.equals(GAMESTATE.RUNNING) ||sys.gamestate.equals(GAMESTATE.SUDDEN_DEATH) || sys.gamestate.equals(GAMESTATE.ENDING)) {
             Objective o = board.getObjective(p.getName());
             try {
+                o.unregister();
+            } catch (Exception ignored) {}
+            try {
                 if (o == null) o = board.registerNewObjective(p.getName(), "");
             } catch (Exception ignored) {}
 
@@ -103,7 +106,7 @@ public class ScoreboardManager {
             o.getScore("§cROTES TEAM§8: " + EggStatus(TEAM.RED)).setScore(4);
             o.getScore("§2").setScore(3);
             if (sys.teams.get(p).equals(CTESystem.TEAM.BLUE)||sys.teams.get(p).equals(CTESystem.TEAM.RED)) {
-                //o.getScore("§3PUNKTE§8: §7" + CTE.INSTANCE.getStatsManager().getPoints(p)).setScore(2);
+                o.getScore("§3PUNKTE§8: §7" + CTE.INSTANCE.getStatsManager().getPoints(p)).setScore(2);
                 o.getScore("§bKILLS§8: §7" + CTE.INSTANCE.getStatsManager().getKills(p)).setScore(1);
             }
         } else {
@@ -116,7 +119,7 @@ public class ScoreboardManager {
             o.setDisplaySlot(DisplaySlot.SIDEBAR);
 
             o.getScore("§1").setScore(8);
-            if (Bukkit.getOnlinePlayers().size() >= 4) {
+            if (Bukkit.getOnlinePlayers().size() < 4) {
                 o.getScore("§eWarte auf "+(4-Bukkit.getOnlinePlayers().size())+" Spieler...").setScore(7);
             } else {
                 o.getScore("§e"+Bukkit.getOnlinePlayers().size()+"§7/§e"+sys.maxPlayers+" Spieler").setScore(7);
@@ -125,8 +128,8 @@ public class ScoreboardManager {
             o.getScore("§9BLAUES TEAM§8: §e" + sys.blue.size()+"§7/§e"+sys.maxPlayers/2).setScore(5);
             o.getScore("§cROTES TEAM§8: §e" + sys.red.size()+"§7/§e"+sys.maxPlayers/2).setScore(4);
             o.getScore("§3").setScore(3);
-            //o.getScore("§3GES. PUNKTE").setScore(2);
-            //o.getScore("§8➥ §7"+CTE.mysql.getDatabase("PLAYERPOINTS", "UUID", p.getUniqueId().toString(), "POINTS")).setScore(1);
+            o.getScore("§3HEUTIGE PUNKTE").setScore(2);
+            o.getScore("§8➥ §7"+CTE.INSTANCE.getStatsManager().getDayPoints(p, sys.getDate())).setScore(1);
         }
 
         p.setScoreboard(board);

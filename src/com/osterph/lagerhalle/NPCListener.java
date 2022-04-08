@@ -86,8 +86,12 @@ public class NPCListener implements Listener {
         		system.sendAllMessage(CTE.prefix + "Das §9Blaue-Ei §ewurde erobert! Das §9Blaue-Team §ekann nicht länger respawnen!");
         		system.sendAllSound(Sound.ENDERDRAGON_GROWL, 1, 1);
         		system.setHelmet(p);
+                sys.addPoints(p, 20, "EI EROBERUNG");
         		for(Player all : Bukkit.getOnlinePlayers()) {
         			ScoreboardManager.refreshBoard(all);
+                    if(system.teams.get(all).equals(TEAM.RED) && !all.equals(p)) {
+                        sys.addPoints(all, 5, "EI EROBERUNG");
+                    }
         		}
         	} else if(t.equals(TEAM.BLUE) && p.getLocation().distance(CTE.INSTANCE.getLocations().blueNPC()) <= 5) {
         		Bukkit.getScheduler().cancelTask(EggListener.eggScheduler.get(p));
@@ -96,8 +100,12 @@ public class NPCListener implements Listener {
         		system.sendAllMessage(CTE.prefix + "Das §cRote-Ei §ewurde erobert! Das §cRote-Team §ekann nicht länger respawnen!");
         		system.sendAllSound(Sound.ENDERDRAGON_GROWL, 1, 1);
         		system.setHelmet(p);
+                sys.addPoints(p, 20, "EI EROBERUNG");
         		for(Player all : Bukkit.getOnlinePlayers()) {
         			ScoreboardManager.refreshBoard(all);
+                    if(system.teams.get(all).equals(TEAM.BLUE) && !all.equals(p)) {
+                        sys.addPoints(all, 5, "EI EROBERUNG");
+                    }
         		}
         	}
         	

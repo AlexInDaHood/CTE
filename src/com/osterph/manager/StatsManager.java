@@ -1,8 +1,10 @@
 package com.osterph.manager;
 
-import java.util.HashMap;
-
+import com.osterph.cte.CTE;
+import com.osterph.lagerhalle.MySQL;
 import org.bukkit.entity.Player;
+
+import java.util.HashMap;
 
 public class StatsManager {
 	
@@ -37,29 +39,53 @@ public class StatsManager {
 			points.put(p, point);
 		}
 	}
+
+	public void addAchievement(Player p, int point) {
+		if(points.containsKey(p)) {
+			points.put(p, points.get(p)+point);
+		} else {
+			points.put(p, point);
+		}
+	}
+
+	public enum ACHIEVEMENT {
+
+	}
 	
 	public int getKills(Player p) {
-		if(kills.containsKey(p)) {
-			return kills.get(p);
-		} else {
-			return 0;
-		}
+		return kills.getOrDefault(p, 0);
 	}
 	
 	public int getDeaths(Player p) {
-		if(deaths.containsKey(p)) {
-			return deaths.get(p);
-		} else {
-			return 0;
-		}
+		return deaths.getOrDefault(p, 0);
 	}
-	
+
 	public int getPoints(Player p) {
-		if(points.containsKey(p)) {
-			return points.get(p);
-		} else {
-			return 0;
+		return points.getOrDefault(p, 0);
+	}
+
+	public int getAllPoints(Player p) {
+		MySQL sql = CTE.mysql;
+
+		int punkte = 0;
+
+		for (int i = 15; i <= 24; i++) {
+			int add = Integer.parseInt(sql.getDatabase("SPIELPUNKTE", "UUID", p.getUniqueId().toString(), i+"").toString());
+			punkte = (add == -999) ? 0 : add+punkte;
 		}
+
+		return punkte;
+	}
+
+	public int getDayPoints(Player p, String date) {
+		MySQL sql = CTE.mysql;
+
+		int punkte = 0;
+
+			int add = Integer.parseInt(sql.getDatabase("SPIELPUNKTE", "UUID", p.getUniqueId().toString(), date+"").toString());
+			punkte = (add == -999) ? 0 : add+punkte;
+
+		return punkte;
 	}
 	
 }

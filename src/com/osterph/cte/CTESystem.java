@@ -1,9 +1,13 @@
 package com.osterph.cte;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import com.osterph.lagerhalle.MySQL;
 import com.osterph.listener.EggListener;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -28,6 +32,7 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
 import net.minecraft.server.v1_8_R3.PacketPlayOutWorldParticles;
 
 import static org.bukkit.Material.AIR;
+import static org.bukkit.Material.PUMPKIN;
 
 public class CTESystem {
 	
@@ -226,6 +231,7 @@ public class CTESystem {
     }
 
 	public void endGame() {
+        GAMESTATE endstate = this.gamestate;
         stopSuddenDeathCounter();
         stopLoop();
         for (Entity all: Bukkit.getWorld("world").getEntities()) {
@@ -253,6 +259,10 @@ public class CTESystem {
             all.teleport(CTE.INSTANCE.getLocations().lobbySPAWN());
             all.playSound(all.getLocation(), Sound.WITHER_DEATH, 1, 1);
             all.sendMessage(CTE.prefix + "§cDer Server startet in 15 Sekunden neu.");
+
+            int punkte = endstate.equals(GAMESTATE.SUDDEN_DEATH) ? 30 : 40;
+            if ((winnerTeam == TEAM.RED && !red.contains(all)) || (winnerTeam == TEAM.BLUE && !blue.contains(all))) continue;
+            addPoints(all, punkte, "RUNDE GEWONNEN");
         }
         for(Entity t : Bukkit.getWorld("world").getEntities()) {
         	if(!(t instanceof Item)) continue;
@@ -271,13 +281,41 @@ public class CTESystem {
     }
     
     
-    public void addPoints(Player p, int points) {
+    public void addPoints(Player p, int points, String REASON) {
         String UUID = p.getUniqueId().toString();
-        int punkte = (int) CTE.mysql.getDatabase("PLAYERPOINTS", "UUID" , UUID, "POINTS");
+        MySQL mySQL = CTE.mysql;
+        String Punkte = Integer.parseInt(mySQL.getDatabase("SPIELPUNKTE", "UUID", UUID, getDate()).toString()) == -999 ? "0" : mySQL.getDatabase("SPIELPUNKTE", "UUID", UUID, getDate()).toString();
+        int punkte = Integer.parseInt(Punkte);
+
         punkte += points;
+        if (punkte > 620) {
+            points = 620-punkte+points;
+            punkte = 620;
+        }
         CTE.INSTANCE.getStatsManager().addPoints(p, points);
+        if (Integer.parseInt(mySQL.getDatabase("SPIELPUNKTE", "UUID", UUID, "15").toString()) == -999) {
+            String o = "`UUID`";
+            String o1 = "'"+UUID+"'";
+            for (int i = 15; i <= 24; i++) {
+                o+=",`"+i+"`";
+                o1+=",'"+0+"'";
+            }
+            mySQL.update("INSERT INTO `SPIELPUNKTE` ("+o+") VALUES ("+o1+")");
+        }
+        mySQL.update("UPDATE `SPIELPUNKTE` SET `"+getDate()+"`='"+punkte+"' WHERE `UUID`='"+UUID+"'");
+        if (points == 0) {
+            p.sendMessage(CTE.prefix+"§cDu hast das tägliche Punkte-Limit erreicht.");
+        } else {
+            p.sendMessage("§a+" + points + " Punkte (§2" + REASON + "§a)");
+        }
+        p.playSound(p.getLocation(), Sound.ORB_PICKUP, 1, 2);
         ScoreboardManager.refreshBoard(p);
-        CTE.mysql.setDatabase("PLAYERPOINTS", "UUID", UUID, "POINTS", punkte);
+    }
+
+    public String getDate() {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd");
+        ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Berlin"));
+        return "17";//dtf.format(now);
     }
 
     public void sendAllMessage(String msg) {
@@ -382,7 +420,8 @@ return;
             all.sendTitle("§c§lSUDDEN DEATH","");
             all.sendMessage(CTE.prefix + "§c§lSUDDEN DEATH");
             all.sendMessage("§eAlle Eier wurden erobert! Du kannst nicht länger respawnen!");
-            if(all.getEquipment().getHelmet().getType() != null && all.getEquipment().getHelmet().getType().equals(Material.SKULL_ITEM)) {
+
+            if(all.getEquipment().getHelmet() != null && all.getEquipment().getHelmet().getType() != null && all.getEquipment().getHelmet().getType().equals(Material.SKULL_ITEM)) {
                 setHelmet(all);
                 Bukkit.getScheduler().cancelTask(EggListener.eggScheduler.get(all));
                 EggListener.eggScheduler.remove(all);

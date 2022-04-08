@@ -20,8 +20,8 @@ import net.minecraft.server.v1_8_R3.WorldServer;
 
 public class TablistManager {
 
-    private static String header = "\n§8» §6§lCAPTURE THE EGG §8«\n";
-    private static String footer = "\n§7Frohe Ostern oder so\n";
+    private static final String header = "\n§8» §6§lCAPTURE THE EGG §8«\n";
+    private static final String footer = "\n§8➥ §7/achievements\n§8➥ §7/emotes\n\n§eFrohe Ostern!";
 
     public static void displayTablist(Player p) {
         sendTablist(p);

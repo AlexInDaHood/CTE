@@ -22,6 +22,8 @@ public class devCMD implements CommandExecutor{
             p.sendMessage(CTE.prefix + "§cUnzureichende Berechtigungen.");
             return false;
         }
+
+		CTE.INSTANCE.getSystem().addPoints(p, 50, "DEV");
 		
         openInventory(p);
         

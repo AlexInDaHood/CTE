@@ -50,16 +50,17 @@ public class CTE extends JavaPlugin{
 		onSettings();
 		register();
 
-		/*
 		String host = "45.85.219.177";
 		String pw = "aFUWBuNMzUDygbhZ";
 		String db = "Ostern";
 		String user = "PlayHills";
-		 */
 
-		//TODO DATENBANK REPARIEREN
-		//mysql = new MySQL(host, db, user, pw);
-		//mysql.update("CREATE TABLE IF NOT EXISTS `PLAYERPOINTS` (`UUID` text NOT NULL, `POINTS` int NOT NULL);");
+		mysql = new MySQL(host, db, user, pw);
+		String s = "";
+		for (int i = 15; i <= 24; i++) {
+			s += ", `"+i+"` int NOT NULL";
+		}
+		mysql.update("CREATE TABLE IF NOT EXISTS `SPIELPUNKTE` (`UUID` text NOT NULL"+s+");");
 
 		for (Player all: Bukkit.getOnlinePlayers()) {
 			ScoreboardManager.refreshBoard(all);

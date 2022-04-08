@@ -47,7 +47,7 @@ public class EggListener implements Listener {
         if (e.getClickedBlock() == null) return;
         if (!e.getClickedBlock().getType().equals(Material.DRAGON_EGG)) return;
         if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-            if (!p.isSneaking() || p.getItemInHand() == null) e.setCancelled(true);
+            if (!p.isSneaking() || p.getItemInHand().getType().equals(Material.AIR)) e.setCancelled(true);
         }
         if (!e.getAction().equals(Action.LEFT_CLICK_BLOCK)) return;
 

@@ -45,7 +45,7 @@ public class ShopListener implements Listener {
                 if(name.contains("Zurück")) {
                 	CTE.INSTANCE.getShop().openShop(p, Shop.SHOPTYPE.CHOOSE);
                 }
-                if(item.getItemMeta().getLore() != null && item.getItemMeta().getLore().get(2).contains("§7Kosten§8: ")) {
+                if(item.getItemMeta().getLore() != null && item.getItemMeta().getLore().toString().contains("§7Kosten§8: ")) {
                     ShopItem shop = CTE.INSTANCE.getShop().getShopItemByItemStack(item);
                     if(shop != null) {
                         if(checkItem(shop.getRessource(), shop.cost, p)) {

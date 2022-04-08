@@ -26,7 +26,7 @@ import java.util.List;
 
 public class TeamSelector implements Listener {
 
-    public ItemStack team = new ItemManager(Material.BED).withName("§eTeam-Auswahl").complete();
+    public ItemStack team = new ItemManager(Material.BED).withName("§8» §eTeam-Auswahl§8 «").complete();
     private final CTESystem sys = CTE.INSTANCE.getSystem();
 
     @EventHandler

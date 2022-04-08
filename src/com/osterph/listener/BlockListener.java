@@ -230,6 +230,7 @@ public class BlockListener implements Listener {
                 m.equals(Material.BLAZE_ROD) ||
                 m.equals(Material.FIREBALL) ||
                 m.equals(Material.WOOL) ||
-                m.equals(Material.BRICK);
+                m.equals(Material.BRICK)||
+        m.equals(Material.ENDER_PORTAL_FRAME);
     }
 }

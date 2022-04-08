@@ -24,6 +24,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scoreboard.Score;
 
 public class PlayerEvent implements Listener {
 
@@ -80,7 +81,7 @@ public class PlayerEvent implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
-        sendPlayingGamemode();
+        sendPlayingGamemode(p);
         sendServerBanner(p);
         TablistManager.displayTablist(p);
         p.setHealth(20);
@@ -91,39 +92,36 @@ public class PlayerEvent implements Listener {
         if (sys.gamestate.equals(GAMESTATE.RUNNING) || sys.gamestate.equals(GAMESTATE.SUDDEN_DEATH)) {
             sys.teams.put(p, CTESystem.TEAM.SPEC);
             p.teleport(CTE.INSTANCE.getLocations().specSPAWN());
+            e.setJoinMessage(null);
         } else {
             p.teleport(CTE.INSTANCE.getLocations().lobbySPAWN());
             p.getInventory().setItem(0, CTE.INSTANCE.getSelector().team);
-            
-            ItemStack tutorial = new ItemStack(Material.WRITTEN_BOOK);
-            BookMeta meta = (BookMeta)tutorial.getItemMeta();
-            meta.setDisplayName("§8» §3Spielanleitung §8«");
-            meta.setAuthor("Osterhase");					//TODO
-            meta.addPage("§8[§6§lCTE§8] \n§6CTE §7ist ein Teambasierter Spielmodus, indem es die Aufgabe deines Teams ist, das gegnerische Ei zu stehlen und zurück zu deiner Basis zu bringen. In deiner Basis angekommen übergibst du das Ei dann dem Shopkeeper.");
-            meta.addPage("§7Nach der Abgabe des gegnerischen Ei`s ist es dem gegnerische Team nicht länger möglich zu respawnen. Das Team, welches als letztes am Leben ist, entscheidet die Runde damit für sich.");
-            meta.addPage("§8[§6§lRessourcen§8]\n§7Während des gesamten Spiels werdet ihr zusätzlich mit Ressourcen wie §cÄpfel§7, §aMelonen§7 und §6Karotten §7ausgestattet, womit ihr euch zusätzliche Ausstattung kaufen könnt.");
-            //meta.addPage("§8[§6§lLooteggs§8]\n§7Zusätzlich spawnen im Abstand von 2-5 Minuten §6Looteggs§7, die ihr dann in der Mitte aufsuchen könnt. Findet und öffnet ihr eins, versorgt euch das §6Lootegg §7mit zusätzlichen Ressourcen oder Items.");
-            tutorial.setItemMeta(meta);
-            p.getInventory().setItem(4, tutorial);
-        }
-
-        if(sys.gamestate.equals(GAMESTATE.STARTING)) {
             if(new StaffManager(p).isDev()) {
                 p.getInventory().setItem(8, new ItemManager(Material.REDSTONE_COMPARATOR).withName("§8» §bDev-Settings §8«").complete());
             }
             e.setJoinMessage("§8[§a+§8] §7" + p.getName());
 
             if(Bukkit.getOnlinePlayers().size() >= sys.minPlayers && sys.countdown > 60) {
-            	sys.startTimer();
+                sys.startTimer();
             }
-        } else {
-            e.setJoinMessage(null);
+            ItemStack tutorial = new ItemStack(Material.WRITTEN_BOOK);
+            BookMeta meta = (BookMeta)tutorial.getItemMeta();
+            meta.setDisplayName("§8» §3Spielanleitung §8«");
+            meta.setAuthor("Osterhase");
+            meta.addPage("§8[§6§lCTE§8] \n§6CTE §0ist ein Teambasierter Spielmodus, indem es die Aufgabe deines Teams ist, das gegnerische Ei zu stehlen und zurück zu deiner Basis zu bringen. In deiner Basis angekommen übergibst du das Ei dann dem Shopkeeper.");
+            meta.addPage("§0Nach der Abgabe des gegnerischen Ei's ist es dem gegnerische Team nicht länger möglich zu respawnen. Das Team, welches als letztes am Leben ist, entscheidet die Runde damit für sich.");
+            meta.addPage("§8[§6§lRessourcen§8]\n§0Während des gesamten Spiels werdet ihr zusätzlich mit Ressourcen wie §cÄpfel§0, §aMelonen§0 und §6Karotten §0ausgestattet, womit ihr euch zusätzliche Ausstattung kaufen könnt.");
+            //meta.addPage("§8[§6§lLooteggs§8]\n§7Zusätzlich spawnen im Abstand von 2-5 Minuten §6Looteggs§7, die ihr dann in der Mitte aufsuchen könnt. Findet und öffnet ihr eins, versorgt euch das §6Lootegg §7mit zusätzlichen Ressourcen oder Items.");
+            tutorial.setItemMeta(meta);
+            p.getInventory().setItem(4, tutorial);
         }
 
+        ScoreboardManager.refreshBoard();
+        if (!sys.gamestate.equals(GAMESTATE.RUNNING) && !sys.gamestate.equals(GAMESTATE.SUDDEN_DEATH)) return;
         for (Player all: Bukkit.getOnlinePlayers()) {
-            ScoreboardManager.refreshBoard(all);
             all.setLevel(sys.c);
-            if (sys.gamestate.equals(GAMESTATE.RUNNING) || sys.gamestate.equals(GAMESTATE.SUDDEN_DEATH)) all.hidePlayer(p);
+            if (sys.teams.get(all).equals(TEAM.DEFAULT)||sys.teams.get(all).equals(TEAM.SPEC)) continue;
+            all.hidePlayer(p);
         }
     }
 
@@ -135,8 +133,6 @@ public class PlayerEvent implements Listener {
             new DamageListener().onEgg(p);
         }
         sys.teams.remove(p);
-        sys.blue.remove(p);
-        sys.red.remove(p);
         Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, () -> {
             for (Player all: Bukkit.getOnlinePlayers()) {
                 ScoreboardManager.refreshBoard(all);
@@ -146,25 +142,26 @@ public class PlayerEvent implements Listener {
         if(sys.gamestate.equals(GAMESTATE.STARTING)) {
             e.setQuitMessage("§8[§c-§8] §7" + p.getName());
             Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, () -> {
-                if(Bukkit.getOnlinePlayers().size() < sys.minPlayers) {
+                if(Bukkit.getOnlinePlayers().size() == sys.minPlayers-1) {
                     sys.stopStartTimer();
                     sys.sendAllMessage(CTE.prefix + "Der Start wurde abgebrochen!");
                 }
             },5);
         } else if(sys.gamestate.equals(GAMESTATE.RUNNING) || sys.gamestate.equals(GAMESTATE.SUDDEN_DEATH)) {
             e.setQuitMessage("§8[§c-§8] §7" + p.getName());
-            sys.teams.put(e.getPlayer(), TEAM.SPEC);
+            sys.blue.remove(p);
+            sys.red.remove(p);
             sys.checkTeamSizes();
         } else {
             e.setQuitMessage(null);
         }
     }
     
-    private void sendPlayingGamemode() {
+    private void sendPlayingGamemode(Player player) {
     	JsonObject obj = new JsonObject();
     	obj.addProperty("show_gamemode", true);
     	obj.addProperty("gamemode_name", "§ePlayHills.eu §8» §6§lCapture the Egg");
-    	//LabyModProtocol.sendClientMessage(p, "server_gamemode", obj); //TODO
+    	LabyModProtocol.sendClientMessage(player, "server_gamemode", obj);
     }
     
     private void sendServerBanner(Player player) {
