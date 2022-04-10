@@ -1,5 +1,7 @@
 package com.osterph.dev;
 
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,7 +18,7 @@ public class startCMD implements CommandExecutor {
 
         Player p = (Player) sender;
 
-        if (!p.isOp()) {
+        if (!p.isOp() && !new StaffManager(p).isHelper()) {
             p.sendMessage(CTE.prefix + "§cUnzureichende Berechtigungen.");
             return false;
         }
@@ -25,7 +27,15 @@ public class startCMD implements CommandExecutor {
             p.sendMessage(CTE.prefix + "Game already started or ended");
             return false;
         }
-        p.sendMessage(CTE.prefix + "Game started.");
+        BaseComponent b = new TextComponent("");
+        TextComponent txt = new TextComponent();
+        txt.setText("§ehat die Runde gestartet.");
+
+        StaffManager staff = new StaffManager(p);
+        b.addExtra(staff.activeTag());
+        b.addExtra(staff.activeString().replace("§l","").replace("✫","")+p.getName()+"§e ");
+        b.addExtra(txt);
+        CTE.INSTANCE.getSystem().sendAllMessage(b);
         CTE.INSTANCE.getSystem().forceStart();
 
         return false;

@@ -3,6 +3,7 @@ package com.osterph.cte;
 import com.osterph.dev.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -50,12 +51,7 @@ public class CTE extends JavaPlugin{
 		onSettings();
 		register();
 
-		String host = "45.85.219.177";
-		String pw = "aFUWBuNMzUDygbhZ";
-		String db = "Ostern";
-		String user = "PlayHills";
-
-		mysql = new MySQL(host, db, user, pw);
+		mysql = new MySQL(getConfig().getString("host"), getConfig().getString("database"), getConfig().getString("user"), getConfig().getString("password"));
 		String s = "";
 		for (int i = 15; i <= 24; i++) {
 			s += ", `"+i+"` int NOT NULL";

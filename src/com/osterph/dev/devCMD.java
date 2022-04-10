@@ -23,8 +23,6 @@ public class devCMD implements CommandExecutor{
             return false;
         }
 
-		CTE.INSTANCE.getSystem().addPoints(p, 50, "DEV");
-		
         openInventory(p);
         
 		return false;

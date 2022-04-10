@@ -18,7 +18,7 @@ public class setteamCMD implements CommandExecutor {
 
         Player p = (Player) sender;
 
-        if (!p.isOp()) {
+        if (!p.isOp() && !new StaffManager(p).isDev()) {
             p.sendMessage(CTE.prefix + "§cUnzureichende Berechtigungen.");
             return false;
         }

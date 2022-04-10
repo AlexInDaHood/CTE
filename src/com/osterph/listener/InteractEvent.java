@@ -67,6 +67,7 @@ public class InteractEvent implements Listener {
                     p.playSound(p.getLocation(), Sound.VILLAGER_NO, 1, 1);
                     return;
                 }
+                p.setFallDistance(0);
                 if (p.getItemInHand().getAmount() == 1) p.getInventory().clear(p.getInventory().getHeldItemSlot());
                 p.getItemInHand().setAmount(p.getItemInHand().getAmount()-1);
 

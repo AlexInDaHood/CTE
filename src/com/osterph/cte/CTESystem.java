@@ -9,6 +9,7 @@ import java.util.Random;
 
 import com.osterph.lagerhalle.MySQL;
 import com.osterph.listener.EggListener;
+import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.GameMode;
@@ -194,6 +195,7 @@ public class CTESystem {
             startEquip(all);
             if (teams.get(all).equals(TEAM.RED)) all.teleport(new LocationLIST().redSPAWN());
             if (teams.get(all).equals(TEAM.BLUE)) all.teleport(new LocationLIST().blueSPAWN());
+            all.playSound(all.getLocation(), Sound.ENDERDRAGON_GROWL, 1 ,1);
         }
         new LocationLIST().shopkeeperStand();
         CTE.INSTANCE.getSpawnermanager().aktivateSpawner();
@@ -315,12 +317,20 @@ public class CTESystem {
     public String getDate() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd");
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Berlin"));
-        return "17";//dtf.format(now);
+        if (Integer.parseInt(dtf.format(now)) < 15) return "15";
+        if (Integer.parseInt(dtf.format(now)) > 24) return "24";
+        return dtf.format(now);
     }
 
     public void sendAllMessage(String msg) {
         for(Player all : Bukkit.getOnlinePlayers()) {
             all.sendMessage(msg);
+        }
+    }
+
+    public void sendAllMessage(BaseComponent msg) {
+        for(Player all : Bukkit.getOnlinePlayers()) {
+            all.spigot().sendMessage(msg);
         }
     }
 

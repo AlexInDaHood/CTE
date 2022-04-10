@@ -159,11 +159,9 @@ public class DamageListener implements Listener {
 		}
     	onEgg(p);
 		TEAM taa = sys.teams.get(p);
-		sys.teams.put(p, TEAM.SPEC);
 		for(Player all : Bukkit.getOnlinePlayers()) {
 			ScoreboardManager.refreshBoard(all);
 		}
-		p.setFlying(true);
 		p.setHealth(20);
     	p.teleport(locs.specSPAWN());
 		p.playSound(p.getLocation(), Sound.CAT_PURREOW, 1, 0.5f);
@@ -260,6 +258,7 @@ public class DamageListener implements Listener {
 
 			sys.checkTeamSizes();
 		}
+		sys.teams.put(p, TEAM.SPEC);
     }
     
     public void onEgg(Player p) {
