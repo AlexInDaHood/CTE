@@ -58,7 +58,7 @@ public class EggListener implements Listener {
                 p.sendMessage(CTE.prefix + "Das ist das falsche Ei...");
                 return;
             }
-            sys.sendAllMessage(CTE.prefix+"§c" + p.getName() + " §ehat das §9blaue Ei§e gestohlen!");
+            sys.sendAllMessage(CTE.prefix+"§c" + p.getName() + " §ehat das §9Blaue-Ei§e gestohlen!");
             sys.sendAllSound(Sound.WITHER_DEATH, 1, 1);
             sys.BLUE_EGG = CTESystem.EGG_STATE.STOLEN;
             stolenegg = "blue";
@@ -68,7 +68,7 @@ public class EggListener implements Listener {
                 p.sendMessage(CTE.prefix + "Das ist das falsche Ei...");
                 return;
             }
-            sys.sendAllMessage(CTE.prefix+"§9" + p.getName() + " §ehat das §crote Ei§e gestohlen!");
+            sys.sendAllMessage(CTE.prefix+"§9" + p.getName() + " §ehat das §cRote-Ei§e gestohlen!");
             sys.sendAllSound(Sound.WITHER_DEATH, 1, 1);
             sys.RED_EGG = CTESystem.EGG_STATE.STOLEN;
             stolenegg = "red";

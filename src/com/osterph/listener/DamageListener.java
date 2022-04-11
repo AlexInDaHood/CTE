@@ -177,7 +177,6 @@ public class DamageListener implements Listener {
 				vec = new Vector(-0.7, -0.8, 0);
 			}
 			ch.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999, 999, true));
-			p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999, 999, true));
 			scheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, () -> {
 				//CHICKEN
 				if(deathTimer.get(p)%2 == 0) {
@@ -223,7 +222,6 @@ public class DamageListener implements Listener {
 				combat.remove(p);
 				if(target != null) {
 					CTE.INSTANCE.getStatsManager().addKill(target);
-					ScoreboardManager.refreshBoard(target);
 					String t = sys.teams.get(target).equals(TEAM.RED) ? "§c" : sys.teams.get(target).equals(TEAM.BLUE) ? "§9" : "§7";
 					target.playSound(target.getLocation(), Sound.BAT_DEATH, 1f, 1.6f);
 					sys.sendAllMessage(CTE.prefix + pl + p.getName() + "§e wurde von §c" + t + target.getName() + "§e getötet!");
@@ -242,7 +240,6 @@ public class DamageListener implements Listener {
 				combat.remove(p);
 				if(target != null) {
 					CTE.INSTANCE.getStatsManager().addKill(target);
-					ScoreboardManager.refreshBoard(target);
 					String t = sys.teams.get(target).equals(TEAM.RED) ? "§c" : sys.teams.get(target).equals(TEAM.BLUE) ? "§9" : "§7";
 					target.playSound(target.getLocation(), Sound.BAT_DEATH, 1f, 1.6f);
 					sys.sendAllMessage(CTE.prefix + pl + p.getName() + "§e wurde von §c" + t + target.getName() + "§4 eliminiert§e!");
@@ -259,6 +256,8 @@ public class DamageListener implements Listener {
 			sys.checkTeamSizes();
 		}
 		sys.teams.put(p, TEAM.SPEC);
+		ScoreboardManager.refreshBoard();
+		p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999, 999, true));
     }
     
     public void onEgg(Player p) {
@@ -270,9 +269,7 @@ public class DamageListener implements Listener {
     			sys.sendAllMessage(CTE.prefix + "Das §cRote-Ei §eist nun wieder sicher!");
     			Bukkit.getScheduler().cancelTask(EggListener.eggScheduler.get(p));
     			EggListener.eggScheduler.remove(p);
-    			for(Player all : Bukkit.getOnlinePlayers()) {
-    				ScoreboardManager.refreshBoard(all);
-    			}
+    			ScoreboardManager.refreshBoard();
     		}
     	} else if(t == TEAM.RED) {
     		if(p.getInventory().getHelmet() != null && p.getInventory().getHelmet().getItemMeta().getDisplayName() != null && p.getInventory().getHelmet().getItemMeta().getDisplayName().equals("§9Blaues-Ei")) {
@@ -281,9 +278,7 @@ public class DamageListener implements Listener {
     			sys.sendAllMessage(CTE.prefix + "Das §9Blaue-Ei §eist nun wieder sicher!");
     			Bukkit.getScheduler().cancelTask(EggListener.eggScheduler.get(p));
     			EggListener.eggScheduler.remove(p);
-    			for(Player all : Bukkit.getOnlinePlayers()) {
-    				ScoreboardManager.refreshBoard(all);
-    			}
+    			ScoreboardManager.refreshBoard(); 
     		}
     	}
     }
