@@ -261,6 +261,7 @@ public class DamageListener implements Listener {
     }
     
     public void onEgg(Player p) {
+    	
     	TEAM t = sys.teams.get(p);
     	if(t == TEAM.BLUE) {
     		if(p.getInventory().getHelmet() != null && p.getInventory().getHelmet().getItemMeta().getDisplayName() != null && p.getInventory().getHelmet().getItemMeta().getDisplayName().equals("§cRotes-Ei")) {
