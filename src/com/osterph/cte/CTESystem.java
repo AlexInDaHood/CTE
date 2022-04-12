@@ -69,7 +69,6 @@ public class CTESystem {
 
     public void checkTeamSizes() {
     	Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, new Runnable() {
-			
 			@Override
 			public void run() {
 				int blue = 0;
@@ -89,7 +88,7 @@ public class CTESystem {
 		    		endGame();
 		    	}
 			}
-		},10);
+		},4);
     	
     }
 
