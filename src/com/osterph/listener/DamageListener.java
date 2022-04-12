@@ -253,9 +253,9 @@ public class DamageListener implements Listener {
 			}
 			p.sendMessage(CTE.prefix + "§cDu wurdest eliminiert!");
 
-			sys.checkTeamSizes();
+			sys.checkTeamSizes(); //TODO
 		}
-		sys.teams.put(p, TEAM.SPEC);
+		sys.teams.put(p, TEAM.SPEC); //TODO
 		ScoreboardManager.refreshBoard();
 		p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999, 999, true));
     }

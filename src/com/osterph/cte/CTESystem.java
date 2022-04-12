@@ -68,22 +68,29 @@ public class CTESystem {
     }
 
     public void checkTeamSizes() {
-    	int blue = 0;
-    	int red = 0;
-    	for(Player p : teams.keySet()) {
-    		if(teams.get(p).equals(TEAM.BLUE)) {
-    			blue++;
-    		} else if(teams.get(p).equals(TEAM.RED)) {
-    			red++;
-    		}
-    	}
-    	if(blue == 0) {
-    		winnerTeam = TEAM.RED;
-    		endGame();
-    	} else if(red == 0) {
-    		winnerTeam = TEAM.BLUE;
-    		endGame();
-    	}
+    	Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, new Runnable() {
+			
+			@Override
+			public void run() {
+				int blue = 0;
+		    	int red = 0;
+		    	for(Player p : teams.keySet()) {
+		    		if(teams.get(p).equals(TEAM.BLUE)) {
+		    			blue++;
+		    		} else if(teams.get(p).equals(TEAM.RED)) {
+		    			red++;
+		    		}
+		    	}
+		    	if(blue == 0) {
+		    		winnerTeam = TEAM.RED;
+		    		endGame();
+		    	} else if(red == 0) {
+		    		winnerTeam = TEAM.BLUE;
+		    		endGame();
+		    	}
+			}
+		},10);
+    	
     }
 
     public int teamData(Player p) {
