@@ -1,1 +1,8 @@
 /bin/
+*.iml
+.project
+.classpath
+org.eclipse.*
+.idea/
+compiler.xml
+.classpath

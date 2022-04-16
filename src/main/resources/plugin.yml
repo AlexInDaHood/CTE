@@ -1,9 +1,10 @@
-name: Capture the egg
+name: CTE
 authors:
   - Flauschi
   - Cake-chan
 version: 69.420
 main: com.osterph.cte.CTE
+depend: [PlayHillsAPI]
 commands:
   start:
   countdown:

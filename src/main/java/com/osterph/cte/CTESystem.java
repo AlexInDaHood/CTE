@@ -9,6 +9,7 @@ import java.util.Random;
 
 import com.osterph.lagerhalle.MySQL;
 import com.osterph.listener.EggListener;
+import de.fkfabian.api.API;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -33,7 +34,6 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
 import net.minecraft.server.v1_8_R3.PacketPlayOutWorldParticles;
 
 import static org.bukkit.Material.AIR;
-import static org.bukkit.Material.PUMPKIN;
 
 public class CTESystem {
 	
@@ -279,13 +279,17 @@ public class CTESystem {
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, () -> {
             moveHub();
-            Bukkit.getServer().shutdown();
-        }, 20*15L);
 
+        }, 20*15L);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(CTE.INSTANCE, () -> {
+        Bukkit.shutdown();
+        }, 23*15L);
     }
 
     public void moveHub() {
-        //TODO PLAYHILLS API - LOBBY-1
+        for(Player player: Bukkit.getOnlinePlayers()) {
+            API.getInstance().sendtoServer("Lobby-1", player);
+        }
     }
     
     
@@ -371,7 +375,9 @@ public class CTESystem {
     public int countdown = 61;
     
     public void startTimer() {
-    	gamestate = GAMESTATE.STARTING;
+        //relaunch server
+        System.out.println("cloudapi:status:serverIngame");
+        gamestate = GAMESTATE.STARTING;
         for (Entity all: Bukkit.getWorld("world").getEntities()) {
             if (!all.getType().equals(EntityType.DROPPED_ITEM)) continue;
             all.remove();

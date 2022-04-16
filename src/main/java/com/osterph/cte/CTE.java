@@ -25,6 +25,7 @@ import com.osterph.manager.StatsManager;
 import com.osterph.shop.Shop;
 import com.osterph.shop.ShopListener;
 import com.osterph.spawner.SpawnerManager;
+import com.osterph.cte.CloudServerLogin;
 
 public class CTE extends JavaPlugin{
 	
@@ -62,6 +63,12 @@ public class CTE extends JavaPlugin{
 			ScoreboardManager.refreshBoard(all);
 		}
 		NPCListener.spawnNPCs();
+		CloudServerLogin.login();
+	}
+
+	@Override
+	public void onDisable() {
+		CloudServerLogin.logout();
 	}
 
 	private void onSettings() {
