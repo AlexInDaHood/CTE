@@ -55,8 +55,8 @@ public class InteractEvent implements Listener {
                     p.playSound(p.getLocation(), Sound.VILLAGER_NO, 1, 1);
                     return;
                 }
-                if (p.getItemInHand().getAmount() == 1) p.getInventory().clear(p.getInventory().getHeldItemSlot());
-                p.getItemInHand().setAmount(p.getItemInHand().getAmount()-1);
+                //if (p.getItemInHand().getAmount() == 1) p.getInventory().clear(p.getInventory().getHeldItemSlot());
+                //p.getItemInHand().setAmount(p.getItemInHand().getAmount()-1);
             } else if(p.getItemInHand().getType().equals(Material.ENDER_PORTAL_FRAME)) {
                 e.setCancelled(true);
                 CTESystem sys = CTE.INSTANCE.getSystem();
