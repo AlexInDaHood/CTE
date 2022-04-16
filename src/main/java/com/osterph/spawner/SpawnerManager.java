@@ -19,7 +19,7 @@ public class SpawnerManager {
 		
 		
 		//BLUE
-		spawners.add(new Spawner("BLUE-APPLE", apple.getItem(1), new Location(Bukkit.getWorld("world"), 1060.5, 100, 993.5), 30, 1, 30, true));
+		spawners.add(new Spawner("BLUE-APPLE", apple.getItem(1), new Location(Bukkit.getWorld("world"), 1060.5, 100, 993.5), 20, 1, 30, true));
 		spawners.add(new Spawner("BLUE-MELON-1", melon.getItem(1), new Location(Bukkit.getWorld("world"), 1037.5, 104, 1018.5), 20*6, 1, 10, false));
 		spawners.add(new Spawner("BLUE-MELON-2", melon.getItem(1), new Location(Bukkit.getWorld("world"), 1037.5, 104, 982.5), 20*6, 1, 10, false));
 		
@@ -29,7 +29,7 @@ public class SpawnerManager {
 		spawners.add(new Spawner("MIDDLE-CARROT-3", carrot.getItem(1), new Location(Bukkit.getWorld("world"), 1005.5, 100, 997.5), 20*50, 1, 2, false));
 		
 		//RED																											
-		spawners.add(new Spawner("RED-APPLE", apple.getItem(1), new Location(Bukkit.getWorld("world"), 940.5, 100, 1007.5), 30, 1, 30, true));
+		spawners.add(new Spawner("RED-APPLE", apple.getItem(1), new Location(Bukkit.getWorld("world"), 940.5, 100, 1007.5), 20, 1, 30, true));
 		spawners.add(new Spawner("RED-MELON-1", melon.getItem(1), new Location(Bukkit.getWorld("world"), 963.5, 104, 982.5), 20*6, 1, 10, false));
 		spawners.add(new Spawner("RED-MELON-2", melon.getItem(1), new Location(Bukkit.getWorld("world"), 963.5, 104, 1018.5), 20*6, 1, 10, false));
 		

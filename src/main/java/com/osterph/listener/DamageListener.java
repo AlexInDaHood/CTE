@@ -102,7 +102,7 @@ public class DamageListener implements Listener {
 			}
 
 			if (e.getDamager().getType().equals(EntityType.PRIMED_TNT)||e.getDamager().getType().equals(EntityType.FIREBALL)) {
-				int r = new Random().nextInt(4)+1;
+				int r = new Random().nextInt(3)+1;
 				e.setDamage(r);
 			}
     		

@@ -44,7 +44,7 @@ public class InteractEvent implements Listener {
                 p.getItemInHand().setAmount(p.getItemInHand().getAmount()-1);
                 onSave(e.getPlayer());
             } else if(p.getItemInHand().getType().equals(Material.BRICK)) {
-                if(!canBridge(p.getLocation(), getDirection(p))) {p.sendMessage(CTE.prefix + "§cDieses Item kannst du gerade nicht benutzen!");return;}
+                if(!canBridge(p.getLocation(), getDirection(p))) {p.sendMessage(CTE.prefix + "§cDieses Item kannst du gerade nicht benutzen!");e.setCancelled(true);return;}
             	e.setCancelled(true);
             	onBridge(p.getLocation().add(0, -1, 0), getDirection(p), 0, p);
             	if (p.getItemInHand().getAmount() == 1) p.getInventory().clear(p.getInventory().getHeldItemSlot());
@@ -55,7 +55,6 @@ public class InteractEvent implements Listener {
                     p.playSound(p.getLocation(), Sound.VILLAGER_NO, 1, 1);
                     return;
                 }
-                e.setCancelled(true);
                 if (p.getItemInHand().getAmount() == 1) p.getInventory().clear(p.getInventory().getHeldItemSlot());
                 p.getItemInHand().setAmount(p.getItemInHand().getAmount()-1);
             } else if(p.getItemInHand().getType().equals(Material.ENDER_PORTAL_FRAME)) {
@@ -93,49 +92,49 @@ public class InteractEvent implements Listener {
     private boolean canBridge(Location loc, direction dir) {
         switch (dir) {
             case N:
-                loc.add(0, 0, -1);
+                loc.add(0, -1, -1);
                 if (!loc.getBlock().getType().equals(Material.AIR)) {
                     return false;
                 }
                 break;
             case E:
-                loc.add(1, 0, 0);
+                loc.add(1, -1, 0);
                 if (!loc.getBlock().getType().equals(Material.AIR)) {
                     return false;
                 }
                 break;
             case S:
-                loc.add(0, 0, 1);
+                loc.add(0, -1, 1);
                 if (!loc.getBlock().getType().equals(Material.AIR)) {
                     return false;
                 }
                 break;
             case W:
-                loc.add(-1, 0, 0);
+                loc.add(-1, -1, 0);
                 if (!loc.getBlock().getType().equals(Material.AIR)) {
                     return false;
                 }
                 break;
             case NW:
-                loc.add(-1, 0, -1);
+                loc.add(-1, -1, -1);
                 if (!loc.getBlock().getType().equals(Material.AIR)) {
                     return false;
                 }
                 break;
             case NE:
-                loc.add(1, 0, -1);
+                loc.add(1, -1, -1);
                 if (!loc.getBlock().getType().equals(Material.AIR)) {
                     return false;
                 }
                 break;
             case SE:
-                loc.add(1, 0, 1);
+                loc.add(1, -1, 1);
                 if (!loc.getBlock().getType().equals(Material.AIR)) {
                     return false;
                 }
                 break;
             case SW:
-                loc.add(-1, 0, 1);
+                loc.add(-1, -1, 1);
                 if (!loc.getBlock().getType().equals(Material.AIR)) {
                     return false;
                 }
