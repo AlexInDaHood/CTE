@@ -208,6 +208,7 @@ public class CTESystem {
 
         countdown = 900;
         scheduler = Bukkit.getScheduler().scheduleSyncRepeatingTask(CTE.INSTANCE, () -> {
+            if (this.gamestate != GAMESTATE.RUNNING) return;
             switch (countdown) {
                 case 300:
                     sendAllMessage(CTE.prefix + "Das Deathmatch startet in §c5 Minuten§e.");
